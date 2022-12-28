@@ -27,7 +27,7 @@ public class Utils {
                 baseUrl = "http://localhost:8080";
             }
             case PRD -> {
-                baseUrl = "http://vemser-dbc.dbccompany.com.br:39000/vemser/vemrankser-back";
+                baseUrl = "http://vemser-dbc.dbccompany.com.br:39000/vemser";
             }
             default -> {
                 Assert.fail("Ambiente não configurado");
@@ -48,17 +48,5 @@ public class Utils {
         return Manipulation.getProp().getProperty("prop.env");
     }
 
-    public static String convertLoginToJson(Login login) {
-        return new Gson().toJson(login);
-    }
-
-    public static String convertUsusarioToJson(Usuario usuario) { return new Gson().toJson(usuario); }
-
-    public static String convertTrilhaToJson(Trilha trilha) { return new Gson().toJson(trilha); }
-
-    public static String convertModuloToJson(Modulo modulo) { return new Gson().toJson(modulo); }
-
-    public static String converterAtividadeToJson(Atividade atividade) { return new Gson().toJson(atividade); }
-
-    public static String converterComentarioToJson(Comentario comentario) { return new Gson().toJson(comentario); }
+    public static String convertProgramaToJson(Programa programa) { return new Gson().toJson(programa); }
 }

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>VemRankSer-Testes-RestAssured-Api</artifactId>
+    <artifactId>Testes-Avaliaser-Back</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

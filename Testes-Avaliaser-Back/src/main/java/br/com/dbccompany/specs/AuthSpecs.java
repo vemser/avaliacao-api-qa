@@ -9,21 +9,21 @@ import io.restassured.specification.RequestSpecification;
 
 public class AuthSpecs {
 
-    private static String tokenAdmin = new Auth().autenticacaoAdmin();
+    private static String token = new Auth().autenticacao();
 
     private AuthSpecs() {}
 
-    public static RequestSpecification requestSpecAdmin() {
+    public static RequestSpecification requestSpec() {
         return new RequestSpecBuilder().
-                addHeader(Values.AUTHORIZATION, tokenAdmin).
+                addHeader(Values.AUTHORIZATION, token).
                 setContentType(ContentType.JSON).
                 build();
     }
 
-    public static RequestSpecification requestSpecFOTO() {
-        return new RequestSpecBuilder().
-                addHeader(Values.AUTHORIZATION, tokenAdmin).
-                setContentType(ContentType.MULTIPART).
-                build();
-    }
+//    public static RequestSpecification requestSpecFOTO() {
+//        return new RequestSpecBuilder().
+//                addHeader(Values.AUTHORIZATION, token).
+//                setContentType(ContentType.MULTIPART).
+//                build();
+//    }
 }
