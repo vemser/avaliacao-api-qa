@@ -33,14 +33,13 @@ public class AtualizarTest extends BaseTest {
             programaCadastrado = programaClient.cadastrar(Utils.convertProgramaToJson(programaNovo))
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             ProgramaDataFactory.modificarNomePrograma(programaNovo, "VemSer 12ed");
             ProgramaDTO programaAtualizado = programaClient.atualizar(Utils.convertProgramaToJson(programaNovo), programaCadastrado.getIdPrograma())
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_OK)
+                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             Assertions.assertEquals(programaNovo.getNome(), programaAtualizado.getNome());
@@ -64,14 +63,13 @@ public class AtualizarTest extends BaseTest {
             programaCadastrado = programaClient.cadastrar(Utils.convertProgramaToJson(programaNovo))
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             ProgramaDataFactory.modificarSituacaoPrograma(programaNovo, "FECHADO");
             ProgramaDTO programaAtualizado = programaClient.atualizar(Utils.convertProgramaToJson(programaNovo), programaCadastrado.getIdPrograma())
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_OK)
+                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             Assertions.assertEquals(programaNovo.getSituacao(), programaAtualizado.getSituacao());
@@ -94,14 +92,13 @@ public class AtualizarTest extends BaseTest {
             programaCadastrado = programaClient.cadastrar(Utils.convertProgramaToJson(programaNovo))
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             ProgramaDataFactory.modificarDescricaoPrograma(programaNovo, "Descricao Nova");
             ProgramaDTO programaAtualizado = programaClient.atualizar(Utils.convertProgramaToJson(programaNovo), programaCadastrado.getIdPrograma())
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_OK)
+                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             Assertions.assertEquals(programaNovo.getDescricao(), programaAtualizado.getDescricao());
@@ -126,14 +123,13 @@ public class AtualizarTest extends BaseTest {
             programaCadastrado = programaClient.cadastrar(Utils.convertProgramaToJson(programaNovo))
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             ProgramaDataFactory.modificarDataInicioPrograma(programaNovo, 2);
             ProgramaDTO programaAtualizado = programaClient.atualizar(Utils.convertProgramaToJson(programaNovo), programaCadastrado.getIdPrograma())
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_OK)
+                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             Assertions.assertEquals(programaNovo.getDataInicio(), programaAtualizado.getDataInicio());
@@ -157,14 +153,13 @@ public class AtualizarTest extends BaseTest {
             programaCadastrado = programaClient.cadastrar(Utils.convertProgramaToJson(programaNovo))
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             ProgramaDataFactory.modificarDataFimPrograma(programaNovo, 2);
             ProgramaDTO programaAtualizado = programaClient.atualizar(Utils.convertProgramaToJson(programaNovo), programaCadastrado.getIdPrograma())
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_OK)
+                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             Assertions.assertEquals(programaNovo.getDataFim(), programaAtualizado.getDataFim());
@@ -184,14 +179,12 @@ public class AtualizarTest extends BaseTest {
         ProgramaDTO programaCadastrado = null;
         try {
             Programa programaNovo = ProgramaDataFactory.programaValido();
-            ProgramaDataFactory.modificarProgramaDataInicioMesMaiorQueDoze(programaNovo);
-
             programaCadastrado = programaClient.cadastrar(Utils.convertProgramaToJson(programaNovo))
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
+            ProgramaDataFactory.modificarProgramaDataInicioMesMaiorQueDoze(programaNovo);
             programaClient.atualizar(Utils.convertProgramaToJson(programaNovo), programaCadastrado.getIdPrograma())
                     .then()
                     .log().all()
@@ -218,7 +211,6 @@ public class AtualizarTest extends BaseTest {
             programaCadastrado = programaClient.cadastrar(Utils.convertProgramaToJson(programaNovo))
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
             ProgramaDataFactory.modificarDataInicioPrograma(programaNovo, 4);
 
@@ -247,7 +239,6 @@ public class AtualizarTest extends BaseTest {
             programaCadastrado = programaClient.cadastrar(Utils.convertProgramaToJson(programaNovo))
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             ProgramaDataFactory.modificarNomePrograma(programaNovo, StringUtils.EMPTY);

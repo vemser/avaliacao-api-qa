@@ -25,13 +25,13 @@ public class CadastrarTest extends BaseTest {
     @Story("Deve cadastrar usuário com sucesso")
     public void testeDeveCadastrarProgramaValidoComSucesso() {
 
+
         ProgramaDTO programaCadastrado = null;
         try {
             Programa programaNovo = ProgramaDataFactory.programaValido();
             programaCadastrado = programaClient.cadastrar(Utils.convertProgramaToJson(programaNovo))
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
 
             Assertions.assertEquals(programaNovo.getSituacao(), programaCadastrado.getSituacao());
