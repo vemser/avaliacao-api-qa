@@ -13,8 +13,8 @@ public class Auth {
     public String autenticacao(){
         Login login = new Login();
 
-        login.setEmail(Manipulation.getProp().getProperty("prop.email"));
-        login.setSenha(Manipulation.getProp().getProperty("prop.password"));
+        login.setUsername(Manipulation.getProp().getProperty("prop.email"));
+        login.setPassword(Manipulation.getProp().getProperty("prop.password"));
 
         return
                 given()

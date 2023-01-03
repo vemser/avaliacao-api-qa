@@ -49,4 +49,6 @@ public class Utils {
     }
 
     public static String convertProgramaToJson(Programa programa) { return new Gson().toJson(programa); }
+
+    public static String convertTrilhaToJson(Trilha trilha) { return new Gson().toJson(trilha); }
 }

@@ -5,6 +5,6 @@ import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
-@SelectPackages("br.com.dbccompany.tests")
+@SelectPackages("br.com.dbccompany.tests.programa")
 public class TodosTestsRunner {
 }
