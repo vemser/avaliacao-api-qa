@@ -100,7 +100,6 @@ public class AtualizarTest extends BaseTest {
                     .log().all()
                     .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(ProgramaDTO.class);
-
             Assertions.assertEquals(programaNovo.getDescricao(), programaAtualizado.getDescricao());
 
         } catch (Exception e) {
