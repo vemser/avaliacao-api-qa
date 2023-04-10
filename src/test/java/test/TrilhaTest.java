@@ -5,7 +5,7 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 import service.TrilhaService;
 
-public class TrilhaControllerTest extends BaseTest{
+public class TrilhaTest extends BaseTest{
     TrilhaService trilhaService = new TrilhaService();
     @Test
     public void testCadastrarTrilha(){
