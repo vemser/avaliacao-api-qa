@@ -1,12 +1,22 @@
 package test;
 
 import base.BaseTest;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.restassured.http.ContentType;
+import model.ProgramaModel;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import service.ProgramaService;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
 public class ProgramaTest extends BaseTest {
+    ProgramaModel programaModel = new ProgramaModel();
     ProgramaService programaService = new ProgramaService();
 //    region TESTES DE CRIAR PROGRAMA!
     @Test
@@ -16,7 +26,10 @@ public class ProgramaTest extends BaseTest {
                 .statusCode(HttpStatus.SC_CREATED);
         response.assertThat().contentType(ContentType.JSON);
         response.assertThat().statusCode(HttpStatus.SC_CREATED);
-        response.log().all();
+        ProgramaModel programaResponse = response.extract().as(ProgramaModel.class);
+        assertThat("nome", equalTo(programaResponse.getNome()));
+        System.out.println(programaResponse);
+//        response.log().all();
     }
     @Test
     public void testAdicionarProgramaComErro(){
@@ -60,6 +73,33 @@ public class ProgramaTest extends BaseTest {
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.log().all();
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+//endregion
+//    region TESTES DE BUSCAR PROGRAMA POR ID
+
+    @Test
+    public void testBuscarPorId(){
+        var response = programaService.buscarPrograma()
+                .then()
+                .statusCode(HttpStatus.SC_OK);
+        response.assertThat().contentType(ContentType.JSON);
+        response.assertThat().statusCode(HttpStatus.SC_OK);
+    }
+    @Test
+    public void testBuscarProgramaSemId(){
+        var response = programaService.buscarProgramaSemId()
+                .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+        response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
+        response.log().all();
+    }
+    @Test
+    public void testBuscarProgramaComIdInexistente(){
+        var response = programaService.buscarProgramaComLetrasNoId()
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
+        response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
+        response.log().all();
     }
 //endregion
 //    region EDITAR PROGRAMA

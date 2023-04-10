@@ -1,25 +1,19 @@
 package service;
 
 import io.restassured.response.Response;
+import model.ProgramaModel;
 import specs.SetupsRequestSpecification;
 import static io.restassured.RestAssured.given;
 
 public class ProgramaService {
+    ProgramaModel programaModel = new ProgramaModel("Programa KTeste", "Programa de teste", "2023-05-01", "2023-08-01", "ABERTO");
 
 //    region CRIAR PROGRAMA
     public Response criarPrograma(){
         Response response =
             given()
                     .spec(SetupsRequestSpecification.requestSpecification())
-                    .body("""
-                               {
-                                "nome": "VemSer 11ed",
-                                "descricao": "Programa de formação profissional Vem Ser DBC 11º edição.",
-                                "dataInicio": "2023-10-23",
-                                "dataFim": "2023-12-23",
-                                "status": "ABERTO"
-                              }
-                            """)
+                    .body(programaModel)
                 .when()
                     .post("/programa/create");
         return response;
@@ -94,6 +88,35 @@ public class ProgramaService {
     }
 
 //endregion
+//    region BUSCAR PROGRAMA PELO ID
+public Response buscarProgramaComLetrasNoId(){
+    Response response =
+            given()
+                    .spec(SetupsRequestSpecification.requestSpecification())
+                    .pathParam("idPrograma", "saxsaxaxasxsaa")
+                    .when()
+                    .get("/programa/get-by-id/{idPrograma}");
+    return response;
+}
+    public Response buscarProgramaSemId(){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idPrograma", "")
+                        .when()
+                        .get("/programa/get-by-id/{idPrograma}");
+        return response;
+    }
+    public Response buscarPrograma(){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idPrograma", 12)
+                        .when()
+                        .get("/programa/get-by-id/{idPrograma}");
+        return response;
+    }
+    //    endregion
 //    region ATUALIZAR PROGRAMA
     public Response atualizarPrograma(){
         Response response =
@@ -198,7 +221,7 @@ public Response deletarProgramaComLetrasNoId(){
                         .delete("/programa/delete/{idPrograma}");
         return response;
     }
-    public Response deletarPrograma(){
+        public Response deletarPrograma(){
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
