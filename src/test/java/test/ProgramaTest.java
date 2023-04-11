@@ -1,9 +1,6 @@
 package test;
 
 import base.BaseTest;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import dataFactory.ProgramaDataFactory;
 import io.qameta.allure.Description;
@@ -58,17 +55,25 @@ public class ProgramaTest extends BaseTest {
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("nome: Nome não pode ser vazio ou nulo."));
     }
     @Test
+    @DisplayName("Falha ao criar um programa com datas abaixo da atual")
+    @Story("Criar um programa")
+    @Description("Falha ao criar um programa com datas abaixo da atual")
     public void testCriarProgramaComDataAbaixoDaAtual(){
-        var response = programaService.criarProgramaComDataAbaixoDaAtual()
+        var response = programaService.criarProgramaComDatasAbaixoDaAtual()
                 .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
-        response.log().all();
+        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
+        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("dataInicio: must be a date in the present or in the future"));
+        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("dataFim: must be a date in the present or in the future"));
     }
 //    endregion
 //    region TESTES DE BUSCAR PROGRAMA
 
     @Test
+    @DisplayName("Buscar todos os programas com sucesso")
+    @Story("Buscar programas")
+    @Description("Buscar todos os programas com sucesso")
     public void testBuscarTodosProgramas(){
         var response = programaService.buscarProgramas()
             .then()
@@ -77,128 +82,197 @@ public class ProgramaTest extends BaseTest {
         response.assertThat().statusCode(HttpStatus.SC_OK);
     }
     @Test
-    public void testBuscarTodosProgramasSemPagina(){
-        var response = programaService.buscarProgramasSemNumeroDePaginas()
+    @DisplayName("Falha ao buscar programas com numero de pagina em vazio")
+    @Story("Buscar programas")
+    @Description("Falha ao buscar programas com numero de pagina em vazio")
+    public void testBuscarTodosProgramasNumeroPaginaVazio(){
+        var response = programaService.buscarProgramasNumeroPaginaVazio()
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
-        response.log().all();
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
     }
     @Test
+    @DisplayName("Falha ao buscar programas com tamanho em vazio")
+    @Story("Buscar programas")
+    @Description("Falha ao buscar programas com tamanho em vazio")
     public void testBuscarTodosProgramasSemTamanho(){
-        var response = programaService.buscarProgramasSemTamanho()
+        var response = programaService.buscarProgramasTamanhoVazio()
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
-        response.log().all();
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 //endregion
 //    region TESTES DE BUSCAR PROGRAMA POR ID
 
     @Test
+    @DisplayName("Buscar programa por id com sucesso")
+    @Story("Buscar programas")
+    @Description("Buscar programa por id com sucesso")
     public void testBuscarPorId(){
-        var response = programaService.buscarPrograma()
+        ProgramaModel programaCriado = programaService.criarPrograma(programaValido)
                 .then()
-                .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_CREATED)
+                .extract().as(ProgramaModel.class);
+        var response = programaService.buscarPrograma(programaCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
         response.assertThat().contentType(ContentType.JSON);
         response.assertThat().statusCode(HttpStatus.SC_OK);
+        ProgramaModel programaResponse = response.extract().as(ProgramaModel.class);
+        assertThat(programaValido.getNome(), equalTo(programaResponse.getNome()));
+        assertThat(programaValido.getDescricao(), equalTo(programaResponse.getDescricao()));
+        assertThat(programaValido.getDataInicio(), equalTo(programaResponse.getDataInicio()));
+        assertThat(programaValido.getDataFim(), equalTo(programaResponse.getDataFim()));
+        assertThat(programaValido.getStatus(), equalTo(programaResponse.getStatus()));
+        assertThat(programaCriado.getIdPrograma(), equalTo(programaResponse.getIdPrograma()));
+        assertThat(programaCriado.getAtivo(), equalTo(programaResponse.getAtivo()));
+        programaService.deletarPrograma(programaResponse)
+                .then()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
+    @DisplayName("Falha ao buscar programa por id vazio")
+    @Story("Buscar programas")
+    @Description("Falha ao buscar programa por id vazio")
     public void testBuscarProgramaSemId(){
         var response = programaService.buscarProgramaSemId()
                 .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-        response.log().all();
+        response.assertThat().contentType(ContentType.JSON);
+        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
+        assertThat(jsonFailureResponse.getError(), equalTo("Not Found"));
+        assertThat(jsonFailureResponse.getPath(), equalTo("/programa/get-by-id/"));
     }
     @Test
-    public void testBuscarProgramaComIdInexistente(){
+    @DisplayName("Falha ao buscar programa por id invalido com letras")
+    @Story("Buscar programas")
+    @Description("Falha ao buscar programa por id invalido com letras")
+    public void testBuscarProgramaComLetrasNoId(){
         var response = programaService.buscarProgramaComLetrasNoId()
                 .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
-        response.log().all();
     }
 //endregion
 //    region EDITAR PROGRAMA
     @Test
+    @DisplayName("Editar programa com sucesso")
+    @Story("Editar programa")
+    @Description("Editar programa com sucesso")
     public void testEditarPrograma(){
-        var response = programaService.atualizarPrograma()
+        ProgramaModel programaCriado = programaService.criarPrograma(programaValido)
                 .then()
-                .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_CREATED)
+                .extract().as(ProgramaModel.class);
+        ProgramaModel programaNovo = ProgramaDataFactory.gerarProgramaValido();
+        var response = programaService.atualizarPrograma(programaCriado, programaNovo)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
         response.assertThat().contentType(ContentType.JSON);
         response.assertThat().statusCode(HttpStatus.SC_OK);
-        response.log().all();
+        response.assertThat().contentType(ContentType.JSON);
+        ProgramaModel programaResponse = response.extract().as(ProgramaModel.class);
+        assertThat(programaNovo.getNome(), equalTo(programaResponse.getNome()));
+        assertThat(programaNovo.getDescricao(), equalTo(programaResponse.getDescricao()));
+        assertThat(programaNovo.getDataInicio(), equalTo(programaResponse.getDataInicio()));
+        assertThat(programaNovo.getDataFim(), equalTo(programaResponse.getDataFim()));
+        assertThat(programaNovo.getStatus(), equalTo(programaResponse.getStatus()));
+        assertThat(programaCriado.getIdPrograma(), equalTo(programaResponse.getIdPrograma()));
+        assertThat(programaCriado.getAtivo(), equalTo(programaResponse.getAtivo()));
+        //Deleta o programa criado
+        programaService.deletarPrograma(programaCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
-    public void testEditarProgramaSemId(){
-        var response = programaService.atualizarProgramaSemInformarId()
+    @DisplayName("Falha ao editar programa com id vazio")
+    @Story("Editar programa")
+    @Description("Falha ao editar programa com id vazio")
+    public void testEditarProgramaComIdVazio(){
+        var response = programaService.atualizarProgramaComIdVazio()
                 .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().contentType(ContentType.JSON);
-        response.log().all();
+        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
+        assertThat(jsonFailureResponse.getError(), equalTo("Not Found"));
+        assertThat(jsonFailureResponse.getPath(), equalTo("/programa/update/"));
     }
     @Test
-    public void testEditarProgramaComIdErrado(){
-        var response = programaService.atualizarProgramaComIdErrado()
+    @DisplayName("Falha ao editar programa com id inexistente")
+    @Story("Editar programa")
+    @Description("Falha ao editar programa com id inexistente")
+    public void testEditarProgramaComIdInexistente(){
+        var response = programaService.atualizarProgramaComIdInexistente()
                 .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().contentType(ContentType.JSON);
-        response.log().all();
     }
 //    endregion
 //    region DESATIVAR PROGRAMA
     @Test
+    @DisplayName("Desativar programa com sucesso")
+    @Story("Desativar programa")
+    @Description("Desativar programa com sucesso")
     public void testDesativarPrograma(){
         var response = programaService.desativarPrograma()
                 .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
         response.assertThat().statusCode(HttpStatus.SC_NO_CONTENT);
-        response.log().all();
     }
     @Test
-    public void testDesativarProgramaSemId(){
+    @DisplayName("Falha ao desativar programa com letras no id")
+    @Story("Desativar programa")
+    @Description("Falha ao desativar programa com letras no id")
+    public void testDesativarProgramaComLetrasNoId(){
         var response = programaService.desativarProgramaComLetrasNoId()
                 .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
-        response.log().all();
     }
     @Test
+    @DisplayName("Falha ao desativar programa com id inexistente")
+    @Story("Desativar programa")
+    @Description("Falha ao desativar programa com id inexistente")
     public void testDesativarProgramaComIdErrado(){
-        var response = programaService.desativarProgramaComIdErrado()
+        var response = programaService.desativarProgramaComIdInexistente()
                 .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-        response.log().all();
     }
 //    endregion
 //    region DELETAR PROGRAMA
-@Test
-public void testDeletarPrograma(){
-    var response = programaService.deletarPrograma()
-            .then()
-            .statusCode(HttpStatus.SC_NO_CONTENT);
-    response.assertThat().statusCode(HttpStatus.SC_NO_CONTENT);
-    response.log().all();
-}
     @Test
+    @DisplayName("Deletar programa com sucesso")
+    @Story("Deletar programa")
+    @Description("Deletar programa com sucesso")
+    public void testDeletarPrograma(){
+        var response = programaService.deletarPrograma()
+                .then()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
+        response.assertThat().statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+    @Test
+    @DisplayName("Falha ao deletar programa com letras no id")
+    @Story("Deletar programa")
+    @Description("Falha ao deletar programa com letras no id")
     public void testDeletarProgramaComLetrasNoId(){
         var response = programaService.deletarProgramaComLetrasNoId()
                 .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-        response.log().all();
     }
     @Test
-    public void testDeletarProgramaComIdErrado(){
-        var response = programaService.deletarProgramaComIdErrado()
+    @DisplayName("Falha ao deletar programa com id inexistente")
+    @Story("Deletar programa")
+    @Description("Falha ao deletar programa com id inexistente")
+    public void testDeletarProgramaComIdInexistente(){
+        var response = programaService.deletarProgramaComIdInexistente()
                 .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-        response.log().all();
     }
 //    endregion
 }

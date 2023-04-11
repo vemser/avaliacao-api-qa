@@ -44,19 +44,11 @@ public class ProgramaService {
                         .post("/programa/create");
         return response;
     }
-    public Response criarProgramaComDataAbaixoDaAtual(){
+    public Response criarProgramaComDatasAbaixoDaAtual(){
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .body("""
-                               {
-                                "nome": "VemSer 11ed",
-                                "descricao": "Programa de formação profissional Vem Ser DBC 11º edição.",
-                                "dataInicio": "2021-10-21",
-                                "dataFim": "2021-12-21",
-                                "status": "ABERTO"
-                              }
-                            """)
+                        .body(ProgramaDataFactory.gerarProgramaComDataAbaixoDaAtual())
                 .when()
                         .post("/programa/create");
         return response;
@@ -69,22 +61,22 @@ public class ProgramaService {
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
                 .queryParam("pagina", 0)
-                .queryParam("tamanho", 1)
+                .queryParam("tamanho", 10)
             .when()
                 .get("/programa/list-all");
         return response;
     }
-    public Response buscarProgramasSemNumeroDePaginas(){
+    public Response buscarProgramasNumeroPaginaVazio(){
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
                 .queryParam("pagina", "")
-                .queryParam("tamanho", 1)
+                .queryParam("tamanho", 10)
             .when()
                 .get("/programa/list-all");
         return response;
     }
-    public Response buscarProgramasSemTamanho(){
+    public Response buscarProgramasTamanhoVazio(){
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
@@ -102,7 +94,7 @@ public Response buscarProgramaComLetrasNoId(){
             given()
                     .spec(SetupsRequestSpecification.requestSpecification())
                     .pathParam("idPrograma", "saxsaxaxasxsaa")
-                    .when()
+            .when()
                     .get("/programa/get-by-id/{idPrograma}");
     return response;
 }
@@ -121,6 +113,15 @@ public Response buscarProgramaComLetrasNoId(){
                         .spec(SetupsRequestSpecification.requestSpecification())
                         .pathParam("idPrograma", 12)
                         .when()
+                        .get("/programa/get-by-id/{idPrograma}");
+        return response;
+    }
+    public Response buscarPrograma(ProgramaModel programa){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idPrograma", programa.getIdPrograma())
+                .when()
                         .get("/programa/get-by-id/{idPrograma}");
         return response;
     }
@@ -144,7 +145,17 @@ public Response buscarProgramaComLetrasNoId(){
                 .put("/programa/update/{idPrograma}");
         return response;
     }
-    public Response atualizarProgramaComIdErrado(){
+    public Response atualizarPrograma(ProgramaModel programaExistente, ProgramaModel programaNovo){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .body(programaNovo)
+                .pathParam("idPrograma", programaExistente.getIdPrograma())
+            .when()
+                .put("/programa/update/{idPrograma}");
+        return response;
+    }
+    public Response atualizarProgramaComIdInexistente(){
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
@@ -162,7 +173,7 @@ public Response buscarProgramaComLetrasNoId(){
                 .put("/programa/update/{idPrograma}");
         return response;
     }
-    public Response atualizarProgramaSemInformarId(){
+    public Response atualizarProgramaComIdVazio(){
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
@@ -191,11 +202,11 @@ public Response buscarProgramaComLetrasNoId(){
                 .delete("/programa/deactivate/{idPrograma}");
         return response;
     }
-    public Response desativarProgramaComIdErrado(){
+    public Response desativarProgramaComIdInexistente(){
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
-                .pathParam("idPrograma", 19987)
+                .pathParam("idPrograma", 19987000)
             .when()
                 .delete("/programa/deactivate/{idPrograma}");
         return response;
@@ -220,11 +231,11 @@ public Response deletarProgramaComLetrasNoId(){
                     .delete("/programa/dealete/{idPrograma}");
     return response;
 }
-    public Response deletarProgramaComIdErrado(){
+    public Response deletarProgramaComIdInexistente(){
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idPrograma", 25525)
+                        .pathParam("idPrograma", 2552500)
                 .when()
                         .delete("/programa/delete/{idPrograma}");
         return response;
