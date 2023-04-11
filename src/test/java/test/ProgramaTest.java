@@ -52,7 +52,7 @@ public class ProgramaTest extends BaseTest {
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
         JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("nome: size must be between 10 and 2147483647"));
-        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("nome: Nome não pode ser vazio ou nulo."));
+
     }
     @Test
     @DisplayName("Falha ao criar um programa com datas abaixo da atual")

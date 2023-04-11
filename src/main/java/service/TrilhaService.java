@@ -7,7 +7,7 @@ import model.TrilhaModel;
 import specs.SetupsRequestSpecification;
 
 import static io.restassured.RestAssured.given;
-
+//region ADICIONAR TRILHA
 public class TrilhaService {
     public Response adicionarTrilha(TrilhaModel trilha){
         Response response =
@@ -18,44 +18,50 @@ public class TrilhaService {
                 .post("/trilha/create");
         return response;
     }
-    public Response atualizarTrilha(){
-
+//endregion
+//region    ATUALIZAR TRILHA
+    public Response atualizarTrilha(TrilhaModel trilhaAntiga, TrilhaModel trilhaModelNovo){
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
-                .body("""
-                                {
-                                  "idPrograma": 1,
-                                  "nome": "Backend",
-                                  "descricao": "Especialidade com java."
-                                }
-                            """)
-                .pathParam("idTrilha",1)
+                .body(trilhaModelNovo)
+                .pathParam("idTrilha",trilhaAntiga.getIdTrilha())
             .when()
                 .put("/trilha/update/{idTrilha}");
         return response;
     }
-    public Response buscarTodasAsTrilhas(){
+//endregion
+
+    public Response buscarTrilhaPorIdTrilha(TrilhaModel trilha){
         Response response =
-            given()
-                .spec(SetupsRequestSpecification.requestSpecification())
-                .pathParam("idPrograma", 12)
-                .queryParam("pagina", 0)
-                .queryParam("tamanho", 1)
-            .when()
-                .get("/trilha/list-by-programa/{idPrograma}");
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idTrilha", trilha.getIdTrilha())
+                        .when()
+                        .get("/programa/get-by-id/{idTrilha}");
         return response;
     }
-    public Response buscarTrilhaPage(){
-        Response response =
-            given()
-                .spec(SetupsRequestSpecification.requestSpecification())
-                .queryParam("page", 0)
-                .queryParam("size", 5)
-            .when()
-                .get("/trilha/lista-trilha-page");
-        return response;
-    }
+
+
+
+
+
+
+
+
+
+
+
+//    public Response buscarTrilhaPage(){
+//        Response response =
+//            given()
+//                .spec(SetupsRequestSpecification.requestSpecification())
+//                .queryParam("page", 0)
+//                .queryParam("size", 5)
+//            .when()
+//                .get("/trilha/lista-trilha-page");
+//        return response;
+//    }
 
     public Response deletarTrilhaIdTrilha(TrilhaModel trilha){
         Response response =
