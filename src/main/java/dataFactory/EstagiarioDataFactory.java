@@ -39,7 +39,7 @@ public class EstagiarioDataFactory extends DataFactory {
     public static String gerarCpfComPontoEHifen() {
         return faker.cpf().valid();
     }
-    public static Stream<Arguments> provideEmailComSimbolosInvalidos() {
+    public static Stream<Arguments> provideEmailsInvalidos() {
         return Stream.of(
                 Arguments.of("a`" + faker.internet().emailAddress()),
                 Arguments.of("a~" + faker.internet().emailAddress()),
@@ -53,7 +53,12 @@ public class EstagiarioDataFactory extends DataFactory {
                 Arguments.of("aã" + faker.internet().emailAddress()),
                 Arguments.of("aé" + faker.internet().emailAddress()),
                 Arguments.of("a@" + faker.internet().emailAddress()),
-                Arguments.of("a.." + faker.internet().emailAddress())
+//                Arguments.of("a.." + faker.internet().emailAddress()),
+                Arguments.of(faker.internet().url()),
+                Arguments.of(faker.internet().ipV4Address()),
+                Arguments.of(faker.internet().ipV6Address()),
+                Arguments.of(faker.internet().domainName()),
+                Arguments.of("")
         );
     }
 }

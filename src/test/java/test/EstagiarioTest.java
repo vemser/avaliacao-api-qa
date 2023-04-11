@@ -99,12 +99,26 @@ public class EstagiarioTest extends BaseTest {
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("cpf: invalid Brazilian individual taxpayer registry number (CPF)"));
     }
     @ParameterizedTest
-    @DisplayName("Criar estagiário com Email Pessoal com símbolos inválidos")
+    @DisplayName("Criar estagiário com Email Pessoal inválido")
     @Story("Criar estagiário")
-    @Description("Criar estagiário com Email Pessoal com símbolos inválidos")
-    @MethodSource("dataFactory.EstagiarioDataFactory#provideEmailComSimbolosInvalidos")
-    public void testCriarEstagiarioComCpfComPontoEVirgula(String emailComSimbolosInvalidos) {
-        estagiarioValido.setEmailPessoal(emailComSimbolosInvalidos);
+    @Description("Criar estagiário com Email Pessoal inválido")
+    @MethodSource("dataFactory.EstagiarioDataFactory#provideEmailsInvalidos")
+    public void testCriarEstagiarioComEmailPessoalInvalido(String emailInvalido) {
+        estagiarioValido.setEmailPessoal(emailInvalido);
+        jsonFailureResponse = estagiarioService.criarEstagiario(estagiarioValido)
+                .then()
+                    .statusCode(HttpStatus.SC_BAD_REQUEST)
+                    .contentType(ContentType.JSON)
+                    .extract().as(JSONFailureResponse.class);
+        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
+    }
+    @ParameterizedTest
+    @DisplayName("Criar estagiário com Email Corporativo inválido")
+    @Story("Criar estagiário")
+    @Description("Criar estagiário com Email Corporativo inválido")
+    @MethodSource("dataFactory.EstagiarioDataFactory#provideEmailsInvalidos")
+    public void testCriarEstagiarioComEmailCorporativoInvalido(String emailInvalido) {
+        estagiarioValido.setEmailCorporativo(emailInvalido);
         jsonFailureResponse = estagiarioService.criarEstagiario(estagiarioValido)
                 .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
