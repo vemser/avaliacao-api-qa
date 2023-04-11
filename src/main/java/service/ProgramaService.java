@@ -220,6 +220,15 @@ public Response buscarProgramaComLetrasNoId(){
                 .delete("/programa/deactivate/{idPrograma}");
         return response;
     }
+    public Response desativarPrograma(ProgramaModel programa){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .pathParam("idPrograma", programa.getIdPrograma())
+            .when()
+                .delete("/programa/deactivate/{idPrograma}");
+        return response;
+    }
 //    endregion
 //    region DELETAR PROGRAMA
 public Response deletarProgramaComLetrasNoId(){

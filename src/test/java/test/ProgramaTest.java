@@ -209,6 +209,7 @@ public class ProgramaTest extends BaseTest {
                     .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().contentType(ContentType.JSON);
+        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
     }
 //    endregion
 //    region DESATIVAR PROGRAMA
@@ -217,7 +218,11 @@ public class ProgramaTest extends BaseTest {
     @Story("Desativar programa")
     @Description("Desativar programa com sucesso")
     public void testDesativarPrograma(){
-        var response = programaService.desativarPrograma()
+        ProgramaModel programaCriado = programaService.criarPrograma(programaValido)
+                .then()
+                    .statusCode(HttpStatus.SC_CREATED)
+                .extract().as(ProgramaModel.class);
+        var response = programaService.desativarPrograma(programaCriado)
                 .then()
                     .statusCode(HttpStatus.SC_NO_CONTENT);
         response.assertThat().statusCode(HttpStatus.SC_NO_CONTENT);
@@ -249,7 +254,11 @@ public class ProgramaTest extends BaseTest {
     @Story("Deletar programa")
     @Description("Deletar programa com sucesso")
     public void testDeletarPrograma(){
-        var response = programaService.deletarPrograma()
+        ProgramaModel programaCriado = programaService.criarPrograma(programaValido)
+                .then()
+                    .statusCode(HttpStatus.SC_CREATED)
+                .extract().as(ProgramaModel.class);
+        var response = programaService.deletarPrograma(programaCriado)
                 .then()
                     .statusCode(HttpStatus.SC_NO_CONTENT);
         response.assertThat().statusCode(HttpStatus.SC_NO_CONTENT);
