@@ -59,11 +59,7 @@ public class EstagiarioTest extends BaseTest {
     @Story("Criar estagiário")
     @Description("Criar estagiário com sucesso")
     public void testCriarEstagiarioComSucesso() {
-        estagiarioCriado = estagiarioService.criarEstagiario(estagiarioValido)
-                .then()
-                    .statusCode(HttpStatus.SC_OK)
-                    .contentType(ContentType.JSON)
-                    .extract().as(EstagiarioModel.class);
+        estagiarioCriado = retornarEstagiarioCriado();
         Assertions.assertEquals(estagiarioValido.getIdTrilha(), estagiarioCriado.getIdTrilha());
         Assertions.assertEquals(estagiarioValido.getNome(), estagiarioCriado.getNome());
         Assertions.assertEquals(estagiarioValido.getCpf(), estagiarioCriado.getCpf());
@@ -127,5 +123,36 @@ public class EstagiarioTest extends BaseTest {
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
     }
     // endregion
+    // region Deletar estagiário
+    @Test
+    @DisplayName("Deletar estagiário com sucesso")
+    @Story("Deletar estagiário")
+    @Description("Deletar estagiário com sucesso")
+    public void testDeletarEstagiarioComSucesso() {
+        estagiarioCriado = retornarEstagiarioCriado();
+        estagiarioService.deletarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
+    }
+    @Test
+    @DisplayName("Deletar estagiário inexistente")
+    @Story("Deletar estagiário")
+    @Description("Deletar estagiário inexistente")
+    public void testDeletarEstagiarioinexistente() {
+        estagiarioCriado = retornarEstagiarioCriado();
+        estagiarioService.deletarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
+        estagiarioService.deletarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
 
+    private static EstagiarioModel retornarEstagiarioCriado() {
+        return estagiarioService.criarEstagiario(estagiarioValido)
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .contentType(ContentType.JSON)
+                    .extract().as(EstagiarioModel.class);
+    }
 }
