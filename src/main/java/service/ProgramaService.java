@@ -7,7 +7,6 @@ import specs.SetupsRequestSpecification;
 import static io.restassured.RestAssured.given;
 
 public class ProgramaService {
-    ProgramaModel programaModel = new ProgramaModel("Programa KTeste", "Programa de teste", "2023-05-01", "2023-08-01", "ABERTO");
 
 //    region CRIAR PROGRAMA
     public Response criarPrograma(ProgramaModel programa) {
@@ -18,9 +17,6 @@ public class ProgramaService {
                 .when()
                     .post("/programa/create");
         return response;
-    }
-    public Response criarPrograma(){
-        return criarPrograma(programaModel);
     }
 
     public Response criarProgramaValido(){

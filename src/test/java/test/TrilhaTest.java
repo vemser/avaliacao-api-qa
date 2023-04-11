@@ -87,13 +87,17 @@ public class TrilhaTest extends BaseTest{
         TrilhaModel trilhaAlterada = TrilhaDataFactory.atualizarTrilhaValida(trilhaCriada.getIdPrograma());
         var response = trilhaService.atualizarTrilha(trilhaCriada, trilhaAlterada)
                 .then()
-                .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_OK);
         response.log().all();
         TrilhaModel trilhaResponse = response.extract().as(TrilhaModel.class);
         assertThat(trilhaAlterada.getNome(), equalTo(trilhaResponse.getNome()));
         assertThat(trilhaAlterada.getDescricao(), equalTo(trilhaResponse.getDescricao()));
         assertThat(trilhaAlterada.getStatus(), equalTo(trilhaResponse.getStatus()));
         assertThat(trilhaAlterada.getIdPrograma(), equalTo(trilhaResponse.getIdPrograma()));
+        //Deletar trilha
+        trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
+                .then()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     public void testAtualizarTrilhaSemId(){
@@ -127,15 +131,17 @@ public class TrilhaTest extends BaseTest{
 @Test
 public void testBuscarTrilhaPorIdTrilha(){
     trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
-    TrilhaModel trilhaParaBusca = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
-    var response = trilhaService.buscarTrilhaPorIdTrilha(trilhaParaBusca)
+    TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
+    var response = trilhaService.buscarTrilhaPorIdTrilha(trilhaCriada)
             .then()
-            .statusCode(HttpStatus.SC_OK);
-    response.log().all();
+                .statusCode(HttpStatus.SC_OK);
     TrilhaModel trilhaResponse = response.extract().as(TrilhaModel.class);
-    assertThat(trilhaParaBusca.getNome(), equalTo(trilhaResponse.getNome()));
+    assertThat(trilhaCriada.getNome(), equalTo(trilhaResponse.getNome()));
 
-
+    //Deletar trilha
+    trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
+            .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
 //    TrilhaModel trilhaResponse = response.extract().as(TrilhaModel.class)
 }
 //    endregion
@@ -156,11 +162,11 @@ public void testBuscarTrilhaPorIdTrilha(){
         trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
         TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel)
                 .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(TrilhaModel.class);
+                    .statusCode(HttpStatus.SC_CREATED)
+                    .extract().as(TrilhaModel.class);
          var response = trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
                 .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
          response.log().all();
     }
 //    endregion

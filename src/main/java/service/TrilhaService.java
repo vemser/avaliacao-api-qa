@@ -38,7 +38,7 @@ public class TrilhaService {
                         .spec(SetupsRequestSpecification.requestSpecification())
                         .pathParam("idTrilha", trilha.getIdTrilha())
                         .when()
-                        .get("/programa/get-by-id/{idTrilha}");
+                        .get("/trilha/get-by-id/{idTrilha}");
         return response;
     }
 
