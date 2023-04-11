@@ -6,7 +6,7 @@ import model.TrilhaModel;
 public class TrilhaDataFactory extends DataFactory{
     public static TrilhaModel gerarTrilhaValida(Integer idPrograma) {
         TrilhaModel trilha = new TrilhaModel();
-        trilha.setIdTrilha(idPrograma);
+        trilha.setIdPrograma(idPrograma);
         trilha.setNome("Trilha " + faker.name().firstName());
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("FECHADO");
