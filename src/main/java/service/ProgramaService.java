@@ -1,5 +1,6 @@
 package service;
 
+import dataFactory.ProgramaDataFactory;
 import io.restassured.response.Response;
 import model.ProgramaModel;
 import specs.SetupsRequestSpecification;
@@ -9,14 +10,21 @@ public class ProgramaService {
     ProgramaModel programaModel = new ProgramaModel("Programa KTeste", "Programa de teste", "2023-05-01", "2023-08-01", "ABERTO");
 
 //    region CRIAR PROGRAMA
-    public Response criarPrograma(){
+    public Response criarPrograma(ProgramaModel programa) {
         Response response =
             given()
                     .spec(SetupsRequestSpecification.requestSpecification())
-                    .body(programaModel)
+                    .body(programa)
                 .when()
                     .post("/programa/create");
         return response;
+    }
+    public Response criarPrograma(){
+        return criarPrograma(programaModel);
+    }
+
+    public Response criarProgramaValido(){
+        return criarPrograma(ProgramaDataFactory.gerarProgramaValido());
     }
 
     public Response criarProgramaSemNome(){
@@ -25,14 +33,14 @@ public class ProgramaService {
                         .spec(SetupsRequestSpecification.requestSpecification())
                         .body("""
                                {
-                                "nome": ,
+                                "nome": "",
                                 "descricao": "Programa de formação profissional Vem Ser DBC 11º edição.",
                                 "dataInicio": "2023-10-23",
                                 "dataFim": "2023-12-23",
                                 "status": "ABERTO"
                               }
                             """)
-                        .when()
+                .when()
                         .post("/programa/create");
         return response;
     }
@@ -49,7 +57,7 @@ public class ProgramaService {
                                 "status": "ABERTO"
                               }
                             """)
-                        .when()
+                .when()
                         .post("/programa/create");
         return response;
     }
@@ -208,7 +216,7 @@ public Response deletarProgramaComLetrasNoId(){
             given()
                     .spec(SetupsRequestSpecification.requestSpecification())
                     .pathParam("idPrograma", "ushuahus")
-                    .when()
+            .when()
                     .delete("/programa/dealete/{idPrograma}");
     return response;
 }
@@ -217,16 +225,25 @@ public Response deletarProgramaComLetrasNoId(){
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
                         .pathParam("idPrograma", 25525)
-                        .when()
+                .when()
                         .delete("/programa/delete/{idPrograma}");
         return response;
     }
-        public Response deletarPrograma(){
+    public Response deletarPrograma(){
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
                         .pathParam("idPrograma", 45)
-                        .when()
+                .when()
+                        .delete("/programa/delete/{idPrograma}");
+        return response;
+    }
+    public Response deletarPrograma(ProgramaModel programa){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idPrograma", programa.getIdPrograma())
+                .when()
                         .delete("/programa/delete/{idPrograma}");
         return response;
     }

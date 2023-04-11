@@ -5,10 +5,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import dataFactory.ProgramaDataFactory;
+import io.qameta.allure.Description;
+import io.qameta.allure.Story;
 import io.restassured.http.ContentType;
+import model.JSONFailureResponse;
 import model.ProgramaModel;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.ProgramaService;
 
@@ -16,34 +21,47 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 public class ProgramaTest extends BaseTest {
-    ProgramaModel programaModel = new ProgramaModel();
+    ProgramaModel programaValido = ProgramaDataFactory.gerarProgramaValido();
     ProgramaService programaService = new ProgramaService();
 //    region TESTES DE CRIAR PROGRAMA!
     @Test
+    @DisplayName("Criar um programa com sucesso")
+    @Story("Criar um programa")
+    @Description("Criar um programa com sucesso")
     public void testAdicionarPrograma(){
-        var response = programaService.criarPrograma()
+        var response = programaService.criarPrograma(programaValido)
                 .then()
-                .statusCode(HttpStatus.SC_CREATED);
+                    .statusCode(HttpStatus.SC_CREATED);
         response.assertThat().contentType(ContentType.JSON);
         response.assertThat().statusCode(HttpStatus.SC_CREATED);
         ProgramaModel programaResponse = response.extract().as(ProgramaModel.class);
-        assertThat("nome", equalTo(programaResponse.getNome()));
-        System.out.println(programaResponse);
-//        response.log().all();
+        assertThat(programaValido.getNome(), equalTo(programaResponse.getNome()));
+        assertThat(programaValido.getDescricao(), equalTo(programaResponse.getDescricao()));
+        assertThat(programaValido.getDataInicio(), equalTo(programaResponse.getDataInicio()));
+        assertThat(programaValido.getDataFim(), equalTo(programaResponse.getDataFim()));
+        assertThat(programaValido.getStatus(), equalTo(programaResponse.getStatus()));
+        programaService.deletarPrograma(programaResponse)
+                .then()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
+    @DisplayName("Falha ao criar um programa com nome nulo")
+    @Story("Criar um programa")
+    @Description("Falha ao criar um programa com nome nulo")
     public void testAdicionarProgramaComErro(){
         var response = programaService.criarProgramaSemNome()
                 .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
-        response.log().all();
+        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
+        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("nome: size must be between 10 and 2147483647"));
+        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("nome: Nome não pode ser vazio ou nulo."));
     }
     @Test
     public void testCriarProgramaComDataAbaixoDaAtual(){
         var response = programaService.criarProgramaComDataAbaixoDaAtual()
                 .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
         response.log().all();
     }
