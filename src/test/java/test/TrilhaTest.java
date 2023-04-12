@@ -323,9 +323,9 @@ public class TrilhaTest extends BaseTest{
         ;
     }
     @ParameterizedTest
-    @DisplayName("Buscar todas trilhas")
+    @DisplayName("Falha uscar todas trilhas")
     @Story("Buscar trilhas")
-    @Description("Buscar todas trilhas")
+    @Description("Falha uscar todas trilhas")
     @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaInvalidos")
     public void testBuscarTodasTrilhasSemInformacoes(String pagina, String tamanhoPagina) {
         trilhaService.buscarTrilhaModeloInvalido(pagina, tamanhoPagina)
