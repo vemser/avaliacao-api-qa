@@ -1,12 +1,11 @@
 package dataFactory;
 
-import com.sun.jdi.IntegerValue;
 import model.ProgramaModel;
 import model.TrilhaModel;
-
-import static java.lang.Integer.valueOf;
+import service.TrilhaService;
 
 public class TrilhaDataFactory extends DataFactory{
+    private static TrilhaService trilhaService = new TrilhaService();
 
 //region    CENÁRIOS DE CRIAÇÃO DE TRILHA
 
@@ -29,7 +28,7 @@ public class TrilhaDataFactory extends DataFactory{
         trilha.setStatus("FECHADO");
         return trilha;
     }
-    public static TrilhaModel gerarTrilhaComLetrasNoId(Integer idPrograma) {
+    public static TrilhaModel gerarTrilhaComStatusInexistente(Integer idPrograma) {
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdTrilha(idPrograma);
         trilha.setNome("Trilha " + faker.name().firstName());
@@ -59,6 +58,37 @@ public class TrilhaDataFactory extends DataFactory{
         return trilha;
     }
 //endregion
-
-
+//region    CENÁRIO DE BUSCA POR ID
+    public static TrilhaModel buscarTrilhaComIdInexistente(){
+        TrilhaModel trilha = new TrilhaModel();
+        trilha.setIdTrilha(12321564);
+        return trilha;
+    }
+//endregion
+// region CENÁRIOS PARA  DESATIVAR TRILHA POR ID DA TRILHA
+    public static TrilhaModel desativarTrilhaComIdInexistente(){
+        TrilhaModel trilha = new TrilhaModel();
+        trilha.setIdTrilha(12321564);
+        return trilha;
+    }
+//endregion
+//region   CENÁRIOS PARA DELETAR TRILHA POR ID DA TRILHA
+    public static TrilhaModel deletarTrilhaComIdInexistente(){
+        TrilhaModel trilha = new TrilhaModel();
+        trilha.setIdTrilha(12321564);
+        return trilha;
+    }
+//endregion
+//region CENÁRIOS PARA BUSCAR TODAS AS TRILHAS
+    public static TrilhaModel buscarProgramasPorId(Integer idPrograma) {
+        TrilhaModel trilha = new TrilhaModel();
+        trilha.setIdPrograma(idPrograma);
+        return trilha;
+    }
+    public static TrilhaModel buscarProgramasSemId() {
+        TrilhaModel trilha = new TrilhaModel();
+        trilha.setIdPrograma(-123);
+        return trilha;
+    }
+//endregion
 }
