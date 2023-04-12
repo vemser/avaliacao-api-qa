@@ -13,6 +13,20 @@ public class AcompanhamentoModel {
     private String status;
 
 
+    public AcompanhamentoModel(Integer idPrograma, String titulo, String dataInicio, String dataFim, String horarioInicio, String horarioFim, Integer duracao, String descricao, Integer numeroResponsaveis, String status) {
+        this.idPrograma = idPrograma;
+        this.titulo = titulo;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.horarioInicio = horarioInicio;
+        this.horarioFim = horarioFim;
+        this.duracao = duracao;
+        this.descricao = descricao;
+        this.numeroResponsaveis = numeroResponsaveis;
+        this.status = status;
+    }
+    public AcompanhamentoModel(){
+    }
 
     public Integer getIdPrograma() {
         return idPrograma;

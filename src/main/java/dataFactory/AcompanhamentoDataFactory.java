@@ -22,11 +22,13 @@ public class AcompanhamentoDataFactory {
         acompanhamento.setDataFim(acompanhamento.getDataInicio());
         LocalTime horarioInicio = LocalTime.of(8, 0);
         LocalTime horarioFim = LocalTime.of(17, 0);
-        LocalTime horaAleatoria = horarioInicio.plusMinutes(faker.random().nextInt(540));
-        acompanhamento.setHorarioInicio(String.valueOf(horaAleatoria));
-        acompanhamento.setHorarioFim(String.valueOf(horaAleatoria.plusMinutes(30)));
+//        LocalTime horaAleatoria = horarioInicio.plusMinutes(faker.random().nextInt(540));
+//        acompanhamento.setHorarioInicio(String.valueOf(horaAleatoria));
+//        acompanhamento.setHorarioFim(String.valueOf(horaAleatoria.plusMinutes(30)));
+        acompanhamento.setHorarioInicio(String.valueOf(horarioInicio));
+        acompanhamento.setHorarioFim(String.valueOf(horarioFim));
         acompanhamento.setDuracao(30);
-        acompanhamento.setNumeroResponsaveis(faker.number().positive());
+        acompanhamento.setNumeroResponsaveis(faker.random().nextInt(5));
         acompanhamento.setDescricao("Descrição da " + acompanhamento.getTitulo());
         acompanhamento.setStatus("ABERTO");
 
