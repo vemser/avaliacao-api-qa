@@ -99,21 +99,6 @@ public class EstagiarioDataFactory extends DataFactory {
                 Arguments.of(gerarCpfInvalidoComEspacoVazio())
         );
     }
-
-    public static Stream<Arguments> provideIdsInvalidos() {
-        return Stream.of(
-                Arguments.of("" + faker.number().numberBetween(-100, -1)),
-                Arguments.of("e"),
-                Arguments.of(""),
-                Arguments.of(" "),
-                Arguments.of(faker.numerify("# #")),
-                Arguments.of(faker.numerify("#a#")),
-                Arguments.of(faker.numerify("#.#")),
-                Arguments.of(faker.numerify("#-#")),
-                Arguments.of(faker.numerify("#+#")),
-                Arguments.of(faker.numerify("#*#"))
-        );
-    }
     private static String gerarCpfInvalidoComEspacoVazio() {
         String cpfInvalido = gerarCpfValido();
         cpfInvalido = cpfInvalido.replace(cpfInvalido.charAt(2), ' ');

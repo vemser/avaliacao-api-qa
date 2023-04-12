@@ -12,14 +12,13 @@ import model.JSONFailureResponse;
 import model.ProgramaModel;
 import model.TrilhaModel;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import service.EstagiarioService;
 import service.ProgramaService;
 import service.TrilhaService;
-
-import java.util.Arrays;
 
 public class EstagiarioTest extends BaseTest {
     //     region Pre-requisitos
@@ -57,9 +56,9 @@ public class EstagiarioTest extends BaseTest {
     private static EstagiarioModel retornarEstagiarioCriado() {
         return estagiarioService.criarEstagiario(estagiarioValido)
                 .then()
-                .statusCode(HttpStatus.SC_OK)
-                .contentType(ContentType.JSON)
-                .extract().as(EstagiarioModel.class);
+                    .statusCode(HttpStatus.SC_OK)
+                    .contentType(ContentType.JSON)
+                    .extract().as(EstagiarioModel.class);
     }
     //     endregion
     //     region Criar estagiário
@@ -150,7 +149,7 @@ public class EstagiarioTest extends BaseTest {
         @Story("Buscar estagiário")
         @Description("Buscar estagiário por ID com sucesso")
         public void testBuscarEstagiarioPorIdComSucesso() {
-            EstagiarioModel estagiario = estagiarioService.buscarEstagiario(estagiarioCriado)
+            EstagiarioModel estagiario = estagiarioService.buscarEstagiarioPorIdEstagiario(estagiarioCriado)
                     .then()
                         .statusCode(HttpStatus.SC_OK)
                         .contentType(ContentType.JSON)
@@ -189,13 +188,41 @@ public class EstagiarioTest extends BaseTest {
         @DisplayName("Buscar estagiário por ID inválido")
         @Story("Buscar estagiário")
         @Description("Buscar estagiário por ID inválido")
-        @MethodSource("dataFactory.EstagiarioDataFactory#provideIdsInvalidos")
+        @MethodSource("dataFactory.GeralDataFactory#provideIdsInvalidos")
         public void testBuscarEstagiarioPorIdInvalido(String idInvalido) {
             estagiarioService.buscarEstagiarioPorIdEstagiarioInvalido(idInvalido)
                     .then()
                         .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
+        @ParameterizedTest
+        @DisplayName("Buscar estagiário por programa")
+        @Story("Buscar estagiário")
+        @Description("Buscar estagiário por programa")
+        @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaValidos")
+        public void testBuscarEstagiarioPorPrograma(int pagina, int tamanhoPagina) {
+            estagiarioService.buscarEstagiariosPorPrograma(programaCriado, pagina, tamanhoPagina)
+                    .then()
+                        .statusCode(HttpStatus.SC_OK)
+                        .contentType(ContentType.JSON)
+                        .body("pagina", Matchers.is(pagina))
+                        .body("tamanho", Matchers.is(tamanhoPagina))
+                        .body("totalElementos", Matchers.greaterThanOrEqualTo(0))
+            ;
+        }
+
+        @ParameterizedTest
+        @DisplayName("Buscar estagiário por programa com página e tamanho inválidos")
+        @Story("Buscar estagiário")
+        @Description("Buscar estagiário por programa com página e tamanho inválidos")
+        @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaInvalidos")
+        public void testBuscarEstagiarioPorProgramaComPaginasETamanhosInvalidos(String pagina, String tamanhoPagina) {
+            estagiarioService.buscarEstagiariosPorProgramaQueryInvalida(programaCriado, pagina, tamanhoPagina)
+                    .then()
+                        .statusCode(HttpStatus.SC_BAD_REQUEST)
+            ;
+        }
     }
+
     // endregion
     // region Atualizar estagiário
     @Nested

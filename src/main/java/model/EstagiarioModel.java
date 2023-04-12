@@ -26,6 +26,7 @@ public class EstagiarioModel {
 }
      */
     private Integer idTrilha;
+    private String trilha;
     private String nome;
     private String cpf;
     private String emailPessoal;
@@ -47,7 +48,7 @@ public class EstagiarioModel {
     public EstagiarioModel() {
     }
 
-    public EstagiarioModel(Integer idTrilha, String nome, String cpf, String emailPessoal, String emailCorporativo, String telefone, String dataNascimento, String estado, String cidade, String curso, String instituicaoEnsino, String linkedin, String github, String observacoes, String status) {
+    public EstagiarioModel(Integer idTrilha, String trilha, String nome, String cpf, String emailPessoal, String emailCorporativo, String telefone, String dataNascimento, String estado, String cidade, String curso, String instituicaoEnsino, String linkedin, String github, String observacoes, String status) {
         this.idTrilha = idTrilha;
         this.nome = nome;
         this.cpf = cpf;
@@ -65,8 +66,9 @@ public class EstagiarioModel {
         this.status = status;
     }
 
-    public EstagiarioModel(Integer idTrilha, String nome, String cpf, String emailPessoal, String emailCorporativo, String telefone, String dataNascimento, String estado, String cidade, String curso, String instituicaoEnsino, String linkedin, String github, String observacoes, String status, Integer idEstagiario, Integer pontuacao, Boolean ativo) {
+    public EstagiarioModel(Integer idTrilha, String trilha, String nome, String cpf, String emailPessoal, String emailCorporativo, String telefone, String dataNascimento, String estado, String cidade, String curso, String instituicaoEnsino, String linkedin, String github, String observacoes, String status, Integer idEstagiario, Integer pontuacao, Boolean ativo) {
         this.idTrilha = idTrilha;
+        this.trilha = trilha;
         this.nome = nome;
         this.cpf = cpf;
         this.emailPessoal = emailPessoal;
@@ -228,5 +230,13 @@ public class EstagiarioModel {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public String getTrilha() {
+        return trilha;
+    }
+
+    public void setTrilha(String trilha) {
+        this.trilha = trilha;
     }
 }

@@ -53,7 +53,7 @@ public class EstagiarioService {
                 .get("/estagiario/get-by-id/{idEstagiario}");
         return response;
     }
-    public Response buscarEstagiario(EstagiarioModel estagiario){
+    public Response buscarEstagiarioPorIdEstagiario(EstagiarioModel estagiario){
         return buscarEstagiarioPorIdEstagiario(estagiario.getIdEstagiario());
     }
     public Response buscarEstagiariosPorPrograma(Integer idPrograma, Integer pagina, Integer tamanho){
@@ -69,6 +69,20 @@ public class EstagiarioService {
     }
     public Response buscarEstagiariosPorPrograma(ProgramaModel programa, Integer pagina, Integer tamanho){
         return buscarEstagiariosPorPrograma(programa.getIdPrograma(), pagina, tamanho);
+    }
+    public Response buscarEstagiariosPorProgramaQueryInvalida(Integer idPrograma, String pagina, String tamanho){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idPrograma", idPrograma)
+                        .queryParam("pagina", pagina)
+                        .queryParam("tamanho", tamanho)
+                        .when()
+                        .get("/estagiario/list-by-programa/{idPrograma}");
+        return response;
+    }
+    public Response buscarEstagiariosPorProgramaQueryInvalida(ProgramaModel programa, String pagina, String tamanho){
+        return buscarEstagiariosPorProgramaQueryInvalida(programa.getIdPrograma(), pagina, tamanho);
     }
     public Response buscarPorListarTodosEstagiarios(Integer pagina, Integer tamanho){
         Response response =
