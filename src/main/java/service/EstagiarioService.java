@@ -18,6 +18,21 @@ public class EstagiarioService {
         return response;
     }
     // endregion
+    // region PUT Estagiario
+    public Response atualizarEstagiario(Integer idEstagiario, EstagiarioModel estagiarioNovo){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .body(estagiarioNovo)
+                .pathParam("idEstagiario", idEstagiario)
+            .when()
+                .put("/estagiario/update/{idEstagiario}");
+        return response;
+    }
+    public Response atualizarEstagiario(EstagiarioModel estagiarioAntigo, EstagiarioModel estagiarioNovo){
+        return atualizarEstagiario(estagiarioAntigo.getIdEstagiario(), estagiarioNovo);
+    }
+    // endregion
     // region DELETE Estagiario
     public Response deletarEstagiarioPorIdEstagiario(Integer idEstagiario){
         Response response =

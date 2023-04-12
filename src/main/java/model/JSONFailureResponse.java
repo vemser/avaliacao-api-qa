@@ -6,9 +6,10 @@ public class JSONFailureResponse {
     private String timestamp;
     private Integer status;
     private List<String> errors;
-    private String error;
-    private String path;
     private List<String> messages;
+    private String error;
+    private String message;
+    private String path;
 
 
     public JSONFailureResponse() {
@@ -21,13 +22,17 @@ public class JSONFailureResponse {
         this.messages = errors;
     }
 
-
-
     public JSONFailureResponse(String timestamp, Integer status, String error, String path) {
         this.timestamp = timestamp;
         this.status = status;
         this.error = error;
         this.path = path;
+    }
+
+    public JSONFailureResponse(String timestamp, Integer status, String message) {
+        this.timestamp = timestamp;
+        this.status = status;
+        this.message = message;
     }
 
     public String getError() {
@@ -78,15 +83,24 @@ public class JSONFailureResponse {
         this.messages = messages;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
         return "JSONFailureResponse{" +
                 "timestamp='" + timestamp + '\'' +
                 ", status=" + status +
                 ", errors=" + errors +
-                ", error='" + error + '\'' +
-                ", path='" + path + '\'' +
                 ", messages=" + messages +
+                ", error='" + error + '\'' +
+                ", message='" + message + '\'' +
+                ", path='" + path + '\'' +
                 '}';
     }
 }

@@ -52,6 +52,13 @@ public class EstagiarioTest extends BaseTest {
 //        estagiarioService.deletarEstagiario(estagiarioCriado)
 //                .then();
     }
+    private static EstagiarioModel retornarEstagiarioCriado() {
+        return estagiarioService.criarEstagiario(estagiarioValido)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType(ContentType.JSON)
+                .extract().as(EstagiarioModel.class);
+    }
     //     endregion
     //     region Criar estagiário
     @Test
@@ -123,6 +130,40 @@ public class EstagiarioTest extends BaseTest {
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
     }
     // endregion
+    // region Atualizar estagiário
+    @Test
+    @DisplayName("Atualizar estagiário com sucesso")
+    @Story("Atualizar estagiário")
+    @Description("Atualizar estagiário com sucesso")
+    public void testAtualizarEstagiarioComSucesso() {
+        EstagiarioModel estagiarioAntigo = retornarEstagiarioCriado();
+        EstagiarioModel estagiarioNovo = EstagiarioDataFactory.gerarEstagiarioAlterado(estagiarioAntigo);
+        EstagiarioModel estagiarioAlterado = estagiarioService.atualizarEstagiario(estagiarioAntigo, estagiarioNovo)
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .contentType(ContentType.JSON)
+                    .extract().as(EstagiarioModel.class);
+        Assertions.assertEquals(estagiarioNovo.getIdTrilha(), estagiarioAlterado.getIdTrilha());
+        Assertions.assertEquals(estagiarioNovo.getNome(), estagiarioAlterado.getNome());
+        Assertions.assertEquals(estagiarioNovo.getCpf(), estagiarioAlterado.getCpf());
+        Assertions.assertEquals(estagiarioNovo.getEmailPessoal(), estagiarioAlterado.getEmailPessoal());
+        Assertions.assertEquals(estagiarioNovo.getEmailCorporativo(), estagiarioAlterado.getEmailCorporativo());
+        Assertions.assertEquals(estagiarioNovo.getTelefone(), estagiarioAlterado.getTelefone());
+        Assertions.assertEquals(estagiarioNovo.getDataNascimento(), estagiarioAlterado.getDataNascimento());
+        Assertions.assertEquals(estagiarioNovo.getEstado(), estagiarioAlterado.getEstado());
+        Assertions.assertEquals(estagiarioNovo.getCidade(), estagiarioAlterado.getCidade());
+        Assertions.assertEquals(estagiarioNovo.getCurso(), estagiarioAlterado.getCurso());
+        Assertions.assertEquals(estagiarioNovo.getInstituicaoEnsino(), estagiarioAlterado.getInstituicaoEnsino());
+        Assertions.assertEquals(estagiarioNovo.getLinkedin(), estagiarioAlterado.getLinkedin());
+        Assertions.assertEquals(estagiarioNovo.getGithub(), estagiarioAlterado.getGithub());
+        Assertions.assertEquals(estagiarioNovo.getObservacoes(), estagiarioAlterado.getObservacoes());
+        Assertions.assertEquals(estagiarioNovo.getStatus(), estagiarioAlterado.getStatus());
+        Assertions.assertEquals(estagiarioAntigo.getIdEstagiario(), estagiarioAlterado.getIdEstagiario());
+        estagiarioService.deletarEstagiario(estagiarioAlterado)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
+    }
+    // endregion
     // region Deletar estagiário
     @Test
     @DisplayName("Deletar estagiário com sucesso")
@@ -147,12 +188,5 @@ public class EstagiarioTest extends BaseTest {
                 .then()
                     .statusCode(HttpStatus.SC_NOT_FOUND);
     }
-
-    private static EstagiarioModel retornarEstagiarioCriado() {
-        return estagiarioService.criarEstagiario(estagiarioValido)
-                .then()
-                    .statusCode(HttpStatus.SC_OK)
-                    .contentType(ContentType.JSON)
-                    .extract().as(EstagiarioModel.class);
-    }
+    // endregion
 }

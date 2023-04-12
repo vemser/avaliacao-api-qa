@@ -35,7 +35,10 @@ public class EstagiarioDataFactory extends DataFactory {
     public static EstagiarioModel gerarEstagiarioValido(TrilhaModel trilha) {
         return gerarEstagiarioValido(trilha.getIdTrilha());
     }
-
+    public static EstagiarioModel gerarEstagiarioAlterado(EstagiarioModel estagiarioAntigo) {
+        EstagiarioModel estagiario = gerarEstagiarioValido(estagiarioAntigo.getIdTrilha());
+        return estagiario;
+    }
     public static String gerarCpfComPontoEHifen() {
         return faker.cpf().valid();
     }
