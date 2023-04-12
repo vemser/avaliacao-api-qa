@@ -91,5 +91,27 @@ public Response adicionarTrilhaComModulo(TrilhaModel trilha) {
     return response;
 }
 //endregion
+//    region LISTAR TRILHAS MODELO
+public Response buscarTrilhaModelo(Integer pagina, Integer tamanho){
+    Response response =
+            given()
+                    .spec(SetupsRequestSpecification.requestSpecification())
+                    .queryParam("pagina", pagina)
+                    .queryParam("tamanho", tamanho)
+                    .when()
+                    .get("/trilha/list-models");
+    return response;
+}
+    public Response buscarTrilhaModeloInvalido(String pagina, String tamanho){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .queryParam("pagina", pagina)
+                        .queryParam("tamanho", tamanho)
+                        .when()
+                        .get("/trilha/list-models");
+        return response;
+    }
+//    endregion
 }
 
