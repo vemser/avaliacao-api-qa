@@ -75,6 +75,7 @@ public class TrilhaModel {
         this.ativo = ativo;
     }
 
+
     @Override
     public String toString() {
         return "TrilhaModel{" +
@@ -86,4 +87,6 @@ public class TrilhaModel {
                 ", ativo=" + ativo +
                 '}';
     }
+
+
 }
