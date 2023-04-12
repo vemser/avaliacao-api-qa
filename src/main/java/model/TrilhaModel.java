@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 public class TrilhaModel {
     private Integer idPrograma;
     private String nome;
@@ -7,6 +9,8 @@ public class TrilhaModel {
     private String status;
     private Integer idTrilha;
     private Boolean ativo;
+
+    private List<ModuloModel> modulos;
 
     public TrilhaModel() {
     }
@@ -73,6 +77,14 @@ public class TrilhaModel {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public List<ModuloModel> getModulos() {
+        return modulos;
+    }
+
+    public void setModulos(List<ModuloModel> modulos) {
+        this.modulos = modulos;
     }
 
 

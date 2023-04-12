@@ -158,7 +158,7 @@ public class TrilhaTest extends BaseTest{
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                         .contentType(ContentType.JSON);
-        response.body("nome", equalTo(programaCriado.getNome()));
+        response.body("tamanho", equalTo(2));
         trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -267,6 +267,40 @@ public class TrilhaTest extends BaseTest{
         var response = trilhaService.deletarTrilhaIdTrilha(trilhaSemId)
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+//endregion
+//region CRIAR TRILHAS COM MODULO
+    @Test
+    @DisplayName("Criar uma trilha com modulo com sucesso")
+    @Story("Criar uma trilha com modulo")
+    @Description("Criar uma trilha com modulo com sucesso")
+    public void testCadastrarTrilhaComModulo(){
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModulo(programaCriado.getIdPrograma());
+        var response = trilhaService.adicionarTrilhaComModulo(trilhaModel)
+            .then()
+                .statusCode(HttpStatus.SC_CREATED)
+                .contentType(ContentType.JSON);
+            TrilhaModel trilhaResponse = response.extract().as(TrilhaModel.class);
+            assertThat(trilhaModel.getNome(), equalTo(trilhaResponse.getNome()));
+            assertThat(trilhaModel.getDescricao(), equalTo(trilhaResponse.getDescricao()));
+            assertThat(trilhaModel.getStatus(), equalTo(trilhaResponse.getStatus()));
+            assertThat(trilhaResponse.getIdTrilha(), equalTo(trilhaResponse.getIdTrilha()));
+            trilhaService.deletarTrilhaIdTrilha(trilhaResponse)
+            .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+    @Test
+    @DisplayName("Falha ao criar trilha com modulo Sem ID")
+    @Story("Falha ao criar uma trilha com modulo")
+    @Description("Falha ao criar trilha com modulo Sem ID")
+    public void testCadastrarTrilhaComModuloSemId(){
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModuloSemInformarOId(programaCriado.getIdPrograma());
+        var response = trilhaService.adicionarTrilhaComModulo(trilhaModel)
+            .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .contentType(ContentType.JSON)
+                .extract().as(JSONFailureResponse.class);
+            Assertions.assertTrue(response.getErrors().contains("idPrograma: must not be null"));
     }
 //endregion
 }

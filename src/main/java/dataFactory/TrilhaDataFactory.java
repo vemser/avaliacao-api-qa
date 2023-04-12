@@ -1,8 +1,12 @@
 package dataFactory;
 
+import model.ModuloModel;
 import model.ProgramaModel;
 import model.TrilhaModel;
 import service.TrilhaService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrilhaDataFactory extends DataFactory{
     private static TrilhaService trilhaService = new TrilhaService();
@@ -15,6 +19,8 @@ public class TrilhaDataFactory extends DataFactory{
         trilha.setNome("Trilha " + faker.name().firstName());
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("FECHADO");
+        trilha.setNome(faker.name().firstName());
+
         return trilha;
     }
     public static TrilhaModel gerarTrilhaValida(ProgramaModel programa) {
@@ -88,6 +94,45 @@ public class TrilhaDataFactory extends DataFactory{
     public static TrilhaModel buscarProgramasSemId() {
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdPrograma(-123);
+        return trilha;
+    }
+//endregion
+//region CRIAR TRILHA COM MODULO
+    public static TrilhaModel gerarTrilhaValidaComModulo(Integer idPrograma) {
+        TrilhaModel trilha = new TrilhaModel();
+        trilha.setIdPrograma(idPrograma);
+        trilha.setNome("Trilha " + faker.name().firstName());
+        trilha.setDescricao("Descrição da " + trilha.getNome());
+        trilha.setStatus("FECHADO");
+        trilha.setNome(faker.name().firstName());
+    // array do modulo
+        ModuloModel modulo = new ModuloModel();
+        modulo.setNome(faker.name().firstName());
+        modulo.setDescricao("Descrição da " + trilha.getNome());
+        modulo.setStatus("ABERTO");
+
+        List<ModuloModel> modulos = new ArrayList<>();
+        modulos.add(modulo);
+
+        trilha.setModulos(modulos);
+        return trilha;
+    }
+    public static TrilhaModel gerarTrilhaValidaComModuloSemInformarOId(Integer idPrograma) {
+        TrilhaModel trilha = new TrilhaModel();
+        trilha.setNome("Trilha " + faker.name().firstName());
+        trilha.setDescricao("Descrição da " + trilha.getNome());
+        trilha.setStatus("FECHADO");
+        trilha.setNome(faker.name().firstName());
+        // array do modulo
+        ModuloModel modulo = new ModuloModel();
+        modulo.setNome(faker.name().firstName());
+        modulo.setDescricao("Descrição da " + trilha.getNome());
+        modulo.setStatus("ABERTO");
+
+        List<ModuloModel> modulos = new ArrayList<>();
+        modulos.add(modulo);
+
+        trilha.setModulos(modulos);
         return trilha;
     }
 //endregion

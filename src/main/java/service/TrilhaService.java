@@ -80,5 +80,16 @@ public class TrilhaService {
         return response;
     }
 //endregion
+//region ADICIONAR TRILHA COM MODULO
+public Response adicionarTrilhaComModulo(TrilhaModel trilha) {
+    Response response =
+            given()
+                    .spec(SetupsRequestSpecification.requestSpecification())
+                    .body(trilha)
+                    .when()
+                    .post("/trilha/create-with-modulos");
+    return response;
+}
+//endregion
 }
 
