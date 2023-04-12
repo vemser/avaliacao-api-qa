@@ -4,7 +4,6 @@ import model.EstagiarioModel;
 import model.TrilhaModel;
 import org.junit.jupiter.params.provider.Arguments;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 public class EstagiarioDataFactory extends DataFactory {
@@ -37,8 +36,8 @@ public class EstagiarioDataFactory extends DataFactory {
         return gerarEstagiarioValido(trilha.getIdTrilha());
     }
     public static EstagiarioModel gerarEstagiarioAlterado(EstagiarioModel estagiarioAntigo) {
-        EstagiarioModel estagiario = gerarEstagiarioValido(estagiarioAntigo.getIdTrilha());
-        return estagiario;
+        return gerarEstagiarioValido(estagiarioAntigo.getIdTrilha());
+
     }
     public static EstagiarioModel copiarEstagiario(EstagiarioModel estagiario) {
         EstagiarioModel estagiarioCopia = new EstagiarioModel();
@@ -67,18 +66,18 @@ public class EstagiarioDataFactory extends DataFactory {
     public static Stream<Arguments> provideEmailsInvalidos() {
         return Stream.of(
                 Arguments.of("a`" + faker.internet().emailAddress()),
-//                Arguments.of("a~" + faker.internet().emailAddress()),
-//                Arguments.of("a!" + faker.internet().emailAddress()),
-//                Arguments.of("a´" + faker.internet().emailAddress()),
-//                Arguments.of("a#" + faker.internet().emailAddress()),
-//                Arguments.of("a$" + faker.internet().emailAddress()),
-//                Arguments.of("a%" + faker.internet().emailAddress()),
-//                Arguments.of("aá" + faker.internet().emailAddress()),
-//                Arguments.of("aâ" + faker.internet().emailAddress()),
-//                Arguments.of("aã" + faker.internet().emailAddress()),
-//                Arguments.of("aé" + faker.internet().emailAddress()),
-//                Arguments.of("a@" + faker.internet().emailAddress()),
-//                Arguments.of("a.." + faker.internet().emailAddress()),
+                Arguments.of("a~" + faker.internet().emailAddress()),
+                Arguments.of("a!" + faker.internet().emailAddress()),
+                Arguments.of("a´" + faker.internet().emailAddress()),
+                Arguments.of("a#" + faker.internet().emailAddress()),
+                Arguments.of("a$" + faker.internet().emailAddress()),
+                Arguments.of("a%" + faker.internet().emailAddress()),
+                Arguments.of("aá" + faker.internet().emailAddress()),
+                Arguments.of("aâ" + faker.internet().emailAddress()),
+                Arguments.of("aã" + faker.internet().emailAddress()),
+                Arguments.of("aé" + faker.internet().emailAddress()),
+                Arguments.of("a@" + faker.internet().emailAddress()),
+                Arguments.of("a.." + faker.internet().emailAddress()),
                 Arguments.of(faker.internet().url()),
                 Arguments.of(faker.internet().ipV4Address()),
                 Arguments.of(faker.internet().ipV6Address()),
@@ -101,6 +100,20 @@ public class EstagiarioDataFactory extends DataFactory {
         );
     }
 
+    public static Stream<Arguments> provideIdsInvalidos() {
+        return Stream.of(
+                Arguments.of("" + faker.number().numberBetween(-100, -1)),
+                Arguments.of("e"),
+                Arguments.of(""),
+                Arguments.of(" "),
+                Arguments.of(faker.numerify("# #")),
+                Arguments.of(faker.numerify("#a#")),
+                Arguments.of(faker.numerify("#.#")),
+                Arguments.of(faker.numerify("#-#")),
+                Arguments.of(faker.numerify("#+#")),
+                Arguments.of(faker.numerify("#*#"))
+        );
+    }
     private static String gerarCpfInvalidoComEspacoVazio() {
         String cpfInvalido = gerarCpfValido();
         cpfInvalido = cpfInvalido.replace(cpfInvalido.charAt(2), ' ');

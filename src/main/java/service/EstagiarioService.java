@@ -2,6 +2,7 @@ package service;
 
 import io.restassured.response.Response;
 import model.EstagiarioModel;
+import model.ProgramaModel;
 import specs.SetupsRequestSpecification;
 
 import static io.restassured.RestAssured.given;
@@ -31,6 +32,64 @@ public class EstagiarioService {
     }
     public Response atualizarEstagiario(EstagiarioModel estagiarioAntigo, EstagiarioModel estagiarioNovo){
         return atualizarEstagiario(estagiarioAntigo.getIdEstagiario(), estagiarioNovo);
+    }
+    // endregion
+    // region GET Estagiario
+    public Response buscarEstagiarioPorIdEstagiario(Integer idEstagiario){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .pathParam("idEstagiario", idEstagiario)
+            .when()
+                .get("/estagiario/get-by-id/{idEstagiario}");
+        return response;
+    }
+    public Response buscarEstagiarioPorIdEstagiarioInvalido(String idEstagiario){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .pathParam("idEstagiario", idEstagiario)
+            .when()
+                .get("/estagiario/get-by-id/{idEstagiario}");
+        return response;
+    }
+    public Response buscarEstagiario(EstagiarioModel estagiario){
+        return buscarEstagiarioPorIdEstagiario(estagiario.getIdEstagiario());
+    }
+    public Response buscarEstagiariosPorPrograma(Integer idPrograma, Integer pagina, Integer tamanho){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .pathParam("idPrograma", idPrograma)
+                .queryParam("pagina", pagina)
+                .queryParam("tamanho", tamanho)
+            .when()
+                .get("/estagiario/list-by-programa/{idPrograma}");
+        return response;
+    }
+    public Response buscarEstagiariosPorPrograma(ProgramaModel programa, Integer pagina, Integer tamanho){
+        return buscarEstagiariosPorPrograma(programa.getIdPrograma(), pagina, tamanho);
+    }
+    public Response buscarPorListarTodosEstagiarios(Integer pagina, Integer tamanho){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .queryParam("pagina ", pagina )
+                .queryParam("tamanho", tamanho)
+            .when()
+                .get("/estagiario/get-all");
+        return response;
+    }
+    public Response buscarDadosDoDashboardPorIdPrograma(Integer idPrograma, Integer pagina, Integer tamanho){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .pathParam("idPrograma", idPrograma)
+                .queryParam("pagina", pagina)
+                .queryParam("tamanho", tamanho)
+            .when()
+                .get("/estagiario/get-dashboard-data/{idPrograma}");
+        return response;
     }
     // endregion
     // region DELETE Estagiario

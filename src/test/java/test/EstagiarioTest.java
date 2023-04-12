@@ -132,6 +132,71 @@ public class EstagiarioTest extends BaseTest {
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
     }
     // endregion
+    // region Buscar estagiário
+    @Nested
+    class BuscarEstagiario {
+        @BeforeAll
+        public static void setupEstagiario() {
+            estagiarioCriado = retornarEstagiarioCriado();
+        }
+        @AfterAll
+        public static void limparEstagiario() {
+            estagiarioService.deletarEstagiario(estagiarioCriado)
+                    .then()
+                    .statusCode(HttpStatus.SC_OK);
+        }
+        @Test
+        @DisplayName("Buscar estagiário por ID com sucesso")
+        @Story("Buscar estagiário")
+        @Description("Buscar estagiário por ID com sucesso")
+        public void testBuscarEstagiarioPorIdComSucesso() {
+            EstagiarioModel estagiario = estagiarioService.buscarEstagiario(estagiarioCriado)
+                    .then()
+                        .statusCode(HttpStatus.SC_OK)
+                        .contentType(ContentType.JSON)
+                        .extract().as(EstagiarioModel.class);
+            Assertions.assertEquals(estagiarioCriado.getIdEstagiario(), estagiario.getIdEstagiario());
+            Assertions.assertEquals(estagiarioCriado.getIdTrilha(), estagiario.getIdTrilha());
+            Assertions.assertEquals(estagiarioCriado.getNome(), estagiario.getNome());
+            Assertions.assertEquals(estagiarioCriado.getCpf(), estagiario.getCpf());
+            Assertions.assertEquals(estagiarioCriado.getEmailPessoal(), estagiario.getEmailPessoal());
+            Assertions.assertEquals(estagiarioCriado.getEmailCorporativo(), estagiario.getEmailCorporativo());
+            Assertions.assertEquals(estagiarioCriado.getTelefone(), estagiario.getTelefone());
+            Assertions.assertEquals(estagiarioCriado.getDataNascimento(), estagiario.getDataNascimento());
+            Assertions.assertEquals(estagiarioCriado.getEstado(), estagiario.getEstado());
+            Assertions.assertEquals(estagiarioCriado.getCidade(), estagiario.getCidade());
+            Assertions.assertEquals(estagiarioCriado.getCurso(), estagiario.getCurso());
+            Assertions.assertEquals(estagiarioCriado.getInstituicaoEnsino(), estagiario.getInstituicaoEnsino());
+            Assertions.assertEquals(estagiarioCriado.getLinkedin(), estagiario.getLinkedin());
+            Assertions.assertEquals(estagiarioCriado.getGithub(), estagiario.getGithub());
+            Assertions.assertEquals(estagiarioCriado.getObservacoes(), estagiario.getObservacoes());
+            Assertions.assertEquals(estagiarioCriado.getStatus(), estagiario.getStatus());
+            Assertions.assertEquals(estagiarioCriado.getAtivo(), estagiario.getAtivo());
+        }
+        @Test
+        @DisplayName("Buscar estagiário por ID inexistente")
+        @Story("Buscar estagiário")
+        @Description("Buscar estagiário por ID inexistente")
+        public void testBuscarEstagiarioPorIdInexistente() {
+            jsonFailureResponse = estagiarioService.buscarEstagiarioPorIdEstagiario(999999999)
+                    .then()
+                        .statusCode(HttpStatus.SC_NOT_FOUND)
+                        .contentType(ContentType.JSON)
+                        .extract().as(JSONFailureResponse.class);
+            Assertions.assertEquals("Estagiário não encontrado.", jsonFailureResponse.getMessage());
+        }
+        @ParameterizedTest
+        @DisplayName("Buscar estagiário por ID inválido")
+        @Story("Buscar estagiário")
+        @Description("Buscar estagiário por ID inválido")
+        @MethodSource("dataFactory.EstagiarioDataFactory#provideIdsInvalidos")
+        public void testBuscarEstagiarioPorIdInvalido(String idInvalido) {
+            estagiarioService.buscarEstagiarioPorIdEstagiarioInvalido(idInvalido)
+                    .then()
+                        .statusCode(HttpStatus.SC_BAD_REQUEST);
+        }
+    }
+    // endregion
     // region Atualizar estagiário
     @Nested
     class AtualizarEstagiario{
