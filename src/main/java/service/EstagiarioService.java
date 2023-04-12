@@ -88,10 +88,20 @@ public class EstagiarioService {
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
-                .queryParam("pagina ", pagina )
+                .queryParam("pagina", pagina )
                 .queryParam("tamanho", tamanho)
             .when()
-                .get("/estagiario/get-all");
+                .get("/estagiario/list-all");
+        return response;
+    }
+    public Response buscarPorListarTodosEstagiariosQueryInvalida(String pagina, String tamanho){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .queryParam("pagina", pagina )
+                .queryParam("tamanho", tamanho)
+            .when()
+                .get("/estagiario/list-all");
         return response;
     }
     public Response buscarDadosDoDashboardPorIdPrograma(Integer idPrograma, Integer pagina, Integer tamanho){

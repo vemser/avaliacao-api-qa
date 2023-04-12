@@ -230,6 +230,32 @@ public class EstagiarioTest extends BaseTest {
                         .statusCode(HttpStatus.SC_BAD_REQUEST)
             ;
         }
+        @ParameterizedTest
+        @DisplayName("Buscar por lista de todos estagiários")
+        @Story("Buscar estagiário")
+        @Description("Buscar por lista de todos estagiários")
+        @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaValidos")
+        public void testBuscarPorListarTodosEstagiarios(int pagina, int tamanhoPagina) {
+            estagiarioService.buscarPorListarTodosEstagiarios(pagina, tamanhoPagina)
+                    .then()
+                        .statusCode(HttpStatus.SC_OK)
+                        .contentType(ContentType.JSON)
+                        .body("pagina", Matchers.is(pagina))
+                        .body("tamanho", Matchers.is(tamanhoPagina))
+                        .body("totalElementos", Matchers.greaterThanOrEqualTo(0))
+            ;
+        }
+        @ParameterizedTest
+        @DisplayName("Buscar por lista de todos estagiários com página e tamanho inválidos")
+        @Story("Buscar estagiário")
+        @Description("Buscar por lista de todos estagiários com página e tamanho inválidos")
+        @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaInvalidos")
+        public void testBuscarPorListarTodosEstagiariosComPaginasETamanhosInvalidos(String pagina, String tamanhoPagina) {
+            estagiarioService.buscarPorListarTodosEstagiariosQueryInvalida(pagina, tamanhoPagina)
+                    .then()
+                        .statusCode(HttpStatus.SC_BAD_REQUEST)
+            ;
+        }
     }
 
     // endregion
