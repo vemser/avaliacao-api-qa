@@ -40,6 +40,9 @@ public class EstagiarioTest extends BaseTest {
                 .then()
                     .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(TrilhaModel.class);
+    }
+    @BeforeEach
+    public void criarEstagiarioValido() {
         estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada);
     }
     @AfterAll
@@ -95,12 +98,13 @@ public class EstagiarioTest extends BaseTest {
     @Description("Criar estagiário com CPF com ponto e hífen")
     public void testCriarEstagiarioComCpfComPontoEVirgula() {
         estagiarioValido.setCpf(EstagiarioDataFactory.gerarCpfComPontoEHifen());
-        jsonFailureResponse = estagiarioService.criarEstagiario(estagiarioValido)
+        estagiarioService.criarEstagiario(estagiarioValido)
                 .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .contentType(ContentType.JSON)
-                    .extract().as(JSONFailureResponse.class);
-        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("cpf: invalid Brazilian individual taxpayer registry number (CPF)"));
+                    .body("message", Matchers.equalTo("CPF deve ser apenas númerico!"))
+                ;
+        ;
     }
     @ParameterizedTest
     @DisplayName("Criar estagiário com Email Pessoal inválido")
@@ -123,12 +127,12 @@ public class EstagiarioTest extends BaseTest {
     @MethodSource("dataFactory.EstagiarioDataFactory#provideEmailsInvalidos")
     public void testCriarEstagiarioComEmailCorporativoInvalido(String emailInvalido) {
         estagiarioValido.setEmailCorporativo(emailInvalido);
-        jsonFailureResponse = estagiarioService.criarEstagiario(estagiarioValido)
+        estagiarioService.criarEstagiario(estagiarioValido)
                 .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .contentType(ContentType.JSON)
-                    .extract().as(JSONFailureResponse.class);
-        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
+                    .body("errors", Matchers.hasItem("emailCorporativo: Endereço de e-mail inválido"))
+                ;
     }
     // endregion
     // region Buscar estagiário
