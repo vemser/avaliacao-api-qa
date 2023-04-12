@@ -61,7 +61,6 @@ public class TrilhaTest extends BaseTest{
             trilhaService.deletarTrilhaIdTrilha(trilhaResponse)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-        response.log().all();
     }
     @Test
     @DisplayName("Falha ao criar uma trilha sem id")
@@ -159,8 +158,6 @@ public class TrilhaTest extends BaseTest{
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                         .contentType(ContentType.JSON);
-        response.log().all();
-        System.out.println(response);
         response.body("nome", equalTo(programaCriado.getNome()));
         trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
                 .then()
@@ -178,8 +175,6 @@ public class TrilhaTest extends BaseTest{
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType(ContentType.JSON);
-        response.log().all();
-        System.out.println(response);
         trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -233,7 +228,6 @@ public class TrilhaTest extends BaseTest{
         var response = trilhaService.desativarTrilhaIdTrilha(trilhaCriada)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-        response.log().all();
     }
 
     @Test
@@ -247,7 +241,6 @@ public class TrilhaTest extends BaseTest{
         var response = trilhaService.desativarTrilhaIdTrilha(trilhaSemId)
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
-        response.log().all();
     }
 //endregion
 //region  DELETAR TRILHA POR ID
@@ -261,7 +254,6 @@ public class TrilhaTest extends BaseTest{
         var response = trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-        response.log().all();
     }
 
     @Test
@@ -275,7 +267,6 @@ public class TrilhaTest extends BaseTest{
         var response = trilhaService.deletarTrilhaIdTrilha(trilhaSemId)
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
-        response.log().all();
     }
 //endregion
 }
