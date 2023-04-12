@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+allure-results
+src/properties
+
 ### STS ###
 .apt_generated
 .classpath
