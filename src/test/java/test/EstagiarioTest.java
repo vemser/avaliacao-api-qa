@@ -20,6 +20,8 @@ import service.EstagiarioService;
 import service.ProgramaService;
 import service.TrilhaService;
 
+import static org.hamcrest.Matchers.equalTo;
+
 public class EstagiarioTest extends BaseTest {
     //     region Pre-requisitos
     private static ProgramaService programaService = new ProgramaService();
@@ -102,7 +104,7 @@ public class EstagiarioTest extends BaseTest {
                 .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .contentType(ContentType.JSON)
-                    .body("message", Matchers.equalTo("CPF deve ser apenas númerico!"))
+                    .body("message", equalTo("CPF deve ser apenas númerico!"))
                 ;
         ;
     }
@@ -376,12 +378,62 @@ public class EstagiarioTest extends BaseTest {
     @DisplayName("Deletar estagiário inexistente")
     @Story("Deletar estagiário")
     @Description("Deletar estagiário inexistente")
-    public void testDeletarEstagiarioinexistente() {
+    public void testDeletarEstagiarioInexistente() {
         estagiarioCriado = retornarEstagiarioCriado();
         estagiarioService.deletarEstagiario(estagiarioCriado)
                 .then()
                     .statusCode(HttpStatus.SC_OK);
         estagiarioService.deletarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+    @Test
+    @DisplayName("Desativar estagiário")
+    @Story("Deletar estagiário")
+    @Description("Desativar estagiário")
+    public void testDesativarEstagiario() {
+        estagiarioCriado = retornarEstagiarioCriado();
+        estagiarioService.desativarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
+        estagiarioService.buscarEstagiarioPorIdEstagiario(estagiarioCriado.getIdEstagiario())
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body("ativo", equalTo(false));
+        estagiarioService.deletarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
+    }
+    @Test
+    @DisplayName("Desativar estagiário já desativado")
+    @Story("Deletar estagiário")
+    @Description("Desativar estagiário já desativado")
+    public void testDesativarEstagiarioJaDesativado() {
+        estagiarioCriado = retornarEstagiarioCriado();
+        estagiarioService.desativarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
+        estagiarioService.desativarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
+        estagiarioService.buscarEstagiarioPorIdEstagiario(estagiarioCriado.getIdEstagiario())
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body("ativo", equalTo(false));
+        estagiarioService.deletarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
+    }
+    @Test
+    @DisplayName("Desativar estagiário por ID inexistente")
+    @Story("Deletar estagiário")
+    @Description("Desativar estagiário por ID inexistente")
+    public void testDesativarEstagiarioInexistente() {
+        estagiarioCriado = retornarEstagiarioCriado();
+        estagiarioService.deletarEstagiario(estagiarioCriado)
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
+        estagiarioService.desativarEstagiario(estagiarioCriado)
                 .then()
                     .statusCode(HttpStatus.SC_NOT_FOUND);
     }
