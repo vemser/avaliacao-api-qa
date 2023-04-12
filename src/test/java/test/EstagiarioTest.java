@@ -19,6 +19,8 @@ import service.EstagiarioService;
 import service.ProgramaService;
 import service.TrilhaService;
 
+import java.util.Arrays;
+
 public class EstagiarioTest extends BaseTest {
     //     region Pre-requisitos
     private static ProgramaService programaService = new ProgramaService();
@@ -131,37 +133,105 @@ public class EstagiarioTest extends BaseTest {
     }
     // endregion
     // region Atualizar estagiário
-    @Test
-    @DisplayName("Atualizar estagiário com sucesso")
-    @Story("Atualizar estagiário")
-    @Description("Atualizar estagiário com sucesso")
-    public void testAtualizarEstagiarioComSucesso() {
-        EstagiarioModel estagiarioAntigo = retornarEstagiarioCriado();
-        EstagiarioModel estagiarioNovo = EstagiarioDataFactory.gerarEstagiarioAlterado(estagiarioAntigo);
-        EstagiarioModel estagiarioAlterado = estagiarioService.atualizarEstagiario(estagiarioAntigo, estagiarioNovo)
-                .then()
+    @Nested
+    class AtualizarEstagiario{
+        @BeforeAll
+        public static void setupEstagiario() {
+            estagiarioCriado = retornarEstagiarioCriado();
+        }
+        @AfterAll
+        public static void limparEstagiario() {
+            estagiarioService.deletarEstagiario(estagiarioCriado)
+                    .then()
+                        .statusCode(HttpStatus.SC_OK);
+        }
+        @Test
+        @DisplayName("Atualizar estagiário com sucesso")
+        @Story("Atualizar estagiário")
+        @Description("Atualizar estagiário com sucesso")
+        public void testAtualizarEstagiarioComSucesso () {
+            EstagiarioModel estagiarioAntigo = estagiarioCriado;
+            EstagiarioModel estagiarioNovo = EstagiarioDataFactory.gerarEstagiarioAlterado(estagiarioAntigo);
+            EstagiarioModel estagiarioAlterado = estagiarioService.atualizarEstagiario(estagiarioAntigo, estagiarioNovo)
+                    .then()
                     .statusCode(HttpStatus.SC_OK)
                     .contentType(ContentType.JSON)
                     .extract().as(EstagiarioModel.class);
-        Assertions.assertEquals(estagiarioNovo.getIdTrilha(), estagiarioAlterado.getIdTrilha());
-        Assertions.assertEquals(estagiarioNovo.getNome(), estagiarioAlterado.getNome());
-        Assertions.assertEquals(estagiarioNovo.getCpf(), estagiarioAlterado.getCpf());
-        Assertions.assertEquals(estagiarioNovo.getEmailPessoal(), estagiarioAlterado.getEmailPessoal());
-        Assertions.assertEquals(estagiarioNovo.getEmailCorporativo(), estagiarioAlterado.getEmailCorporativo());
-        Assertions.assertEquals(estagiarioNovo.getTelefone(), estagiarioAlterado.getTelefone());
-        Assertions.assertEquals(estagiarioNovo.getDataNascimento(), estagiarioAlterado.getDataNascimento());
-        Assertions.assertEquals(estagiarioNovo.getEstado(), estagiarioAlterado.getEstado());
-        Assertions.assertEquals(estagiarioNovo.getCidade(), estagiarioAlterado.getCidade());
-        Assertions.assertEquals(estagiarioNovo.getCurso(), estagiarioAlterado.getCurso());
-        Assertions.assertEquals(estagiarioNovo.getInstituicaoEnsino(), estagiarioAlterado.getInstituicaoEnsino());
-        Assertions.assertEquals(estagiarioNovo.getLinkedin(), estagiarioAlterado.getLinkedin());
-        Assertions.assertEquals(estagiarioNovo.getGithub(), estagiarioAlterado.getGithub());
-        Assertions.assertEquals(estagiarioNovo.getObservacoes(), estagiarioAlterado.getObservacoes());
-        Assertions.assertEquals(estagiarioNovo.getStatus(), estagiarioAlterado.getStatus());
-        Assertions.assertEquals(estagiarioAntigo.getIdEstagiario(), estagiarioAlterado.getIdEstagiario());
-        estagiarioService.deletarEstagiario(estagiarioAlterado)
-                .then()
-                    .statusCode(HttpStatus.SC_OK);
+            Assertions.assertEquals(estagiarioNovo.getIdTrilha(), estagiarioAlterado.getIdTrilha());
+            Assertions.assertEquals(estagiarioNovo.getNome(), estagiarioAlterado.getNome());
+            Assertions.assertEquals(estagiarioNovo.getCpf(), estagiarioAlterado.getCpf());
+            Assertions.assertEquals(estagiarioNovo.getEmailPessoal(), estagiarioAlterado.getEmailPessoal());
+            Assertions.assertEquals(estagiarioNovo.getEmailCorporativo(), estagiarioAlterado.getEmailCorporativo());
+            Assertions.assertEquals(estagiarioNovo.getTelefone(), estagiarioAlterado.getTelefone());
+            Assertions.assertEquals(estagiarioNovo.getDataNascimento(), estagiarioAlterado.getDataNascimento());
+            Assertions.assertEquals(estagiarioNovo.getEstado(), estagiarioAlterado.getEstado());
+            Assertions.assertEquals(estagiarioNovo.getCidade(), estagiarioAlterado.getCidade());
+            Assertions.assertEquals(estagiarioNovo.getCurso(), estagiarioAlterado.getCurso());
+            Assertions.assertEquals(estagiarioNovo.getInstituicaoEnsino(), estagiarioAlterado.getInstituicaoEnsino());
+            Assertions.assertEquals(estagiarioNovo.getLinkedin(), estagiarioAlterado.getLinkedin());
+            Assertions.assertEquals(estagiarioNovo.getGithub(), estagiarioAlterado.getGithub());
+            Assertions.assertEquals(estagiarioNovo.getObservacoes(), estagiarioAlterado.getObservacoes());
+            Assertions.assertEquals(estagiarioNovo.getStatus(), estagiarioAlterado.getStatus());
+            Assertions.assertEquals(estagiarioAntigo.getIdEstagiario(), estagiarioAlterado.getIdEstagiario());
+        }
+        @Test
+        @DisplayName("Atualizar estagiário inexistente")
+        @Story("Atualizar estagiário")
+        @Description("Atualizar estagiário inexistente")
+        public void testAtualizarEstagiarioInexistente () {
+            EstagiarioModel estagiarioNovo = EstagiarioDataFactory.copiarEstagiario(estagiarioCriado);
+            jsonFailureResponse = estagiarioService.atualizarEstagiario(1, estagiarioNovo)
+                    .then()
+                        .statusCode(HttpStatus.SC_NOT_FOUND)
+                        .contentType(ContentType.JSON)
+                        .extract().as(JSONFailureResponse.class);
+            Assertions.assertEquals("Estagiário inexistente ou inativo.", jsonFailureResponse.getMessage());
+        }
+        @ParameterizedTest
+        @DisplayName("Atualizar estagiário com Email Pessoal inválido")
+        @Story("Atualizar estagiário")
+        @Description("Atualizar estagiário com Email Pessoal inválido")
+        @MethodSource("dataFactory.EstagiarioDataFactory#provideEmailsInvalidos")
+        public void testAtualizarEstagiarioComEmailPessoalInvalido (String emailInvalido){
+            EstagiarioModel estagiarioNovo = EstagiarioDataFactory.copiarEstagiario(estagiarioCriado);
+            estagiarioNovo.setEmailPessoal(emailInvalido);
+            jsonFailureResponse = estagiarioService.atualizarEstagiario(estagiarioCriado, estagiarioNovo)
+                    .then()
+                        .statusCode(HttpStatus.SC_BAD_REQUEST)
+                        .contentType(ContentType.JSON)
+                        .extract().as(JSONFailureResponse.class);
+            Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
+        }
+        @ParameterizedTest
+        @DisplayName("Atualizar estagiário com Email Corporativo inválido")
+        @Story("Atualizar estagiário")
+        @Description("Atualizar estagiário com Email Corporativo inválido")
+        @MethodSource("dataFactory.EstagiarioDataFactory#provideEmailsInvalidos")
+        public void testAtualizarEstagiarioComEmailCorporativoInvalido (String emailInvalido){
+            EstagiarioModel estagiarioNovo = EstagiarioDataFactory.copiarEstagiario(estagiarioCriado);
+            estagiarioNovo.setEmailCorporativo(emailInvalido);
+            jsonFailureResponse = estagiarioService.atualizarEstagiario(estagiarioCriado, estagiarioNovo)
+                    .then()
+                        .statusCode(HttpStatus.SC_BAD_REQUEST)
+                        .contentType(ContentType.JSON)
+                        .extract().as(JSONFailureResponse.class);
+            Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailCorporativo: Endereço de e-mail inválido"));
+        }
+        @ParameterizedTest
+        @DisplayName("Atualizar estagiário com CPF inválido")
+        @Story("Atualizar estagiário")
+        @Description("Atualizar estagiário com CPF inválido")
+        @MethodSource("dataFactory.EstagiarioDataFactory#provideCpfInvalidos")
+        public void testAtualizarEstagiarioComCpfInvalido (String cpfInvalido){
+            EstagiarioModel estagiarioNovo = EstagiarioDataFactory.copiarEstagiario(estagiarioCriado);
+            estagiarioNovo.setCpf(cpfInvalido);
+            jsonFailureResponse = estagiarioService.atualizarEstagiario(estagiarioCriado, estagiarioNovo)
+                    .then()
+                        .statusCode(HttpStatus.SC_BAD_REQUEST)
+                        .contentType(ContentType.JSON)
+                        .extract().as(JSONFailureResponse.class);
+            Assertions.assertTrue(jsonFailureResponse.getErrors().contains("cpf: invalid Brazilian individual taxpayer registry number (CPF)"));
+        }
     }
     // endregion
     // region Deletar estagiário
