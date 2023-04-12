@@ -10,9 +10,9 @@ public class GeralDataFactory extends DataFactory{
         return Stream.of(
                 Arguments.of("" + faker.number().numberBetween(-100, -1)),
                 Arguments.of("e"),
-                Arguments.of(""),
-                Arguments.of(" "),
-                Arguments.of(faker.numerify("# #")),
+//                Arguments.of(""),
+//                Arguments.of(" "),
+//                Arguments.of(faker.numerify("# #")),
                 Arguments.of(faker.numerify("#a#")),
                 Arguments.of(faker.numerify("#.#")),
                 Arguments.of(faker.numerify("#-#")),

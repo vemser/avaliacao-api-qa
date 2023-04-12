@@ -140,7 +140,12 @@ public class EstagiarioTest extends BaseTest {
     class BuscarEstagiario {
         @BeforeAll
         public static void setupEstagiario() {
-            estagiarioCriado = retornarEstagiarioCriado();
+            estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada);
+            estagiarioCriado = estagiarioService.criarEstagiario(estagiarioValido)
+                    .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .contentType(ContentType.JSON)
+                    .extract().as(EstagiarioModel.class);
         }
         @AfterAll
         public static void limparEstagiario() {
