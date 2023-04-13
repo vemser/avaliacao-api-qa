@@ -54,7 +54,6 @@ public class AcompanhamentoDataFactory {
         acompanhamento.setNumeroResponsaveis(2);
         acompanhamento.setDescricao("Descrição da " + acompanhamento.getTitulo());
         acompanhamento.setStatus("ABERTO");
-
         return acompanhamento;
     }
     public static AcompanhamentoModel gerarAcompanhamentoSemId(ProgramaModel programa) {

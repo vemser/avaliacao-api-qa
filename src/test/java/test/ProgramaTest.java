@@ -27,8 +27,8 @@ public class ProgramaTest extends BaseTest {
     @Description("Criar um programa com sucesso")
     public void testAdicionarPrograma(){
         var response = programaService.criarPrograma(programaValido)
-                .then()
-                    .statusCode(HttpStatus.SC_CREATED);
+            .then()
+                .statusCode(HttpStatus.SC_CREATED);
         response.assertThat().contentType(ContentType.JSON);
         response.assertThat().statusCode(HttpStatus.SC_CREATED);
         ProgramaModel programaResponse = response.extract().as(ProgramaModel.class);
@@ -47,8 +47,8 @@ public class ProgramaTest extends BaseTest {
     @Description("Falha ao criar um programa com nome nulo")
     public void testAdicionarProgramaComErro(){
         var response = programaService.criarProgramaSemNome()
-                .then()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+            .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
         JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("nome: size must be between 10 and 2147483647"));
@@ -60,8 +60,8 @@ public class ProgramaTest extends BaseTest {
     @Description("Falha ao criar um programa com datas abaixo da atual")
     public void testCriarProgramaComDataAbaixoDaAtual(){
         var response = programaService.criarProgramaComDatasAbaixoDaAtual()
-                .then()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+            .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
         JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("dataInicio: must be a date in the present or in the future"));
@@ -110,12 +110,12 @@ public class ProgramaTest extends BaseTest {
     @Description("Buscar programa por id com sucesso")
     public void testBuscarPorId(){
         ProgramaModel programaCriado = programaService.criarPrograma(programaValido)
-                .then()
-                    .statusCode(HttpStatus.SC_CREATED)
+            .then()
+                .statusCode(HttpStatus.SC_CREATED)
                 .extract().as(ProgramaModel.class);
         var response = programaService.buscarPrograma(programaCriado)
-                .then()
-                    .statusCode(HttpStatus.SC_OK);
+            .then()
+                .statusCode(HttpStatus.SC_OK);
         response.assertThat().contentType(ContentType.JSON);
         response.assertThat().statusCode(HttpStatus.SC_OK);
         ProgramaModel programaResponse = response.extract().as(ProgramaModel.class);
@@ -127,8 +127,8 @@ public class ProgramaTest extends BaseTest {
         assertThat(programaCriado.getIdPrograma(), equalTo(programaResponse.getIdPrograma()));
         assertThat(programaCriado.getAtivo(), equalTo(programaResponse.getAtivo()));
         programaService.deletarPrograma(programaResponse)
-                .then()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
+            .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Falha ao buscar programa por id vazio")
@@ -136,8 +136,8 @@ public class ProgramaTest extends BaseTest {
     @Description("Falha ao buscar programa por id vazio")
     public void testBuscarProgramaSemId(){
         var response = programaService.buscarProgramaSemId()
-                .then()
-                    .statusCode(HttpStatus.SC_NOT_FOUND);
+            .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().contentType(ContentType.JSON);
         JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
@@ -149,10 +149,9 @@ public class ProgramaTest extends BaseTest {
     @Story("Buscar programas")
     @Description("Falha ao buscar programa por id invalido com letras")
     public void testBuscarProgramaComLetrasNoId(){
-        var response = programaService.buscarProgramaComLetrasNoId()
-                .then()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
-        response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
+        programaService.buscarProgramaComLetrasNoId()
+            .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 //endregion
 //    region EDITAR PROGRAMA
@@ -162,25 +161,23 @@ public class ProgramaTest extends BaseTest {
     @Description("Editar programa com sucesso")
     public void testEditarPrograma(){
         ProgramaModel programaCriado = programaService.criarPrograma(programaValido)
-                .then()
-                    .statusCode(HttpStatus.SC_CREATED)
+            .then()
+                .statusCode(HttpStatus.SC_CREATED)
                 .extract().as(ProgramaModel.class);
         ProgramaModel programaNovo = ProgramaDataFactory.gerarProgramaValido();
         var response = programaService.atualizarPrograma(programaCriado, programaNovo)
-                .then()
-                    .statusCode(HttpStatus.SC_OK);
-        response.assertThat().contentType(ContentType.JSON);
-        response.assertThat().statusCode(HttpStatus.SC_OK);
-        response.assertThat().contentType(ContentType.JSON);
-        ProgramaModel programaResponse = response.extract().as(ProgramaModel.class);
-        assertThat(programaNovo.getNome(), equalTo(programaResponse.getNome()));
-        assertThat(programaNovo.getDescricao(), equalTo(programaResponse.getDescricao()));
-        assertThat(programaNovo.getDataInicio(), equalTo(programaResponse.getDataInicio()));
-        assertThat(programaNovo.getDataFim(), equalTo(programaResponse.getDataFim()));
-        assertThat(programaNovo.getStatus(), equalTo(programaResponse.getStatus()));
-        assertThat(programaCriado.getIdPrograma(), equalTo(programaResponse.getIdPrograma()));
-        assertThat(programaCriado.getAtivo(), equalTo(programaResponse.getAtivo()));
-        //Deleta o programa criado
+            .then()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType(ContentType.JSON)
+                .extract()
+                .as(ProgramaModel.class);
+        assertThat(programaNovo.getNome(), equalTo(response.getNome()));
+        assertThat(programaNovo.getDescricao(), equalTo(response.getDescricao()));
+        assertThat(programaNovo.getDataInicio(), equalTo(response.getDataInicio()));
+        assertThat(programaNovo.getDataFim(), equalTo(response.getDataFim()));
+        assertThat(programaNovo.getStatus(), equalTo(response.getStatus()));
+        assertThat(programaCriado.getIdPrograma(), equalTo(response.getIdPrograma()));
+        assertThat(programaCriado.getAtivo(), equalTo(response.getAtivo()));
         programaService.deletarPrograma(programaCriado)
                 .then()
                     .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -192,12 +189,12 @@ public class ProgramaTest extends BaseTest {
     public void testEditarProgramaComIdVazio(){
         var response = programaService.atualizarProgramaComIdVazio()
                 .then()
-                    .statusCode(HttpStatus.SC_NOT_FOUND);
-        response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-        response.assertThat().contentType(ContentType.JSON);
-        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
-        assertThat(jsonFailureResponse.getError(), equalTo("Not Found"));
-        assertThat(jsonFailureResponse.getPath(), equalTo("/programa/update/"));
+                    .statusCode(HttpStatus.SC_NOT_FOUND)
+                    .contentType(ContentType.JSON)
+                    .extract()
+                    .as(JSONFailureResponse.class);
+        assertThat(response.getError(), equalTo("Not Found"));
+        assertThat(response.getPath(), equalTo("/programa/update/"));
     }
     @Test
     @DisplayName("Falha ao editar programa com id inexistente")
@@ -206,10 +203,8 @@ public class ProgramaTest extends BaseTest {
     public void testEditarProgramaComIdInexistente(){
         var response = programaService.atualizarProgramaComIdInexistente()
                 .then()
-                    .statusCode(HttpStatus.SC_NOT_FOUND);
-        response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-        response.assertThat().contentType(ContentType.JSON);
-        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
+                    .statusCode(HttpStatus.SC_NOT_FOUND)
+                    .contentType(ContentType.JSON);
     }
 //    endregion
 //    region DESATIVAR PROGRAMA
@@ -219,13 +214,12 @@ public class ProgramaTest extends BaseTest {
     @Description("Desativar programa com sucesso")
     public void testDesativarPrograma(){
         ProgramaModel programaCriado = programaService.criarPrograma(programaValido)
-                .then()
-                    .statusCode(HttpStatus.SC_CREATED)
+            .then()
+                .statusCode(HttpStatus.SC_CREATED)
                 .extract().as(ProgramaModel.class);
-        var response = programaService.desativarPrograma(programaCriado)
-                .then()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
-        response.assertThat().statusCode(HttpStatus.SC_NO_CONTENT);
+        programaService.desativarPrograma(programaCriado)
+            .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Falha ao desativar programa com letras no id")
@@ -233,8 +227,8 @@ public class ProgramaTest extends BaseTest {
     @Description("Falha ao desativar programa com letras no id")
     public void testDesativarProgramaComLetrasNoId(){
         var response = programaService.desativarProgramaComLetrasNoId()
-                .then()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+            .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
     }
     @Test
@@ -243,8 +237,8 @@ public class ProgramaTest extends BaseTest {
     @Description("Falha ao desativar programa com id inexistente")
     public void testDesativarProgramaComIdErrado(){
         var response = programaService.desativarProgramaComIdInexistente()
-                .then()
-                    .statusCode(HttpStatus.SC_NOT_FOUND);
+            .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 //    endregion
@@ -255,13 +249,12 @@ public class ProgramaTest extends BaseTest {
     @Description("Deletar programa com sucesso")
     public void testDeletarPrograma(){
         ProgramaModel programaCriado = programaService.criarPrograma(programaValido)
-                .then()
-                    .statusCode(HttpStatus.SC_CREATED)
+            .then()
+                .statusCode(HttpStatus.SC_CREATED)
                 .extract().as(ProgramaModel.class);
-        var response = programaService.deletarPrograma(programaCriado)
-                .then()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
-        response.assertThat().statusCode(HttpStatus.SC_NO_CONTENT);
+        programaService.deletarPrograma(programaCriado)
+            .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Falha ao deletar programa com letras no id")
@@ -269,8 +262,8 @@ public class ProgramaTest extends BaseTest {
     @Description("Falha ao deletar programa com letras no id")
     public void testDeletarProgramaComLetrasNoId(){
         var response = programaService.deletarProgramaComLetrasNoId()
-                .then()
-                    .statusCode(HttpStatus.SC_NOT_FOUND);
+            .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
     }
     @Test
@@ -279,8 +272,8 @@ public class ProgramaTest extends BaseTest {
     @Description("Falha ao deletar programa com id inexistente")
     public void testDeletarProgramaComIdInexistente(){
         var response = programaService.deletarProgramaComIdInexistente()
-                .then()
-                    .statusCode(HttpStatus.SC_NOT_FOUND);
+            .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
         response.assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 //    endregion

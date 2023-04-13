@@ -2,13 +2,11 @@ package service;
 
 import io.restassured.response.Response;
 import model.AcompanhamentoModel;
-import model.ProgramaModel;
-import model.TrilhaModel;
 import specs.SetupsRequestSpecification;
 
 import static io.restassured.RestAssured.given;
-
 public class AcompanhamentoService {
+//region CRIAR ACOMPANHAMENTO
     public Response criarAcompanhamento(AcompanhamentoModel acompanhamento) {
         Response response =
                 given()
@@ -18,17 +16,9 @@ public class AcompanhamentoService {
                         .post("/acompanhamento/create");
         return response;
     }
-
+//endregion
+//region DESATIVAR ACOMPANHAMENTO PELO ID DO ACOMPANHAMENTO
     public Response desativarAcompanhamentoPeloId(AcompanhamentoModel idAcompanhamento) {
-        Response response =
-                given()
-                        .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idAcompanhamento", idAcompanhamento.getIdAcompanhamento())
-                        .when()
-                        .delete("/acompanhamento/delete/{idAcompanhamento}");
-        return response;
-    }
-    public Response deletarAcompanhamentoPeloId(AcompanhamentoModel idAcompanhamento) {
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
@@ -37,7 +27,19 @@ public class AcompanhamentoService {
                         .delete("/acompanhamento/deactivate/{idAcompanhamento}");
         return response;
     }
-
+//endregion
+//region DELETAR ACOMPANHAMENTO PELO ID DO ACOMPANHAMENTO
+    public Response deletarAcompanhamentoPeloId(AcompanhamentoModel idAcompanhamento) {
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idAcompanhamento", idAcompanhamento.getIdAcompanhamento())
+                        .when()
+                        .delete("/acompanhamento/delete/{idAcompanhamento}");
+        return response;
+    }
+//endregion
+//region BUSCAR ACOMPANHAMENTO PELO ID DO PROGRAMA
     public Response buscarAcompanhamentoPeloId(AcompanhamentoModel idPrograma) {
         Response response =
                 given()
@@ -49,6 +51,8 @@ public class AcompanhamentoService {
                         .get("/acompanhamento/list-by-programa/{idPrograma}");
         return response;
     }
+//endregion
+//region BUSCAR ACOMPANHAMENTOS POR PAGINA
     public Response buscarAcompanhamentoPorPaginas(Integer pagina, Integer tamanho) {
         Response response =
             given()
@@ -59,6 +63,8 @@ public class AcompanhamentoService {
                 .get("/acompanhamento/list-all");
         return response;
     }
+//endregion
+//region BUSCAR ACOMPANHAMENTOS SEM INFORMAR PAGINAS
     public Response buscarAcompanhamentoSemInformarPaginas() {
         Response response =
             given()
@@ -69,6 +75,8 @@ public class AcompanhamentoService {
                 .get("/acompanhamento/list-all");
         return response;
     }
+//endregion
+//region BUSCAR ACOMPANHAMENTO PELO ID DO ACOMPANHAMENTO
     public Response buscarAcompanhamentoPeloIdDoAcompanhamento(AcompanhamentoModel idAcompanhamento) {
         Response response =
                 given()
@@ -78,4 +86,5 @@ public class AcompanhamentoService {
                         .get("/acompanhamento/get-by-id/{idAcompanhamento}");
         return response;
     }
+//endregion
 }
