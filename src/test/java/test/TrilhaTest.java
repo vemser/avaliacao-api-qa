@@ -10,7 +10,10 @@ import model.JSONFailureResponse;
 import model.ProgramaModel;
 import model.TrilhaModel;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import service.ProgramaService;
 import service.TrilhaService;
 
@@ -301,6 +304,33 @@ public class TrilhaTest extends BaseTest{
                 .contentType(ContentType.JSON)
                 .extract().as(JSONFailureResponse.class);
             Assertions.assertTrue(response.getErrors().contains("idPrograma: must not be null"));
+    }
+//endregion
+//region LISTAR TRILHAS MODELO
+    @ParameterizedTest
+    @DisplayName("Buscar todas trilhas")
+    @Story("Buscar trilhas")
+    @Description("Buscar todas trilhas")
+    @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaValidos")
+    public void testBuscarTodasTrilhas(int pagina, int tamanhoPagina) {
+        trilhaService.buscarTrilhaModelo(pagina, tamanhoPagina)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType(ContentType.JSON)
+                .body("pagina", Matchers.is(pagina))
+                .body("tamanho", Matchers.is(tamanhoPagina))
+                .body("totalElementos", Matchers.greaterThanOrEqualTo(0))
+        ;
+    }
+    @ParameterizedTest
+    @DisplayName("Falha uscar todas trilhas")
+    @Story("Buscar trilhas")
+    @Description("Falha uscar todas trilhas")
+    @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaInvalidos")
+    public void testBuscarTodasTrilhasSemInformacoes(String pagina, String tamanhoPagina) {
+        trilhaService.buscarTrilhaModeloInvalido(pagina, tamanhoPagina)
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 //endregion
 }
