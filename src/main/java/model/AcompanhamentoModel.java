@@ -1,5 +1,7 @@
 package model;
 
+import io.restassured.http.ContentType;
+
 public class AcompanhamentoModel {
     private Integer idPrograma;
     private String titulo;
@@ -11,6 +13,8 @@ public class AcompanhamentoModel {
     private String descricao;
     private Integer numeroResponsaveis;
     private String status;
+    private Integer idAcompanhamento;
+    private Boolean ativo;
 
 
     public AcompanhamentoModel(Integer idPrograma, String titulo, String dataInicio, String dataFim, String horarioInicio, String horarioFim, Integer duracao, String descricao, Integer numeroResponsaveis, String status) {
@@ -26,6 +30,22 @@ public class AcompanhamentoModel {
         this.status = status;
     }
     public AcompanhamentoModel(){
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public Integer getIdAcompanhamento() {
+        return idAcompanhamento;
+    }
+
+    public void setIdAcompanhamento(Integer idAcompanhamento) {
+        this.idAcompanhamento = idAcompanhamento;
     }
 
     public Integer getIdPrograma() {
@@ -107,4 +127,5 @@ public class AcompanhamentoModel {
     public void setNumeroResponsaveis(Integer numeroResponsaveis) {
         this.numeroResponsaveis = numeroResponsaveis;
     }
+
 }
