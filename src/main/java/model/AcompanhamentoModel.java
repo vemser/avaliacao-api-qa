@@ -15,6 +15,7 @@ public class AcompanhamentoModel {
     private String status;
     private Integer idAcompanhamento;
     private Boolean ativo;
+    private String nome;
 
 
     public AcompanhamentoModel(Integer idPrograma, String titulo, String dataInicio, String dataFim, String horarioInicio, String horarioFim, Integer duracao, String descricao, Integer numeroResponsaveis, String status) {
@@ -30,6 +31,14 @@ public class AcompanhamentoModel {
         this.status = status;
     }
     public AcompanhamentoModel(){
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public Boolean getAtivo() {

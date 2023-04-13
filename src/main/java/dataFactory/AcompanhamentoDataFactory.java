@@ -69,7 +69,7 @@ public class AcompanhamentoDataFactory {
     }
     public static AcompanhamentoModel buscarAcompanhamentoComIdNegativo(Integer idPrograma) {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
-        acompanhamento.setIdPrograma(-2132546);
+        acompanhamento.setIdPrograma(00000000000000000);
         return acompanhamento;
     }
 //endregion

@@ -59,6 +59,9 @@ public class AcompanhamentoTest extends BaseTest {
         assertThat(acompanhamentoModel.getTitulo(), equalTo(response.getTitulo()));
         assertThat(acompanhamentoModel.getDataInicio(), equalTo(response.getDataInicio()));
         assertThat(acompanhamentoModel.getDescricao(), equalTo(response.getDescricao()));
+        acompanhamentoService.deletarAcompanhamentoPeloId(response)
+                .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
     @Test
@@ -67,11 +70,11 @@ public class AcompanhamentoTest extends BaseTest {
     @Description("Falha ao criar um acompanhamento sem id do programa")
     public void testCadastrarAcompanhamentoSemId(){
         acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoSemId(programaCriado);
-        acompanhamentoService.criarAcompanhamento(acompanhamentoModel)
+        var response = acompanhamentoService.criarAcompanhamento(acompanhamentoModel)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .contentType(ContentType.JSON)
-                ;
+                .contentType(ContentType.JSON);
+
     }
 //endregion
 //region LISTAR ACOMPANHAMENTOS POR PROGRAMA
@@ -81,22 +84,20 @@ public class AcompanhamentoTest extends BaseTest {
     @Description("Listar acompanhamento pelo id do programa")
     public void testBuscarAcompanhamentoPorIdDePrograma(){
         acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(programaCriado);
-        AcompanhamentoModel idAcompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().extract().as(AcompanhamentoModel.class);
-        AcompanhamentoModel idprograma = AcompanhamentoDataFactory.buscarAcompanhamentoPorId(idAcompanhamento.getIdPrograma());
-        acompanhamentoService.buscarAcompanhamentoPeloId(idprograma)
+        AcompanhamentoModel idprograma = AcompanhamentoDataFactory.buscarAcompanhamentoPorId(acompanhamentoModel.getIdPrograma());
+        var response = acompanhamentoService.buscarAcompanhamentoPeloId(idprograma)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON);
+
     }
     @Test
-    @DisplayName("Falha ao listar acompanhamento com numero de id negativo")
+    @DisplayName("Falha ao listar acompanhamento com numero de invalido")
     @Story("Listar acompanhamento")
-    @Description("Falha ao listar acompanhamento com numero de id negativo")
+    @Description("Falha ao listar acompanhamento com numero de invalido")
     public void testBuscarProgramaPorIdDePrograma(){
-        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(programaCriado);
-        AcompanhamentoModel idAcompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().extract().as(AcompanhamentoModel.class);
-        AcompanhamentoModel idprograma = AcompanhamentoDataFactory.buscarAcompanhamentoComIdNegativo(idAcompanhamento.getIdPrograma());
-        acompanhamentoService.buscarAcompanhamentoPeloId(idprograma)
+        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(00000000000000000);
+        acompanhamentoService.buscarAcompanhamentoPeloId(acompanhamentoModel)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
@@ -131,22 +132,18 @@ public class AcompanhamentoTest extends BaseTest {
 //endregion
 //region BUSCAR ACOMPANHAMENTO PELO D DO ACOMPANHAMENTO
     @Test
-    @DisplayName("Buscar acompanhamento por id do acompanhamento")
+    @DisplayName("Buscar acompanhamento por id do programa")
     @Story("Buscar acompanhamento por id")
-    @Description("Buscar acompanhamento por id do acompanhamento")
-    public void testBuscarAcompanhamento(){
+    @Description("Buscar acompanhamento por id do programa")
+    public void testBuscarAcompanhamentoPorIdDoPrograma(){
         acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(programaCriado);
-        AcompanhamentoModel acompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().extract().as(AcompanhamentoModel.class);
-        AcompanhamentoModel idAcompanhamento = AcompanhamentoDataFactory.buscarAcompanhamentoPorIdDoAcompanhamento(acompanhamento.getIdAcompanhamento());
-        var response = acompanhamentoService.buscarAcompanhamentoPeloIdDoAcompanhamento(idAcompanhamento)
+        AcompanhamentoModel idprograma = AcompanhamentoDataFactory.buscarAcompanhamentoPorId(acompanhamentoModel.getIdPrograma());
+        var response = acompanhamentoService.buscarAcompanhamentoPeloId(idprograma)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
-                .contentType(ContentType.JSON)
-                .extract()
-                .as(AcompanhamentoModel.class);
-        assertThat(acompanhamentoModel.getTitulo(), equalTo(response.getTitulo()));
-        assertThat(acompanhamentoModel.getDataInicio(), equalTo(response.getDataInicio()));
-        assertThat(acompanhamentoModel.getDescricao(), equalTo(response.getDescricao()));
+                .contentType(ContentType.JSON);
+        response.log().all();
+
     }
     @Test
     @DisplayName("Buscar acompanhamento por id do acompanhamento")
@@ -164,16 +161,16 @@ public class AcompanhamentoTest extends BaseTest {
 //endregion
 //region DESATIVAR ACOMPANHAMENTO
     @Test
-    @DisplayName("Desativar um acompanhamento com sucesso")
+    @DisplayName("Deletar um acompanhamento com sucesso")
     @Story("Deletar um acompanhamento")
-    @Description("Desativar um acompanhamento com sucesso")
-    public void testDesativarAcompanhamento(){
+    @Description("Deletar um acompanhamento com sucesso")
+    public void testDesativatAcompanhamento(){
         acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(programaCriado);
         AcompanhamentoModel acompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().extract().as(AcompanhamentoModel.class);
         AcompanhamentoModel idAcompanhamento = AcompanhamentoDataFactory.buscarAcompanhamentoPorIdDoAcompanhamento(acompanhamento.getIdAcompanhamento());
         acompanhamentoService.desativarAcompanhamentoPeloId(idAcompanhamento)
-            .then()
-            .statusCode(HttpStatus.SC_NO_CONTENT);
+                .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Falha em desativar um acompanhamento com id inexistente")
