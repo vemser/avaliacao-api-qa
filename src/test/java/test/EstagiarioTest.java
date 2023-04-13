@@ -108,7 +108,7 @@ public class EstagiarioTest extends BaseTest {
                 ;
         ;
     }
-    @ParameterizedTest
+    @ParameterizedTest(name = "{index} - E-mail: {0}")
     @DisplayName("Criar estagiário com Email Pessoal inválido")
     @Story("Criar estagiário")
     @Description("Criar estagiário com Email Pessoal inválido")
@@ -122,7 +122,7 @@ public class EstagiarioTest extends BaseTest {
                     .extract().as(JSONFailureResponse.class);
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
     }
-    @ParameterizedTest
+    @ParameterizedTest(name = "{index} - E-mail: {0}")
     @DisplayName("Criar estagiário com Email Corporativo inválido")
     @Story("Criar estagiário")
     @Description("Criar estagiário com Email Corporativo inválido")
@@ -195,7 +195,7 @@ public class EstagiarioTest extends BaseTest {
                         .extract().as(JSONFailureResponse.class);
             Assertions.assertEquals("Estagiário não encontrado.", jsonFailureResponse.getMessage());
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - ID inválido: {0}")
         @DisplayName("Buscar estagiário por ID inválido")
         @Story("Buscar estagiário")
         @Description("Buscar estagiário por ID inválido")
@@ -205,7 +205,7 @@ public class EstagiarioTest extends BaseTest {
                     .then()
                         .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
         @DisplayName("Buscar estagiário por programa")
         @Story("Buscar estagiário")
         @Description("Buscar estagiário por programa")
@@ -221,7 +221,7 @@ public class EstagiarioTest extends BaseTest {
             ;
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
         @DisplayName("Buscar estagiário por programa com página e tamanho inválidos")
         @Story("Buscar estagiário")
         @Description("Buscar estagiário por programa com página e tamanho inválidos")
@@ -232,7 +232,7 @@ public class EstagiarioTest extends BaseTest {
                         .statusCode(HttpStatus.SC_BAD_REQUEST)
             ;
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
         @DisplayName("Buscar por lista de todos estagiários")
         @Story("Buscar estagiário")
         @Description("Buscar por lista de todos estagiários")
@@ -247,7 +247,7 @@ public class EstagiarioTest extends BaseTest {
                         .body("totalElementos", Matchers.greaterThanOrEqualTo(0))
             ;
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
         @DisplayName("Buscar por lista de todos estagiários com página e tamanho inválidos")
         @Story("Buscar estagiário")
         @Description("Buscar por lista de todos estagiários com página e tamanho inválidos")
@@ -266,6 +266,7 @@ public class EstagiarioTest extends BaseTest {
     class AtualizarEstagiario{
         @BeforeAll
         public static void setupEstagiario() {
+            estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada);
             estagiarioCriado = retornarEstagiarioCriado();
         }
         @AfterAll
@@ -316,7 +317,7 @@ public class EstagiarioTest extends BaseTest {
                         .extract().as(JSONFailureResponse.class);
             Assertions.assertEquals("Estagiário inexistente ou inativo.", jsonFailureResponse.getMessage());
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - E-mail: {0}")
         @DisplayName("Atualizar estagiário com Email Pessoal inválido")
         @Story("Atualizar estagiário")
         @Description("Atualizar estagiário com Email Pessoal inválido")
@@ -331,7 +332,7 @@ public class EstagiarioTest extends BaseTest {
                         .extract().as(JSONFailureResponse.class);
             Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - E-mail: {0}")
         @DisplayName("Atualizar estagiário com Email Corporativo inválido")
         @Story("Atualizar estagiário")
         @Description("Atualizar estagiário com Email Corporativo inválido")
@@ -346,7 +347,7 @@ public class EstagiarioTest extends BaseTest {
                         .extract().as(JSONFailureResponse.class);
             Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailCorporativo: Endereço de e-mail inválido"));
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - CPF: {0}")
         @DisplayName("Atualizar estagiário com CPF inválido")
         @Story("Atualizar estagiário")
         @Description("Atualizar estagiário com CPF inválido")
