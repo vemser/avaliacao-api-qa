@@ -18,8 +18,8 @@ public class EstagiarioDataFactory extends DataFactory {
         estagiario.setIdTrilha(idTrilha);
         estagiario.setNome(faker.name().nameWithMiddle());
         estagiario.setCpf(gerarCpfValido());
-        estagiario.setEmailPessoal(faker.internet().emailAddress("teste"));
-        estagiario.setEmailCorporativo(faker.internet().emailAddress("teste"));
+        estagiario.setEmailPessoal("teste." + faker.internet().emailAddress());
+        estagiario.setEmailCorporativo(gerarEmailDbc(estagiario.getEmailPessoal()));
         estagiario.setTelefone(faker.numerify("###########"));
         estagiario.setDataNascimento(dateFormat.format(faker.date().birthday(18, 100)));
         estagiario.setEstado(faker.address().countryCode());
@@ -32,6 +32,11 @@ public class EstagiarioDataFactory extends DataFactory {
         estagiario.setStatus("DISPONIVEL");
         return estagiario;
     }
+
+    private static String gerarEmailDbc(String emailPessoal) {
+        return emailPessoal.replace(emailPessoal.substring(emailPessoal.indexOf("@"), emailPessoal.length()), "@dbccompany.com.br");
+    }
+
     public static EstagiarioModel gerarEstagiarioValido(TrilhaModel trilha) {
         return gerarEstagiarioValido(trilha.getIdTrilha());
     }
