@@ -102,10 +102,10 @@ public class AcompanhamentoTest extends BaseTest {
     }
 //endregion
 //region BUSCAR TODOS ACOMPANHAMENTOS
-    @ParameterizedTest
-    @DisplayName("Buscar toddos os acompanhamentos")
+    @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
+    @DisplayName("Buscar todos os acompanhamentos")
     @Story("Buscar trilhas")
-    @Description("Buscar toddos os acompanhamentos")
+    @Description("Buscar todos os acompanhamentos")
     @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaValidos")
     public void testBuscarTodosAcompanhamentos(int pagina, int tamanhoPagina) {
         acompanhamentoService.buscarAcompanhamentoPorPaginas(pagina, tamanhoPagina)
