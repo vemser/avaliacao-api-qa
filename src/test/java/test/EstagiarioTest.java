@@ -42,6 +42,7 @@ public class EstagiarioTest extends BaseTest {
                 .then()
                     .statusCode(HttpStatus.SC_CREATED)
                     .extract().as(TrilhaModel.class);
+
     }
     @BeforeEach
     public void criarEstagiarioValido() {
