@@ -11,6 +11,7 @@ public class TrilhaModel {
     private Boolean ativo;
 
     private List<ModuloModel> modulos;
+    private String timestamp;
 
     public TrilhaModel() {
     }
@@ -29,6 +30,14 @@ public class TrilhaModel {
         this.status = status;
         this.idTrilha = idTrilha;
         this.ativo = ativo;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Integer getIdPrograma() {

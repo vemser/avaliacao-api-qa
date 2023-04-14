@@ -10,7 +10,6 @@ public class ProgramaModel {
     private String status;
     private Integer idPrograma;
     private Boolean ativo;
-
     public ProgramaModel() {
     }
 

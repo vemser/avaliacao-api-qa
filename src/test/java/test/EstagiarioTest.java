@@ -36,12 +36,12 @@ public class EstagiarioTest extends BaseTest {
     public static void criarPreRequisitos() {
         programaCriado = programaService.criarPrograma(ProgramaDataFactory.gerarProgramaValido())
                 .then()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .extract().as(ProgramaModel.class);
+                .statusCode(HttpStatus.SC_CREATED)
+                .extract().as(ProgramaModel.class);
         trilhaCriada = trilhaService.adicionarTrilha(TrilhaDataFactory.gerarTrilhaValida(programaCriado))
                 .then()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .extract().as(TrilhaModel.class);
+                .statusCode(HttpStatus.SC_CREATED)
+                .extract().as(TrilhaModel.class);
     }
     @BeforeEach
     public void criarEstagiarioValido() {
@@ -51,17 +51,17 @@ public class EstagiarioTest extends BaseTest {
     public static void limparDadosCriados() {
         trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
                 .then()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
+                .statusCode(HttpStatus.SC_NO_CONTENT);
         programaService.deletarPrograma(programaCriado)
                 .then()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
+                .statusCode(HttpStatus.SC_NO_CONTENT);
 //        estagiarioService.deletarEstagiario(estagiarioCriado)
 //                .then();
     }
     private static EstagiarioModel retornarEstagiarioCriado() {
         return estagiarioService.criarEstagiario(estagiarioValido)
                 .then()
-                    .statusCode(HttpStatus.SC_OK)
+                    .statusCode(HttpStatus.SC_CREATED)
                     .contentType(ContentType.JSON)
                     .extract().as(EstagiarioModel.class);
     }
@@ -92,7 +92,7 @@ public class EstagiarioTest extends BaseTest {
         Assertions.assertNotNull(estagiarioCriado.getAtivo());
         estagiarioService.deletarEstagiario(estagiarioCriado)
                 .then()
-                    .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Criar estagiário com CPF com ponto e hífen")
@@ -105,10 +105,10 @@ public class EstagiarioTest extends BaseTest {
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .contentType(ContentType.JSON)
                     .body("message", equalTo("CPF deve ser apenas númerico!"))
-                ;
+        ;
         ;
     }
-    @ParameterizedTest
+    @ParameterizedTest(name = "{index} - E-mail: {0}")
     @DisplayName("Criar estagiário com Email Pessoal inválido")
     @Story("Criar estagiário")
     @Description("Criar estagiário com Email Pessoal inválido")
@@ -122,7 +122,7 @@ public class EstagiarioTest extends BaseTest {
                     .extract().as(JSONFailureResponse.class);
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
     }
-    @ParameterizedTest
+    @ParameterizedTest(name = "{index} - E-mail: {0}")
     @DisplayName("Criar estagiário com Email Corporativo inválido")
     @Story("Criar estagiário")
     @Description("Criar estagiário com Email Corporativo inválido")
@@ -134,7 +134,7 @@ public class EstagiarioTest extends BaseTest {
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .contentType(ContentType.JSON)
                     .body("errors", Matchers.hasItem("emailCorporativo: Endereço de e-mail inválido"))
-                ;
+        ;
     }
     // endregion
     // region Buscar estagiário
@@ -145,15 +145,15 @@ public class EstagiarioTest extends BaseTest {
             estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada);
             estagiarioCriado = estagiarioService.criarEstagiario(estagiarioValido)
                     .then()
-                    .statusCode(HttpStatus.SC_OK)
-                    .contentType(ContentType.JSON)
-                    .extract().as(EstagiarioModel.class);
+                        .statusCode(HttpStatus.SC_CREATED)
+                        .contentType(ContentType.JSON)
+                        .extract().as(EstagiarioModel.class);
         }
         @AfterAll
         public static void limparEstagiario() {
             estagiarioService.deletarEstagiario(estagiarioCriado)
                     .then()
-                    .statusCode(HttpStatus.SC_OK);
+                      .statusCode(HttpStatus.SC_NO_CONTENT);
         }
         @Test
         @DisplayName("Buscar estagiário por ID com sucesso")
@@ -195,7 +195,7 @@ public class EstagiarioTest extends BaseTest {
                         .extract().as(JSONFailureResponse.class);
             Assertions.assertEquals("Estagiário não encontrado.", jsonFailureResponse.getMessage());
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - ID inválido: {0}")
         @DisplayName("Buscar estagiário por ID inválido")
         @Story("Buscar estagiário")
         @Description("Buscar estagiário por ID inválido")
@@ -205,7 +205,7 @@ public class EstagiarioTest extends BaseTest {
                     .then()
                         .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
         @DisplayName("Buscar estagiário por programa")
         @Story("Buscar estagiário")
         @Description("Buscar estagiário por programa")
@@ -221,7 +221,7 @@ public class EstagiarioTest extends BaseTest {
             ;
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
         @DisplayName("Buscar estagiário por programa com página e tamanho inválidos")
         @Story("Buscar estagiário")
         @Description("Buscar estagiário por programa com página e tamanho inválidos")
@@ -232,7 +232,7 @@ public class EstagiarioTest extends BaseTest {
                         .statusCode(HttpStatus.SC_BAD_REQUEST)
             ;
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
         @DisplayName("Buscar por lista de todos estagiários")
         @Story("Buscar estagiário")
         @Description("Buscar por lista de todos estagiários")
@@ -247,7 +247,7 @@ public class EstagiarioTest extends BaseTest {
                         .body("totalElementos", Matchers.greaterThanOrEqualTo(0))
             ;
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
         @DisplayName("Buscar por lista de todos estagiários com página e tamanho inválidos")
         @Story("Buscar estagiário")
         @Description("Buscar por lista de todos estagiários com página e tamanho inválidos")
@@ -266,13 +266,14 @@ public class EstagiarioTest extends BaseTest {
     class AtualizarEstagiario{
         @BeforeAll
         public static void setupEstagiario() {
+            estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada);
             estagiarioCriado = retornarEstagiarioCriado();
         }
         @AfterAll
         public static void limparEstagiario() {
             estagiarioService.deletarEstagiario(estagiarioCriado)
                     .then()
-                        .statusCode(HttpStatus.SC_OK);
+                        .statusCode(HttpStatus.SC_NO_CONTENT);
         }
         @Test
         @DisplayName("Atualizar estagiário com sucesso")
@@ -283,9 +284,9 @@ public class EstagiarioTest extends BaseTest {
             EstagiarioModel estagiarioNovo = EstagiarioDataFactory.gerarEstagiarioAlterado(estagiarioAntigo);
             EstagiarioModel estagiarioAlterado = estagiarioService.atualizarEstagiario(estagiarioAntigo, estagiarioNovo)
                     .then()
-                    .statusCode(HttpStatus.SC_OK)
-                    .contentType(ContentType.JSON)
-                    .extract().as(EstagiarioModel.class);
+                        .statusCode(HttpStatus.SC_OK)
+                        .contentType(ContentType.JSON)
+                        .extract().as(EstagiarioModel.class);
             Assertions.assertEquals(estagiarioNovo.getIdTrilha(), estagiarioAlterado.getIdTrilha());
             Assertions.assertEquals(estagiarioNovo.getNome(), estagiarioAlterado.getNome());
             Assertions.assertEquals(estagiarioNovo.getCpf(), estagiarioAlterado.getCpf());
@@ -316,7 +317,7 @@ public class EstagiarioTest extends BaseTest {
                         .extract().as(JSONFailureResponse.class);
             Assertions.assertEquals("Estagiário inexistente ou inativo.", jsonFailureResponse.getMessage());
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - E-mail: {0}")
         @DisplayName("Atualizar estagiário com Email Pessoal inválido")
         @Story("Atualizar estagiário")
         @Description("Atualizar estagiário com Email Pessoal inválido")
@@ -331,7 +332,7 @@ public class EstagiarioTest extends BaseTest {
                         .extract().as(JSONFailureResponse.class);
             Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailPessoal: Endereço de e-mail inválido"));
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - E-mail: {0}")
         @DisplayName("Atualizar estagiário com Email Corporativo inválido")
         @Story("Atualizar estagiário")
         @Description("Atualizar estagiário com Email Corporativo inválido")
@@ -346,7 +347,7 @@ public class EstagiarioTest extends BaseTest {
                         .extract().as(JSONFailureResponse.class);
             Assertions.assertTrue(jsonFailureResponse.getErrors().contains("emailCorporativo: Endereço de e-mail inválido"));
         }
-        @ParameterizedTest
+        @ParameterizedTest(name = "{index} - CPF: {0}")
         @DisplayName("Atualizar estagiário com CPF inválido")
         @Story("Atualizar estagiário")
         @Description("Atualizar estagiário com CPF inválido")
@@ -372,7 +373,7 @@ public class EstagiarioTest extends BaseTest {
         estagiarioCriado = retornarEstagiarioCriado();
         estagiarioService.deletarEstagiario(estagiarioCriado)
                 .then()
-                    .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Deletar estagiário inexistente")
@@ -382,7 +383,7 @@ public class EstagiarioTest extends BaseTest {
         estagiarioCriado = retornarEstagiarioCriado();
         estagiarioService.deletarEstagiario(estagiarioCriado)
                 .then()
-                    .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
         estagiarioService.deletarEstagiario(estagiarioCriado)
                 .then()
                     .statusCode(HttpStatus.SC_NOT_FOUND);
@@ -395,14 +396,14 @@ public class EstagiarioTest extends BaseTest {
         estagiarioCriado = retornarEstagiarioCriado();
         estagiarioService.desativarEstagiario(estagiarioCriado)
                 .then()
-                    .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
         estagiarioService.buscarEstagiarioPorIdEstagiario(estagiarioCriado.getIdEstagiario())
                 .then()
                     .statusCode(HttpStatus.SC_OK)
                     .body("ativo", equalTo(false));
         estagiarioService.deletarEstagiario(estagiarioCriado)
                 .then()
-                    .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Desativar estagiário já desativado")
@@ -412,7 +413,7 @@ public class EstagiarioTest extends BaseTest {
         estagiarioCriado = retornarEstagiarioCriado();
         estagiarioService.desativarEstagiario(estagiarioCriado)
                 .then()
-                    .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
         estagiarioService.desativarEstagiario(estagiarioCriado)
                 .then()
                     .statusCode(HttpStatus.SC_NOT_FOUND);
@@ -422,7 +423,7 @@ public class EstagiarioTest extends BaseTest {
                     .body("ativo", equalTo(false));
         estagiarioService.deletarEstagiario(estagiarioCriado)
                 .then()
-                    .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Desativar estagiário por ID inexistente")
@@ -432,7 +433,7 @@ public class EstagiarioTest extends BaseTest {
         estagiarioCriado = retornarEstagiarioCriado();
         estagiarioService.deletarEstagiario(estagiarioCriado)
                 .then()
-                    .statusCode(HttpStatus.SC_OK);
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
         estagiarioService.desativarEstagiario(estagiarioCriado)
                 .then()
                     .statusCode(HttpStatus.SC_NOT_FOUND);
