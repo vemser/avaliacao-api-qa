@@ -104,6 +104,37 @@ public class EstagiarioDataFactory extends DataFactory {
                 Arguments.of(gerarCpfInvalidoComEspacoVazio())
         );
     }
+    public static Stream<Arguments> provideNomesInvalidos() {
+        return Stream.of(
+                Arguments.of(faker.numerify("##########")),
+                Arguments.of(faker.numerify("##### #####")),
+                Arguments.of(faker.name().firstName() + "{"),
+                Arguments.of(faker.name().firstName() + "}"),
+                Arguments.of(faker.name().firstName() + "["),
+                Arguments.of(faker.name().firstName() + "]"),
+                Arguments.of(faker.name().firstName() + "<"),
+                Arguments.of(faker.name().firstName() + ">"),
+                Arguments.of(faker.name().firstName() + "("),
+                Arguments.of(faker.name().firstName() + ")"),
+                Arguments.of(faker.name().firstName() + "/"),
+                Arguments.of(faker.name().firstName() + "\\"),
+                Arguments.of(faker.name().firstName() + "|"),
+                Arguments.of(faker.name().firstName() + "%"),
+                Arguments.of(faker.name().firstName() + "!"),
+                Arguments.of(faker.name().firstName() + "@"),
+                Arguments.of(faker.name().firstName() + "#"),
+                Arguments.of(faker.name().firstName() + "$"),
+                Arguments.of(faker.name().firstName() + "*"),
+                Arguments.of(faker.name().firstName() + "&"),
+                Arguments.of(faker.name().nameWithMiddle() + "!"),
+                Arguments.of(faker.name().nameWithMiddle() + "@"),
+                Arguments.of(faker.name().nameWithMiddle() + "#"),
+                Arguments.of(faker.name().nameWithMiddle() + "$"),
+                Arguments.of(faker.name().nameWithMiddle() + "%"),
+                Arguments.of(faker.name().nameWithMiddle() + "^"),
+                Arguments.of(faker.name().nameWithMiddle() + "&")
+        );
+    }
     private static String gerarCpfInvalidoComEspacoVazio() {
         String cpfInvalido = gerarCpfValido();
         cpfInvalido = cpfInvalido.replace(cpfInvalido.charAt(2), ' ');
