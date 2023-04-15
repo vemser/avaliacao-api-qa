@@ -14,7 +14,7 @@ public class TrilhaDataFactory extends DataFactory{
 
 //region    CENÁRIOS DE CRIAÇÃO DE TRILHA
 
-    public static TrilhaModel gerarTrilhaValida(ProgramaModel idPrograma){
+    public static TrilhaModel gerarTrilhaValida(Integer idPrograma){
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdPrograma(idPrograma);
         trilha.setNome("Trilha " + faker.name().firstName());

@@ -1,12 +1,14 @@
 package model;
 
 public class AvaliacaoModel {
+    private Integer idAvaliacao;
     private Integer idAcompanhamento;
     private Integer idEstagiario;
     private String objetivoProfissional;
     private String recomendacaoMelhorias;
     private String link;
     private String status;
+    private String ativo;
 
     public AvaliacaoModel(Integer idAcompanhamento, Integer idEstagiario, String objetivoProfissional, String recomendacaoMelhorias, String link, String status) {
         this.idAcompanhamento = idAcompanhamento;
@@ -22,6 +24,14 @@ public class AvaliacaoModel {
 
     public Integer getIdAcompanhamento() {
         return idAcompanhamento;
+    }
+
+    public Integer getIdAvaliacao() {
+        return idAvaliacao;
+    }
+
+    public void setIdAvaliacao(Integer idAvaliacao) {
+        this.idAvaliacao = idAvaliacao;
     }
 
     public void setIdAcompanhamento(Integer idAcompanhamento) {
@@ -67,4 +77,26 @@ public class AvaliacaoModel {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(String ativo) {
+        this.ativo = ativo;
+    }
+
+    @Override
+    public String toString() {
+        return "AvaliacaoModel{" +
+                "idAvaliacao=" + idAvaliacao +
+                ", idAcompanhamento=" + idAcompanhamento +
+                ", idEstagiario=" + idEstagiario +
+                ", objetivoProfissional='" + objetivoProfissional + '\'' +
+                ", recomendacaoMelhorias='" + recomendacaoMelhorias + '\'' +
+                ", link='" + link + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
+
 }

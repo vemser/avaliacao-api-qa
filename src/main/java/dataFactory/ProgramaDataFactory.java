@@ -10,7 +10,7 @@ public class ProgramaDataFactory extends DataFactory {
         programa.setDescricao("Descrição do " + programa.getNome());
         programa.setDataInicio(dateFormat.format(faker.date().future(10, 1, TimeUnit.DAYS)));
         programa.setDataFim(dateFormat.format(faker.date().future(90, 30, TimeUnit.DAYS)));
-        programa.setStatus("ABERTO");
+        programa.setStatus("FECHADO");
         return programa;
     }
 

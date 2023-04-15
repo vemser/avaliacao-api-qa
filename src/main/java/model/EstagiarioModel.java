@@ -44,6 +44,7 @@ public class EstagiarioModel {
     private Integer idEstagiario;
     private Integer pontuacao;
     private Boolean ativo;
+    private String programa;
 
     public EstagiarioModel() {
     }
@@ -238,5 +239,39 @@ public class EstagiarioModel {
 
     public void setTrilha(String trilha) {
         this.trilha = trilha;
+    }
+
+    public String getPrograma() {
+        return programa;
+    }
+
+    public void setPrograma(String programa) {
+        this.programa = programa;
+    }
+
+    @Override
+    public String toString() {
+        return "EstagiarioModel{" +
+                "idTrilha=" + idTrilha +
+                ", trilha='" + trilha + '\'' +
+                ", nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", emailPessoal='" + emailPessoal + '\'' +
+                ", emailCorporativo='" + emailCorporativo + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", dataNascimento='" + dataNascimento + '\'' +
+                ", estado='" + estado + '\'' +
+                ", cidade='" + cidade + '\'' +
+                ", curso='" + curso + '\'' +
+                ", instituicaoEnsino='" + instituicaoEnsino + '\'' +
+                ", linkedin='" + linkedin + '\'' +
+                ", github='" + github + '\'' +
+                ", observacoes='" + observacoes + '\'' +
+                ", status='" + status + '\'' +
+                ", idEstagiario=" + idEstagiario +
+                ", pontuacao=" + pontuacao +
+                ", ativo=" + ativo +
+                ", programa='" + programa + '\'' +
+                '}';
     }
 }
