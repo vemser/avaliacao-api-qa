@@ -102,7 +102,7 @@ public class EstagiarioTest extends BaseTest {
     public void testCriarEstagiarioComCpfComPontoEVirgula() {
         estagiarioValido.setCpf(EstagiarioDataFactory.gerarCpfComPontoEHifen());
         estagiarioService.criarEstagiario(estagiarioValido)
-                .then()
+            .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType(ContentType.JSON)
                 .body("message", equalTo("CPF deve ser apenas númerico!"))
@@ -117,7 +117,7 @@ public class EstagiarioTest extends BaseTest {
     public void testCriarEstagiarioComEmailPessoalInvalido(String emailInvalido) {
         estagiarioValido.setEmailPessoal(emailInvalido);
         jsonFailureResponse = estagiarioService.criarEstagiario(estagiarioValido)
-                .then()
+            .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType(ContentType.JSON)
                 .extract().as(JSONFailureResponse.class);
@@ -131,7 +131,7 @@ public class EstagiarioTest extends BaseTest {
     public void testCriarEstagiarioComEmailCorporativoInvalido(String emailInvalido) {
         estagiarioValido.setEmailCorporativo(emailInvalido);
         estagiarioService.criarEstagiario(estagiarioValido)
-                .then()
+            .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType(ContentType.JSON);
 //                .body("errors", Matchers.hasItem("emailCorporativo: Endereço de e-mail inválido"))
@@ -145,7 +145,7 @@ public class EstagiarioTest extends BaseTest {
         public static void setupEstagiario() {
             estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada);
             estagiarioCriado = estagiarioService.criarEstagiario(estagiarioValido)
-                    .then()
+                .then()
                     .statusCode(HttpStatus.SC_CREATED)
                     .contentType(ContentType.JSON)
                     .extract().as(EstagiarioModel.class);
@@ -153,7 +153,7 @@ public class EstagiarioTest extends BaseTest {
         @AfterAll
         public static void limparEstagiario() {
             estagiarioService.deletarEstagiario(estagiarioCriado)
-                    .then()
+                .then()
                     .statusCode(HttpStatus.SC_NO_CONTENT);
         }
         @Test
@@ -162,7 +162,7 @@ public class EstagiarioTest extends BaseTest {
         @Description("Buscar estagiário por ID com sucesso")
         public void testBuscarEstagiarioPorIdComSucesso() {
             EstagiarioModel estagiario = estagiarioService.buscarEstagiarioPorIdEstagiario(estagiarioCriado)
-                    .then()
+                .then()
                     .statusCode(HttpStatus.SC_OK)
                     .contentType(ContentType.JSON)
                     .extract().as(EstagiarioModel.class);
@@ -190,7 +190,7 @@ public class EstagiarioTest extends BaseTest {
         @Description("Buscar estagiário por ID inexistente")
         public void testBuscarEstagiarioPorIdInexistente() {
             jsonFailureResponse = estagiarioService.buscarEstagiarioPorIdEstagiario(999999999)
-                    .then()
+                .then()
                     .statusCode(HttpStatus.SC_NOT_FOUND)
                     .contentType(ContentType.JSON)
                     .extract().as(JSONFailureResponse.class);
@@ -203,7 +203,7 @@ public class EstagiarioTest extends BaseTest {
         @MethodSource("dataFactory.GeralDataFactory#provideIdsInvalidos")
         public void testBuscarEstagiarioPorIdInvalido(String idInvalido) {
             estagiarioService.buscarEstagiarioPorIdEstagiarioInvalido(idInvalido)
-                    .then()
+                .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
         @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
@@ -213,7 +213,7 @@ public class EstagiarioTest extends BaseTest {
         @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaValidos")
         public void testBuscarEstagiarioPorPrograma(int pagina, int tamanhoPagina) {
             estagiarioService.buscarEstagiariosPorPrograma(programaCriado, pagina, tamanhoPagina)
-                    .then()
+                .then()
                     .statusCode(HttpStatus.SC_OK)
                     .contentType(ContentType.JSON)
                     .body("pagina", Matchers.is(pagina))
@@ -229,8 +229,8 @@ public class EstagiarioTest extends BaseTest {
         @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaInvalidos")
         public void testBuscarEstagiarioPorProgramaComPaginasETamanhosInvalidos(String pagina, String tamanhoPagina) {
             estagiarioService.buscarEstagiariosPorProgramaQueryInvalida(programaCriado, pagina, tamanhoPagina)
-                    .then()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST)
+            .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
             ;
         }
         @ParameterizedTest(name = "{index} - Página: {0} - Tamanho: {1}")
@@ -240,7 +240,7 @@ public class EstagiarioTest extends BaseTest {
         @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaValidos")
         public void testBuscarPorListarTodosEstagiarios(int pagina, int tamanhoPagina) {
             estagiarioService.buscarPorListarTodosEstagiarios(pagina, tamanhoPagina)
-                    .then()
+                .then()
                     .statusCode(HttpStatus.SC_OK)
                     .contentType(ContentType.JSON)
                     .body("pagina", Matchers.is(pagina))
@@ -255,7 +255,7 @@ public class EstagiarioTest extends BaseTest {
         @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaInvalidos")
         public void testBuscarPorListarTodosEstagiariosComPaginasETamanhosInvalidos(String pagina, String tamanhoPagina) {
             estagiarioService.buscarPorListarTodosEstagiariosQueryInvalida(pagina, tamanhoPagina)
-                    .then()
+                .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
             ;
         }
