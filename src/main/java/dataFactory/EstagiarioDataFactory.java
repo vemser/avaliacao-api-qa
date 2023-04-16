@@ -16,7 +16,7 @@ public class EstagiarioDataFactory extends DataFactory {
     public static EstagiarioModel gerarEstagiarioValido(Integer idTrilha) {
         EstagiarioModel estagiario = new EstagiarioModel();
         estagiario.setIdTrilha(idTrilha);
-        estagiario.setNome(faker.name().nameWithMiddle());
+        estagiario.setNome(faker.name().title());
         estagiario.setCpf(gerarCpfValido());
         estagiario.setEmailPessoal("teste." + faker.internet().emailAddress());
         estagiario.setEmailCorporativo(gerarEmailDbc(estagiario.getEmailPessoal()));
@@ -102,6 +102,37 @@ public class EstagiarioDataFactory extends DataFactory {
                 Arguments.of(faker.numerify("###### #####")),
                 Arguments.of(faker.numerify("#          #")),
                 Arguments.of(gerarCpfInvalidoComEspacoVazio())
+        );
+    }
+    public static Stream<Arguments> provideNomesInvalidos() {
+        return Stream.of(
+                Arguments.of(faker.numerify("##########")),
+                Arguments.of(faker.numerify("##### #####")),
+                Arguments.of(faker.name().firstName() + "{"),
+                Arguments.of(faker.name().firstName() + "}"),
+                Arguments.of(faker.name().firstName() + "["),
+                Arguments.of(faker.name().firstName() + "]"),
+                Arguments.of(faker.name().firstName() + "<"),
+                Arguments.of(faker.name().firstName() + ">"),
+                Arguments.of(faker.name().firstName() + "("),
+                Arguments.of(faker.name().firstName() + ")"),
+                Arguments.of(faker.name().firstName() + "/"),
+                Arguments.of(faker.name().firstName() + "\\"),
+                Arguments.of(faker.name().firstName() + "|"),
+                Arguments.of(faker.name().firstName() + "%"),
+                Arguments.of(faker.name().firstName() + "!"),
+                Arguments.of(faker.name().firstName() + "@"),
+                Arguments.of(faker.name().firstName() + "#"),
+                Arguments.of(faker.name().firstName() + "$"),
+                Arguments.of(faker.name().firstName() + "*"),
+                Arguments.of(faker.name().firstName() + "&"),
+                Arguments.of(faker.name().nameWithMiddle() + "!"),
+                Arguments.of(faker.name().nameWithMiddle() + "@"),
+                Arguments.of(faker.name().nameWithMiddle() + "#"),
+                Arguments.of(faker.name().nameWithMiddle() + "$"),
+                Arguments.of(faker.name().nameWithMiddle() + "%"),
+                Arguments.of(faker.name().nameWithMiddle() + "^"),
+                Arguments.of(faker.name().nameWithMiddle() + "&")
         );
     }
     private static String gerarCpfInvalidoComEspacoVazio() {

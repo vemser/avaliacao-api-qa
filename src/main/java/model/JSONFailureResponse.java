@@ -94,13 +94,13 @@ public class JSONFailureResponse {
     @Override
     public String toString() {
         return "JSONFailureResponse{" +
-                "timestamp='" + timestamp + '\'' +
-                ", status=" + status +
-                ", errors=" + errors +
-                ", messages=" + messages +
-                ", error='" + error + '\'' +
-                ", message='" + message + '\'' +
-                ", path='" + path + '\'' +
-                '}';
+            "timestamp='" + timestamp + '\'' +
+            ", status=" + status +
+            ", errors=" + errors +
+            ", messages=" + messages +
+            ", error='" + error + '\'' +
+            ", message='" + message + '\'' +
+            ", path='" + path + '\'' +
+            '}';
     }
 }

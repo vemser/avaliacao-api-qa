@@ -26,8 +26,9 @@ import static org.hamcrest.Matchers.hasItem;
 public class TrilhaTest extends BaseTest{
     public static ProgramaService programaService = new ProgramaService();
     public static ProgramaModel programaCriado;
-    TrilhaModel trilhaModel;
+    TrilhaModel trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
     TrilhaService trilhaService = new TrilhaService();
+    TrilhaDataFactory trilhaDataFactory = new TrilhaDataFactory();
 
 //    region BEFORE
     @BeforeAll

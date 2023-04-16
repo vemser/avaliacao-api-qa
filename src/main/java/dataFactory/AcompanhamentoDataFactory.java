@@ -1,6 +1,7 @@
 package dataFactory;
 
 import model.AcompanhamentoModel;
+import model.AvaliacaoModel;
 import model.ProgramaModel;
 import model.TrilhaModel;
 
@@ -41,8 +42,8 @@ public class AcompanhamentoDataFactory {
     public static AcompanhamentoModel gerarAcompanhamentoSemId(Integer idPrograma) {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
         acompanhamento.setTitulo("Trilha " + faker.name().firstName());
-        acompanhamento.setDataInicio(dateFormat.format(faker.date().future(10, 5, TimeUnit.DAYS)));
-        acompanhamento.setDataFim(dateFormat.format(faker.date().future(20, 11, TimeUnit.DAYS)));
+        acompanhamento.setDataInicio(dateFormat.format(faker.date().future(10, 1, TimeUnit.DAYS)));
+        acompanhamento.setDataFim(dateFormat.format(faker.date().future(90, 30, TimeUnit.DAYS)));
         LocalTime horarioInicio = LocalTime.of(8, 0);
         LocalTime horarioFim = LocalTime.of(17, 0);
 //        LocalTime horaAleatoria = horarioInicio.plusMinutes(faker.random().nextInt(540));
@@ -58,6 +59,31 @@ public class AcompanhamentoDataFactory {
     }
     public static AcompanhamentoModel gerarAcompanhamentoSemId(ProgramaModel programa) {
         return gerarAcompanhamentoSemId(programa.getIdPrograma());
+    }
+//endregion
+//region ALTERAR ACOMPANHAMENTO
+    public static AcompanhamentoModel alterarAcompanhamento(Integer idPrograma) {
+        AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
+        acompanhamento.setIdPrograma(idPrograma);
+        acompanhamento.setTitulo("Trilha " + faker.name().firstName());
+        acompanhamento.setDataInicio(dateFormat.format(faker.date().future(40, 39, TimeUnit.DAYS)));
+        acompanhamento.setDataFim(dateFormat.format(faker.date().future(2, 1, TimeUnit.DAYS)));
+        LocalTime horarioInicio = LocalTime.of(8, 0);
+        LocalTime horarioFim = LocalTime.of(17, 0);
+        acompanhamento.setHorarioInicio(String.valueOf(horarioInicio));
+        acompanhamento.setHorarioFim(String.valueOf(horarioFim));
+        acompanhamento.setDuracao(30);
+        acompanhamento.setNumeroResponsaveis(2);
+        acompanhamento.setDescricao("Descrição da " + acompanhamento.getTitulo());
+        acompanhamento.setStatus("ABERTO");
+
+        return acompanhamento;
+    }
+        public static AcompanhamentoModel alterarAcompanhamento(AcompanhamentoModel acompanhamento) {
+            return alterarAcompanhamento(acompanhamento.getIdAcompanhamento());
+    }
+    public static AcompanhamentoModel alterarAcompanhamentoSemId(Integer acompanhamento) {
+            return alterarAcompanhamento(0000000);
     }
 //endregion
 //region BUSCAR ACOMPANHAMENTO POR ID
@@ -92,7 +118,12 @@ public class AcompanhamentoDataFactory {
     }
 //endregion
 //region DESATIVAR AGENDAMENTO
-    public static AcompanhamentoModel desativarAcompanhamentocomIdErrado() {
+    public static AcompanhamentoModel deletarAcompanhamentoPorId(Integer acompanhamento) {
+        AcompanhamentoModel acompanhamentoModel = new AcompanhamentoModel();
+        acompanhamentoModel.setIdAcompanhamento(acompanhamento);
+        return acompanhamentoModel;
+    }
+    public static AcompanhamentoModel desativarAcompanhamentocomIdErrado(Integer id) {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
         acompanhamento.setIdAcompanhamento(0000000000000000000000000000000000000);
         return acompanhamento;

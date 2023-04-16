@@ -40,15 +40,15 @@ public class ProgramaService {
                         .post("/programa/create");
         return response;
     }
-    public Response criarProgramaComDatasAbaixoDaAtual(){
-        Response response =
-                given()
-                        .spec(SetupsRequestSpecification.requestSpecification())
-                        .body(ProgramaDataFactory.gerarProgramaComDataAbaixoDaAtual())
-                .when()
-                        .post("/programa/create");
-        return response;
-    }
+//    public Response criarProgramaComDatasAbaixoDaAtual(){
+//        Response response =
+//                given()
+//                        .spec(SetupsRequestSpecification.requestSpecification())
+//                        .body(ProgramaDataFactory.gerarProgramaComDataAbaixoDaAtual())
+//                .when()
+//                        .post("/programa/create");
+//        return response;
+//    }
 //    endregion
 //    region BUSCAR PROGRAMA
 

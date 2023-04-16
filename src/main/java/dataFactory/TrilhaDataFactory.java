@@ -3,6 +3,7 @@ package dataFactory;
 import model.ModuloModel;
 import model.ProgramaModel;
 import model.TrilhaModel;
+import service.ProgramaService;
 import service.TrilhaService;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class TrilhaDataFactory extends DataFactory{
 
 //region    CENÁRIOS DE CRIAÇÃO DE TRILHA
 
-    public static TrilhaModel gerarTrilhaValida(Integer idPrograma) {
+    public static TrilhaModel gerarTrilhaValida(Integer idPrograma){
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdPrograma(idPrograma);
         trilha.setNome("Trilha " + faker.name().firstName());
