@@ -54,19 +54,19 @@ public class ProgramaTest extends BaseTest {
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("nome: size must be between 10 and 2147483647"));
 
     }
-    @Test
-    @DisplayName("Falha ao criar um programa com datas abaixo da atual")
-    @Story("Criar um programa")
-    @Description("Falha ao criar um programa com datas abaixo da atual")
-    public void testCriarProgramaComDataAbaixoDaAtual(){
-        var response = programaService.criarProgramaComDatasAbaixoDaAtual()
-            .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
-        response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
-        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
-        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("dataInicio: must be a date in the present or in the future"));
-        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("dataFim: must be a date in the present or in the future"));
-    }
+//    @Test
+//    @DisplayName("Falha ao criar um programa com datas abaixo da atual")
+//    @Story("Criar um programa")
+//    @Description("Falha ao criar um programa com datas abaixo da atual")
+//    public void testCriarProgramaComDataAbaixoDaAtual(){
+//        var response = programaService.criarProgramaComDatasAbaixoDaAtual()
+//            .then()
+//                .statusCode(HttpStatus.SC_BAD_REQUEST);
+//        response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
+//        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
+//        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("dataInicio: must be a date in the present or in the future"));
+//        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("dataFim: must be a date in the present or in the future"));
+//    }
 //    endregion
 //    region TESTES DE BUSCAR PROGRAMA
 

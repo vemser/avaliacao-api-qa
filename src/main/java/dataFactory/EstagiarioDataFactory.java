@@ -16,7 +16,7 @@ public class EstagiarioDataFactory extends DataFactory {
     public static EstagiarioModel gerarEstagiarioValido(Integer idTrilha) {
         EstagiarioModel estagiario = new EstagiarioModel();
         estagiario.setIdTrilha(idTrilha);
-        estagiario.setNome(faker.name().nameWithMiddle());
+        estagiario.setNome(faker.name().title());
         estagiario.setCpf(gerarCpfValido());
         estagiario.setEmailPessoal("teste." + faker.internet().emailAddress());
         estagiario.setEmailCorporativo(gerarEmailDbc(estagiario.getEmailPessoal()));

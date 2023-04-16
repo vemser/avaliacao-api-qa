@@ -42,8 +42,8 @@ public class AcompanhamentoDataFactory {
     public static AcompanhamentoModel gerarAcompanhamentoSemId(Integer idPrograma) {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
         acompanhamento.setTitulo("Trilha " + faker.name().firstName());
-        acompanhamento.setDataInicio(dateFormat.format(faker.date().future(10, 5, TimeUnit.DAYS)));
-        acompanhamento.setDataFim(dateFormat.format(faker.date().future(20, 11, TimeUnit.DAYS)));
+        acompanhamento.setDataInicio(dateFormat.format(faker.date().future(10, 1, TimeUnit.DAYS)));
+        acompanhamento.setDataFim(dateFormat.format(faker.date().future(90, 30, TimeUnit.DAYS)));
         LocalTime horarioInicio = LocalTime.of(8, 0);
         LocalTime horarioFim = LocalTime.of(17, 0);
 //        LocalTime horaAleatoria = horarioInicio.plusMinutes(faker.random().nextInt(540));
@@ -66,13 +66,10 @@ public class AcompanhamentoDataFactory {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
         acompanhamento.setIdPrograma(idPrograma);
         acompanhamento.setTitulo("Trilha " + faker.name().firstName());
-        acompanhamento.setDataInicio(dateFormat.format(faker.date().future(10, 5, TimeUnit.DAYS)));
-        acompanhamento.setDataFim(dateFormat.format(faker.date().future(20, 11, TimeUnit.DAYS)));
+        acompanhamento.setDataInicio(dateFormat.format(faker.date().future(40, 39, TimeUnit.DAYS)));
+        acompanhamento.setDataFim(dateFormat.format(faker.date().future(2, 1, TimeUnit.DAYS)));
         LocalTime horarioInicio = LocalTime.of(8, 0);
         LocalTime horarioFim = LocalTime.of(17, 0);
-    //        LocalTime horaAleatoria = horarioInicio.plusMinutes(faker.random().nextInt(540));
-    //        acompanhamento.setHorarioInicio(String.valueOf(horaAleatoria));
-    //        acompanhamento.setHorarioFim(String.valueOf(horaAleatoria.plusMinutes(30)));
         acompanhamento.setHorarioInicio(String.valueOf(horarioInicio));
         acompanhamento.setHorarioFim(String.valueOf(horarioFim));
         acompanhamento.setDuracao(30);

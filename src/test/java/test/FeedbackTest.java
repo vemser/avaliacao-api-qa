@@ -24,7 +24,7 @@ import static test.AvaliacaoTest.acompanhamentoCriado;
 import static test.AvaliacaoTest.estagiarioCriado;
 
 public class FeedbackTest extends BaseTest {
-    //region REQUISITOS
+//region REQUISITOS
     FeedbackModel feedbackModel = new FeedbackModel();
     FeedbackDataFactory feedbackDataFactory = new FeedbackDataFactory();
     FeedbackService feedbackService = new FeedbackService();
@@ -66,7 +66,7 @@ public class FeedbackTest extends BaseTest {
         idAvaliacao = AvaliacaoDataFactory.buscarAvaliacaoPorIdDaAvaliacao(response.getIdAvaliacao());
     }
 
-    //endregion
+//endregion
 //region CRIAR FEEDBACK
     @Test
     public void criarFeedback() {
@@ -94,7 +94,7 @@ public class FeedbackTest extends BaseTest {
 //endregion
 //region ATUALIZAR FEEDBACK
     @Test
-    public void atualizarAvaliacao() {
+    public void atualizarFeedback() {
         feedbackModel = FeedbackDataFactory.gerarFeedbackValido(idAvaliacao);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
         FeedbackModel atualizar = FeedbackDataFactory.atualizarFeedback(criarFeedback.getIdFeedBack());
@@ -151,7 +151,9 @@ public class FeedbackTest extends BaseTest {
     public void buscarAvaliacaoPeloIdDaAvaliacao() {
         feedbackModel = FeedbackDataFactory.gerarFeedbackValido(idAvaliacao);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
+        FeedbackModel gerarIdAvaliacao = FeedbackDataFactory.buscarFeedbackPorIdDeAvaliacao(criarFeedback.getIdAvaliacao());
         FeedbackModel idFeedback = FeedbackDataFactory.buscarFeedback(criarFeedback.getIdFeedBack());
+        feedbackService.buscarFeedbackPorPaginas(gerarIdAvaliacao);
         feedbackService.deletarFeedbackPeloId(idFeedback)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
