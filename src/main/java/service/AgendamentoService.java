@@ -28,16 +28,16 @@ public class AgendamentoService {
     }
 //endregion
 //region ATUALIZAR AGENDAMENTO
-//    public Response atualizarAgendamento(AgendamentoModel agendamentoAntigo, AgendamentoModel agendamentoNovo) {
-//        Response response =
-//            given()
-//                .spec(SetupsRequestSpecification.requestSpecification())
-//                .body(agendamentoAntigo)
-//                .pathParam("idAgendamento", agendamentoNovo.getIdAgendamento())
-//            .when()
-//                .post("/agendamento/update/{idAgendamento}");
-//        return response;
-//    }
+    public Response atualizarAgendamento(AgendamentoModel agendamentoAntigo, AgendamentoModel agendamentoNovo) {
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .body(agendamentoAntigo)
+                .pathParam("idAgendamento", agendamentoNovo.getIdAgendamento())
+            .when()
+                .post("/agendamento/update/{idAgendamento}");
+        return response;
+    }
 //endregion
     public Response buscarAgendamentoPorPaginas(Integer pagina, Integer tamanho) {
         Response response =

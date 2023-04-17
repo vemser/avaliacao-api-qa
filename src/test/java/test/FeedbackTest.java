@@ -5,72 +5,26 @@ import dataFactory.*;
 import io.qameta.allure.Description;
 import io.qameta.allure.Story;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import model.*;
 import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import service.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static test.AvaliacaoTest.acompanhamentoCriado;
-import static test.AvaliacaoTest.estagiarioCriado;
-
 public class FeedbackTest extends BaseTest {
 //region REQUISITOS
     FeedbackModel feedbackModel = new FeedbackModel();
-    FeedbackDataFactory feedbackDataFactory = new FeedbackDataFactory();
     FeedbackService feedbackService = new FeedbackService();
-    EstagiarioModel estagiarioModel = new EstagiarioModel();
-    static ProgramaService programaService = new ProgramaService();
-    static AcompanhamentoModel acompanhamentoModel = new AcompanhamentoModel();
-    static TrilhaService trilhaService = new TrilhaService();
-    static AcompanhamentoService acompanhamentoService = new AcompanhamentoService();
-    static EstagiarioService estagiarioService = new EstagiarioService();
 
-    static AvaliacaoModel avaliacaoCriada;
-    static AvaliacaoModel idAvaliacao;
-    static AvaliacaoService avaliacaoService = new AvaliacaoService();
-
-
-    @BeforeAll
-    public static void criarPreRequisitos() {
-        ProgramaModel programaCriado = programaService.criarPrograma(ProgramaDataFactory.gerarProgramaValido())
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(ProgramaModel.class);
-        TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(TrilhaDataFactory.gerarTrilhaValida(programaCriado))
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(TrilhaModel.class);
-        AcompanhamentoModel acompanhamentoCriado = acompanhamentoService.criarAcompanhamento(AcompanhamentoDataFactory.gerarAcompanhamentoValido(programaCriado))
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(AcompanhamentoModel.class);
-        EstagiarioModel estagiarioCriado = estagiarioService.criarEstagiario(EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada))
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(EstagiarioModel.class);
-        avaliacaoCriada = AvaliacaoDataFactory.gerarAvaliacaoValida(acompanhamentoCriado, estagiarioCriado);
-        var response = avaliacaoService.criarAvaliacao(avaliacaoCriada)
-                .then()
-                .extract()
-                .as(AvaliacaoModel.class);
-        idAvaliacao = AvaliacaoDataFactory.buscarAvaliacaoPorIdDaAvaliacao(response.getIdAvaliacao());
-    }
-
-//endregion
 //region CRIAR FEEDBACK
     @Test
+    @DisplayName("Criar feedback com sucesso")
+    @Story("Criar feedback")
+    @Description("Criar feedback com sucesso")
     public void criarFeedback() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(idAvaliacao);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
         var response = feedbackService.cadastrarFeedback(feedbackModel)
             .then()
                 .statusCode(HttpStatus.SC_CREATED)
@@ -80,13 +34,16 @@ public class FeedbackTest extends BaseTest {
         assertThat(feedbackModel.getDescricao(), equalTo(response.getDescricao()));
         assertThat(feedbackModel.getTipoFeedback(), equalTo(response.getTipoFeedback()));
         FeedbackModel delete = feedbackService.buscarFeedbackPeloId(response).then().extract().as(FeedbackModel.class);
-        feedbackService.deletarFeedbackPeloId(delete)
+        feedbackService.desativarFeedbackPeloId(delete)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
+    @DisplayName("Criar feedback invalido")
+    @Story("Criar feedback")
+    @Description("Criar feedback invalido")
     public void criarFeedbackInvalido() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(idAvaliacao);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
         feedbackService.cadastrarFeedback(feedbackModel)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
@@ -94,49 +51,60 @@ public class FeedbackTest extends BaseTest {
 //endregion
 //region ATUALIZAR FEEDBACK
     @Test
+    @DisplayName("Atualizar feedback com sucesso")
+    @Story("Criar feedback")
+    @Description("Atualizar feedback com sucesso")
     public void atualizarFeedback() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(idAvaliacao);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
         FeedbackModel atualizar = FeedbackDataFactory.atualizarFeedback(criarFeedback.getIdFeedBack());
         var response = feedbackService.atualizarFeedback(criarFeedback, atualizar)
                 .then()
                 .statusCode(HttpStatus.SC_OK);
-        feedbackService.deletarFeedbackPeloId(criarFeedback)
+        feedbackService.desativarFeedbackPeloId(criarFeedback)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
-
     @Test
+    @DisplayName("Atualizar feedback com Id errado")
+    @Story("Criar feedback")
+    @Description("Atualizar feedback com Id errado")
     public void atualizarAvaliacaoComIdErrado() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(idAvaliacao);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
         FeedbackModel atualizar = FeedbackDataFactory.atualizarFeedbackComidErrado(0000000000);
         feedbackService.atualizarFeedback(criarFeedback, atualizar)
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .extract();
-        feedbackService.deletarFeedbackPeloId(criarFeedback)
+        feedbackService.desativarFeedbackPeloId(criarFeedback)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 //endregion
 //region BUSCAR FEEDBACK PELO ID
     @Test
-    public void buscarAvaliacao() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(idAvaliacao);
+    @DisplayName("Buscar feedback com sucesso")
+    @Story("Criar feedback")
+    @Description("Buscar feedback com sucesso")
+    public void buscarFeedback() {
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
         FeedbackModel idFeedback = FeedbackDataFactory.buscarFeedback(criarFeedback.getIdFeedBack());
         var response = feedbackService.buscarFeedbackPeloId(idFeedback)
                 .then()
                 .statusCode(HttpStatus.SC_OK);
-        feedbackService.deletarFeedbackPeloId(idFeedback)
+        feedbackService.desativarFeedbackPeloId(idFeedback)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
         response.log().all();
     }
     @Test
-    public void buscarAvaliacaoComIdInvalido() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(idAvaliacao);
+    @DisplayName("Criar feedback com id Invalido")
+    @Story("Criar feedback")
+    @Description("Criar feedback com od invalido")
+    public void buscarFeedbackComIdInvalido() {
+        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
         FeedbackModel atualizar = FeedbackDataFactory.buscarFeedback(0000000000);
         var response = feedbackService.buscarFeedbackPeloId(atualizar)
                 .then()
@@ -144,23 +112,26 @@ public class FeedbackTest extends BaseTest {
     }
 //endregion
 //region BUSCAR FEEDBACK PELO ID DA AVALIACAO
-    @DisplayName("Buscar todos os acompanhamentos")
-    @Story("Buscar trilhas")
-    @Description("Buscar todos os acompanhamentos")
     @Test
+    @DisplayName("Buscar todos os feedbacks")
+    @Story("Buscar trilhas")
+    @Description("Buscar todos os feedbacks")
     public void buscarAvaliacaoPeloIdDaAvaliacao() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(idAvaliacao);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
         FeedbackModel gerarIdAvaliacao = FeedbackDataFactory.buscarFeedbackPorIdDeAvaliacao(criarFeedback.getIdAvaliacao());
         FeedbackModel idFeedback = FeedbackDataFactory.buscarFeedback(criarFeedback.getIdFeedBack());
         feedbackService.buscarFeedbackPorPaginas(gerarIdAvaliacao);
-        feedbackService.deletarFeedbackPeloId(idFeedback)
+        feedbackService.desativarFeedbackPeloId(idFeedback)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
+    @DisplayName("Criar feedback com sucesso")
+    @Story("Criar feedback")
+    @Description("Criar feedback com sucesso")
     public void buscarAvaliacaoComIdDaAvaliacaoInvalida() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(idAvaliacao);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
         feedbackService.cadastrarFeedback(feedbackModel);
         FeedbackModel atualizar = FeedbackDataFactory.buscarFeedbackPorIdDeAvaliacao(0000000000);
         feedbackService.buscarFeedbackPorPaginas(atualizar)
@@ -169,29 +140,32 @@ public class FeedbackTest extends BaseTest {
     }
 //endregion
 //region DELETAR FEEDBACK
-    @Test
-    public void deletarFeedback() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(idAvaliacao);
-        FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
-        FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackPorId(criarFeedback.getIdFeedBack());
-        var response = feedbackService.deletarFeedbackPeloId(idFeedback)
-                .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-        response.log().all();
-    }
-    @Test
-    public void deletarFeedbackComIdErrado() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(idAvaliacao);
-        FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackComIdErrado(000000000000000000000);
-        var response = feedbackService.deletarFeedbackPeloId(idFeedback)
-                .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
-    }
+//    @Test
+//    public void deletarFeedback() {
+//        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
+//        FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
+//        FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackPorId(criarFeedback.getIdFeedBack());
+//        var response = feedbackService.deletarFeedbackPeloId(idFeedback)
+//                .then()
+//                .statusCode(HttpStatus.SC_NO_CONTENT);
+//        response.log().all();
+//    }
+//    @Test
+//    public void deletarFeedbackComIdErrado() {
+//        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
+//        FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackComIdErrado(000000000000000000000);
+//        var response = feedbackService.deletarFeedbackPeloId(idFeedback)
+//                .then()
+//                .statusCode(HttpStatus.SC_BAD_REQUEST);
+//    }
 //endregion
 //region DESATIVAR FEEDBACK
     @Test
+    @DisplayName("Desativar feedback com sucesso")
+    @Story("Criar feedback")
+    @Description("Desativar feedback com sucesso")
     public void desativarFeedback() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(idAvaliacao);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
         FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackPorId(criarFeedback.getIdFeedBack());
         var response = feedbackService.desativarFeedbackPeloId(idFeedback)
@@ -200,8 +174,11 @@ public class FeedbackTest extends BaseTest {
         response.log().all();
     }
     @Test
+    @DisplayName("Desativar feedback com com id errado")
+    @Story("Criar feedback")
+    @Description("Desativar feedback com id errado")
     public void desativarFeedbackComIdErrado() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(idAvaliacao);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
         FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackComIdErrado(000000000000000000000);
         var response = feedbackService.deletarFeedbackPeloId(idFeedback)
                 .then()

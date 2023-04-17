@@ -29,6 +29,7 @@ public class ProgramaTest extends BaseTest {
         var response = programaService.criarPrograma(programaValido)
             .then()
                 .statusCode(HttpStatus.SC_CREATED);
+        response.log().all();
         response.assertThat().contentType(ContentType.JSON);
         response.assertThat().statusCode(HttpStatus.SC_CREATED);
         ProgramaModel programaResponse = response.extract().as(ProgramaModel.class);
@@ -37,6 +38,7 @@ public class ProgramaTest extends BaseTest {
         assertThat(programaValido.getDataInicio(), equalTo(programaResponse.getDataInicio()));
         assertThat(programaValido.getDataFim(), equalTo(programaResponse.getDataFim()));
         assertThat(programaValido.getStatus(), equalTo(programaResponse.getStatus()));
+        System.out.println(response);
         programaService.deletarPrograma(programaResponse)
                 .then()
                     .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -54,20 +56,7 @@ public class ProgramaTest extends BaseTest {
         Assertions.assertTrue(jsonFailureResponse.getErrors().contains("nome: size must be between 10 and 2147483647"));
 
     }
-//    @Test
-//    @DisplayName("Falha ao criar um programa com datas abaixo da atual")
-//    @Story("Criar um programa")
-//    @Description("Falha ao criar um programa com datas abaixo da atual")
-//    public void testCriarProgramaComDataAbaixoDaAtual(){
-//        var response = programaService.criarProgramaComDatasAbaixoDaAtual()
-//            .then()
-//                .statusCode(HttpStatus.SC_BAD_REQUEST);
-//        response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
-//        JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
-//        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("dataInicio: must be a date in the present or in the future"));
-//        Assertions.assertTrue(jsonFailureResponse.getErrors().contains("dataFim: must be a date in the present or in the future"));
-//    }
-//    endregion
+//endregion
 //    region TESTES DE BUSCAR PROGRAMA
 
     @Test

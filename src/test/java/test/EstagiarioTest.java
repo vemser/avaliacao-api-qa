@@ -25,39 +25,20 @@ import static org.hamcrest.Matchers.hasItem;
 
 public class EstagiarioTest extends BaseTest {
     //     region Pre-requisitos
-    private static ProgramaService programaService = new ProgramaService();
-    private static TrilhaService trilhaService = new TrilhaService();
     private static EstagiarioService estagiarioService = new EstagiarioService();
-    private static ProgramaModel programaCriado;
-    private static TrilhaModel trilhaCriada;
     private static EstagiarioModel estagiarioValido;
     private static EstagiarioModel estagiarioCriado;
     private static JSONFailureResponse jsonFailureResponse;
-    @BeforeAll
-    public static void criarPreRequisitos() {
-        programaCriado = programaService.criarPrograma(ProgramaDataFactory.gerarProgramaValido())
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(ProgramaModel.class);
-        trilhaCriada = trilhaService.adicionarTrilha(TrilhaDataFactory.gerarTrilhaValida(programaCriado))
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(TrilhaModel.class);
-    }
+
     @BeforeEach
     public void criarEstagiarioValido() {
-        estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada);
+        estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(1109);
     }
     @AfterAll
     public static void limparDadosCriados() {
-        trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
-                .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-        programaService.deletarPrograma(programaCriado)
-                .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-//        estagiarioService.deletarEstagiario(estagiarioCriado)
-//                .then();
+
+        estagiarioService.deletarEstagiario(estagiarioCriado)
+                .then();
     }
     private static EstagiarioModel retornarEstagiarioCriado() {
         return estagiarioService.criarEstagiario(estagiarioValido)
@@ -67,7 +48,7 @@ public class EstagiarioTest extends BaseTest {
                 .extract().as(EstagiarioModel.class);
     }
     //     endregion
-    //     region Criar estagiário
+//         region Criar estagiário
     @Test
     @DisplayName("Criar estagiário com sucesso")
     @Story("Criar estagiário")
@@ -143,7 +124,7 @@ public class EstagiarioTest extends BaseTest {
     class BuscarEstagiario {
         @BeforeAll
         public static void setupEstagiario() {
-            estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada);
+            estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(1109);
             estagiarioCriado = estagiarioService.criarEstagiario(estagiarioValido)
                 .then()
                     .statusCode(HttpStatus.SC_CREATED)
@@ -212,7 +193,7 @@ public class EstagiarioTest extends BaseTest {
         @Description("Buscar estagiário por programa")
         @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaValidos")
         public void testBuscarEstagiarioPorPrograma(int pagina, int tamanhoPagina) {
-            estagiarioService.buscarEstagiariosPorPrograma(programaCriado, pagina, tamanhoPagina)
+            estagiarioService.buscarEstagiariosPorPrograma(1346, pagina, tamanhoPagina)
                 .then()
                     .statusCode(HttpStatus.SC_OK)
                     .contentType(ContentType.JSON)
@@ -228,7 +209,7 @@ public class EstagiarioTest extends BaseTest {
         @Description("Buscar estagiário por programa com página e tamanho inválidos")
         @MethodSource("dataFactory.GeralDataFactory#providePaginasETamanhosDePaginaInvalidos")
         public void testBuscarEstagiarioPorProgramaComPaginasETamanhosInvalidos(String pagina, String tamanhoPagina) {
-            estagiarioService.buscarEstagiariosPorProgramaQueryInvalida(programaCriado, pagina, tamanhoPagina)
+            estagiarioService.buscarEstagiariosPorProgramaQueryInvalida(1346, pagina, tamanhoPagina)
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
             ;
@@ -267,7 +248,7 @@ public class EstagiarioTest extends BaseTest {
     class AtualizarEstagiario{
         @BeforeAll
         public static void setupEstagiario() {
-            estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada);
+            estagiarioValido = EstagiarioDataFactory.gerarEstagiarioValido(1109);
             estagiarioCriado = retornarEstagiarioCriado();
         }
         @AfterAll

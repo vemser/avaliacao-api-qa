@@ -74,7 +74,7 @@ public class TrilhaService {
                 .spec(SetupsRequestSpecification.requestSpecification())
                 .pathParam("idPrograma", programa.getIdPrograma())
                 .queryParam("pagina", 0)
-                .queryParam("tamanho", 2)
+                .queryParam("tamanho", 20)
             .when()
                 .get("/trilha/list-by-programa/{idPrograma}");
         return response;

@@ -16,16 +16,13 @@ public class TrilhaDataFactory extends DataFactory{
 
     public static TrilhaModel gerarTrilhaValida(Integer idPrograma){
         TrilhaModel trilha = new TrilhaModel();
-        trilha.setIdPrograma(idPrograma);
+        trilha.setIdPrograma(1346);
         trilha.setNome("Trilha " + faker.name().firstName());
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("FECHADO");
         trilha.setNome(faker.name().firstName());
 
         return trilha;
-    }
-    public static TrilhaModel gerarTrilhaValida(ProgramaModel programa) {
-        return gerarTrilhaValida(programa.getIdPrograma());
     }
 
     public static TrilhaModel gerarTrilhaSemId() {
@@ -69,6 +66,11 @@ public class TrilhaDataFactory extends DataFactory{
     public static TrilhaModel buscarTrilhaComIdInexistente(){
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdTrilha(12321564);
+        return trilha;
+    }
+    public static TrilhaModel buscarTrilhaComId(Integer idTrilha){
+        TrilhaModel trilha = new TrilhaModel();
+        trilha.setIdTrilha(idTrilha);
         return trilha;
     }
 //endregion

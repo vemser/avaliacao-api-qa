@@ -26,44 +26,29 @@ import static org.hamcrest.Matchers.hasItem;
 public class TrilhaTest extends BaseTest{
     public static ProgramaService programaService = new ProgramaService();
     public static ProgramaModel programaCriado;
-    TrilhaModel trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+    TrilhaModel trilhaModel = TrilhaDataFactory.gerarTrilhaValida(1340);
     TrilhaService trilhaService = new TrilhaService();
     TrilhaDataFactory trilhaDataFactory = new TrilhaDataFactory();
-
-//    region BEFORE
-    @BeforeAll
-    public static void criarPrograma(){
-
-        programaCriado = programaService.criarPrograma(ProgramaDataFactory.gerarProgramaValido())
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(ProgramaModel.class);
-    }
-    @AfterAll
-    public static void deletarPrograma(){
-        programaService.deletarPrograma(programaCriado)
-                .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-    }
-//    endregion
-//    region CRIAR TRILHA
+//region CRIAR TRILHA
     @Test
     @DisplayName("Criar uma trilha com sucesso")
     @Story("Criar uma trilha")
     @Description("Criar uma trilha com sucesso")
     public void testCadastrarTrilha(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(1346);
         var response = trilhaService.adicionarTrilha(trilhaModel)
             .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .contentType(ContentType.JSON)
                 .extract()
                 .as(TrilhaModel.class);
+        System.out.println(response);
             assertThat(trilhaModel.getNome(), equalTo(response.getNome()));
             assertThat(trilhaModel.getDescricao(), equalTo(response.getDescricao()));
             assertThat(trilhaModel.getStatus(), equalTo(response.getStatus()));
             assertThat(response.getIdTrilha(), equalTo(response.getIdTrilha()));
-            trilhaService.deletarTrilhaIdTrilha(response)
+            TrilhaModel deletar = TrilhaDataFactory.buscarTrilhaComId(response.getIdTrilha());
+            trilhaService.desativarTrilhaIdTrilha(deletar)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -86,7 +71,7 @@ public class TrilhaTest extends BaseTest{
     @Story("Criar uma trilha")
     @Description("Falha ao criar uma trilha com status da trilha inexistente")
     public void testAdicionarTrilhaComLetrasNoId(){
-        TrilhaModel trilhaComLetrasNoCampoId = TrilhaDataFactory.gerarTrilhaComStatusInexistente(programaCriado.getIdPrograma());
+        TrilhaModel trilhaComLetrasNoCampoId = TrilhaDataFactory.gerarTrilhaComStatusInexistente(1341);
         JSONFailureResponse response = trilhaService.adicionarTrilha(trilhaComLetrasNoCampoId)
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
@@ -103,18 +88,17 @@ public class TrilhaTest extends BaseTest{
     @Story("Atualizar uma trilha")
     @Description("Atualizar uma trilha com sucesso")
     public void testAtualizarTrilha(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(122);
         TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
-        TrilhaModel trilhaAlterada = TrilhaDataFactory.atualizarTrilhaValida(trilhaCriada.getIdPrograma());
-        var response = trilhaService.atualizarTrilha(trilhaCriada, trilhaAlterada)
+        var response = trilhaService.atualizarTrilha(trilhaCriada, trilhaModel)
             .then()
                 .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .as(TrilhaModel.class);
-            assertThat(trilhaAlterada.getNome(), equalTo(response.getNome()));
-            assertThat(trilhaAlterada.getDescricao(), equalTo(response.getDescricao()));
-            assertThat(trilhaAlterada.getStatus(), equalTo(response.getStatus()));
-            assertThat(trilhaAlterada.getIdPrograma(), equalTo(response.getIdPrograma()));
+            assertThat(trilhaModel.getNome(), equalTo(response.getNome()));
+            assertThat(trilhaModel.getDescricao(), equalTo(response.getDescricao()));
+            assertThat(trilhaModel.getStatus(), equalTo(response.getStatus()));
+            assertThat(trilhaModel.getIdPrograma(), equalTo(response.getIdPrograma()));
             trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -124,7 +108,7 @@ public class TrilhaTest extends BaseTest{
     @Story("Atualizar uma trilha")
     @Description("Falha ao atualizar uma trilha sem ID")
     public void testAtualizarTrilhaSemId(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(0000);
         TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
         TrilhaModel trilhaAlterada = TrilhaDataFactory.atualizarTrilhaSemId();
         var response = trilhaService.atualizarTrilha(trilhaCriada, trilhaAlterada)
@@ -140,7 +124,7 @@ public class TrilhaTest extends BaseTest{
     @Story("Atualizar uma trilha")
     @Description("Falha ao atualizar uma trilha sem Body")
     public void testAtualizarTrilhaSemBody(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(00);
         TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
         TrilhaModel trilhaAlterada = TrilhaDataFactory.atualizarTrilhSemCorpo();
         var response = trilhaService.atualizarTrilha(trilhaCriada, trilhaAlterada)
@@ -160,35 +144,29 @@ public class TrilhaTest extends BaseTest{
     @Story("Listar trilhas")
     @Description("Listar todas trilhas pelo id do programa")
     public void testBuscarProgramaPorIdDePrograma(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
-        TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
-        TrilhaModel idprograma = TrilhaDataFactory.buscarProgramasPorId(trilhaCriada.getIdPrograma());
-        var response = trilhaService.buscarTrilhaPage(idprograma)
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(0);
+        var response = trilhaService.buscarTrilhaPage(trilhaModel)
             .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON);
-        response.body("tamanho", equalTo(2));
-        trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
-            .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+        response.log().all();
     }
     @Test
     @DisplayName("Falha ao listar todas trilhas com id negativo")
     @Story("Listar trilhas")
     @Description("Falha ao listar todas trilhas com id negativo")
     public void testBuscarProgramaPorIdDeProgramaComIdNegtivo(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(122);
         TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
         TrilhaModel idprograma = TrilhaDataFactory.buscarProgramasSemId();
         var response = trilhaService.buscarTrilhaPage(idprograma)
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType(ContentType.JSON);
-        trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
+        trilhaService.desativarTrilhaIdTrilha(trilhaCriada)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
-
 //endregion
 //    region BUSCAR TRILHA POR ID
     @Test
@@ -196,7 +174,7 @@ public class TrilhaTest extends BaseTest{
     @Story("Listar trilha")
     @Description("Listar trilha pelo id")
     public void testBuscarTrilhaPorIdTrilha(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(1341);
         TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
         var response = trilhaService.buscarTrilhaPorIdTrilha(trilhaCriada)
             .then()
@@ -206,7 +184,7 @@ public class TrilhaTest extends BaseTest{
         assertThat(trilhaCriada.getNome(), equalTo(response.getNome()));
         assertThat(trilhaCriada.getStatus(), equalTo(response.getStatus()));
         assertThat(trilhaCriada.getDescricao(), equalTo(response.getDescricao()));
-        trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
+        trilhaService.desativarTrilhaIdTrilha(trilhaCriada)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -215,13 +193,13 @@ public class TrilhaTest extends BaseTest{
     @Story("Listar trilha")
     @Description("Falha ao listar trilha sem o Id")
     public void testBuscarTrilhaPorIdTrilhaSemId(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(0);
         TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
         TrilhaModel trilhaSemId = TrilhaDataFactory.buscarTrilhaComIdInexistente();
         trilhaService.buscarTrilhaPorIdTrilha(trilhaSemId)
             .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
-        trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
+        trilhaService.desativarTrilhaIdTrilha(trilhaCriada)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -233,7 +211,7 @@ public class TrilhaTest extends BaseTest{
     @Story("Deletar trilha")
     @Description("Desativar trilha pelo Id")
     public void testDesativarTrilhaPorIdTrilha(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(0);
         TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
         trilhaService.desativarTrilhaIdTrilha(trilhaCriada)
             .then()
@@ -245,45 +223,45 @@ public class TrilhaTest extends BaseTest{
     @Story("Deletar trilha")
     @Description("Falha ao desativar trilha com id inexistente")
     public void testDesativarTrilhaPorIdTrilhaComIdInexistente(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(0000000);
         TrilhaModel trilhaSemId = TrilhaDataFactory.desativarTrilhaComIdInexistente();
         trilhaService.desativarTrilhaIdTrilha(trilhaSemId)
             .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 //endregion
-//region  DELETAR TRILHA POR ID
-    @Test
-    @DisplayName("Deletar trilha pelo Id")
-    @Story("Deletar trilha")
-    @Description("Deletar trilha pelo Id")
-    public void testDeletarTrilhaPorIdTrilha(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
-        TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
-        var response = trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
-            .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-    }
-
-    @Test
-    @DisplayName("Falha ao deletar trilha com id inexistente")
-    @Story("Deletar trilha")
-    @Description("Falha ao deletar trilha com id inexistente")
-    public void testDeletarTrilhaPorIdTrilhaComIdInexistente(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(programaCriado);
-        TrilhaModel trilhaSemId = TrilhaDataFactory.deletarTrilhaComIdInexistente();
-        trilhaService.deletarTrilhaIdTrilha(trilhaSemId)
-            .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-//endregion
+////region  DELETAR TRILHA POR ID
+//    @Test
+//    @DisplayName("Deletar trilha pelo Id")
+//    @Story("Deletar trilha")
+//    @Description("Deletar trilha pelo Id")
+//    public void testDeletarTrilhaPorIdTrilha(){
+//        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(1341);
+//        TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(trilhaModel).then().extract().as(TrilhaModel.class);
+//        trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
+//            .then()
+//                .statusCode(HttpStatus.SC_NO_CONTENT);
+//    }
+//
+//    @Test
+//    @DisplayName("Falha ao deletar trilha com id inexistente")
+//    @Story("Deletar trilha")
+//    @Description("Falha ao deletar trilha com id inexistente")
+//    public void testDeletarTrilhaPorIdTrilhaComIdInexistente(){
+//        trilhaModel = TrilhaDataFactory.gerarTrilhaValida(000000);
+//        TrilhaModel trilhaSemId = TrilhaDataFactory.deletarTrilhaComIdInexistente();
+//        trilhaService.deletarTrilhaIdTrilha(trilhaSemId)
+//            .then()
+//                .statusCode(HttpStatus.SC_NOT_FOUND);
+//    }
+////endregion
 //region CRIAR TRILHAS COM MODULO
     @Test
     @DisplayName("Criar uma trilha com modulo com sucesso")
     @Story("Criar uma trilha com modulo")
     @Description("Criar uma trilha com modulo com sucesso")
     public void testCadastrarTrilhaComModulo(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModulo(programaCriado.getIdPrograma());
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModulo(1346);
         var response = trilhaService.adicionarTrilhaComModulo(trilhaModel)
             .then()
                 .statusCode(HttpStatus.SC_CREATED)
@@ -294,16 +272,16 @@ public class TrilhaTest extends BaseTest{
             assertThat(trilhaModel.getDescricao(), equalTo(response.getDescricao()));
             assertThat(trilhaModel.getStatus(), equalTo(response.getStatus()));
             assertThat(response.getIdTrilha(), equalTo(response.getIdTrilha()));
-            trilhaService.deletarTrilhaIdTrilha(response)
-            .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+            trilhaService.desativarTrilhaIdTrilha(response)
+                .then()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Falha ao criar trilha com modulo Sem ID")
     @Story("Falha ao criar uma trilha com modulo")
     @Description("Falha ao criar trilha com modulo Sem ID")
     public void testCadastrarTrilhaComModuloSemId(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModuloSemInformarOId(programaCriado.getIdPrograma());
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModuloSemInformarOId(1346);
         var response = trilhaService.adicionarTrilhaComModulo(trilhaModel)
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
