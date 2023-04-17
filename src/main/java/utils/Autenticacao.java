@@ -22,7 +22,7 @@ static String baseURL = "http://vemser-dbc.dbccompany.com.br:39000/vemser/usuari
                         .post(baseURL)
                         .then()
                         .extract().asString();
-    //    System.out.println(token);
+//        System.out.println(token);
         return token;
 }
 }

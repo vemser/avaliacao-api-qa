@@ -25,35 +25,12 @@ public class AvaliacaoTest extends BaseTest {
     static TrilhaService trilhaService = new TrilhaService();
     static AcompanhamentoService acompanhamentoService = new AcompanhamentoService();
     static EstagiarioService estagiarioService = new EstagiarioService();
-    static EstagiarioModel estagiarioCriado;
-    static AcompanhamentoModel acompanhamentoCriado;
 
-    //region REQUISITOS
-    @BeforeAll
-    public static void criarPreRequisitos() {
-        ProgramaModel programaCriado = programaService.criarPrograma(ProgramaDataFactory.gerarProgramaValido())
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(ProgramaModel.class);
-        TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(TrilhaDataFactory.gerarTrilhaValida(programaCriado))
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(TrilhaModel.class);
-        acompanhamentoCriado = acompanhamentoService.criarAcompanhamento(AcompanhamentoDataFactory.gerarAcompanhamentoValido(programaCriado))
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(AcompanhamentoModel.class);
-        estagiarioCriado = estagiarioService.criarEstagiario(EstagiarioDataFactory.gerarEstagiarioValido(trilhaCriada))
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .extract().as(EstagiarioModel.class);
-    }
 
-    //endregion
 //region CRIAR AVALIACAO
     @Test
     public void criarAvaliacao() {
-        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(acompanhamentoCriado, estagiarioCriado);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(712, 904);
         var response = avaliacaoService.criarAvaliacao(avaliacaoModel)
             .then()
                 .statusCode(HttpStatus.SC_CREATED)
@@ -83,7 +60,7 @@ public class AvaliacaoTest extends BaseTest {
 //region ATUALIZAR AVALIACAO
     @Test
     public void atualizarAvaliacao() {
-        avaliacaoModel = AvaliacaoDataFactory.alterarAvaliacao(acompanhamentoCriado, estagiarioCriado);
+        avaliacaoModel = AvaliacaoDataFactory.alterarAvaliacao(712, 904);
         AvaliacaoModel criarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
         AvaliacaoModel avaliacao = AvaliacaoDataFactory.buscarAvaliacaoPorIdDaAvaliacao(criarAvaliacao.getIdAvaliacao());
         AvaliacaoModel avaliacaoAlterada = AvaliacaoDataFactory.alterarAvaliacao(criarAvaliacao.getIdAcompanhamento(), criarAvaliacao.getIdEstagiario());
@@ -100,7 +77,7 @@ public class AvaliacaoTest extends BaseTest {
 //    region BUSCAR AVALIACAO PELO ID DO ACOMPANHAMENTO
     @Test
     public void buscarAvaliacaoPeloIdDoAcompanhamento() {
-        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(acompanhamentoCriado, estagiarioCriado);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(712, 904);
         AvaliacaoModel criarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
         AvaliacaoModel delete = AvaliacaoDataFactory.buscarAvaliacaoPorIdDaAvaliacao(criarAvaliacao.getIdAvaliacao());
         AvaliacaoModel avaliacao = AvaliacaoDataFactory.buscarAvaliacaoPorIdDoAcompanhamento(avaliacaoModel.getIdAcompanhamento());
@@ -126,7 +103,7 @@ public class AvaliacaoTest extends BaseTest {
 //region BUSCAR AVALIACAO PELO ID DA AVALIACAO
     @Test
     public void buscarAvaliacaoPeloIdDaAvaliacao() {
-        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(acompanhamentoCriado, estagiarioCriado);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(712, 904);
         AvaliacaoModel avaliacaoCriada = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
         AvaliacaoModel avaliacao = AvaliacaoDataFactory.buscarAvaliacaoPorIdDaAvaliacao(avaliacaoCriada.getIdAvaliacao());
         var response = avaliacaoService.buscarAvaliacaoPeloIdDaAvaliacao(avaliacao)
@@ -180,7 +157,7 @@ public class AvaliacaoTest extends BaseTest {
 //region DELETAR AVALIACAO
     @Test
     public void deletarAvaliacaoPeloIdDaAvaliacao() {
-        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(acompanhamentoCriado, estagiarioCriado);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(712, 904);
         AvaliacaoModel avaliacaoCriada = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
         AvaliacaoModel avaliacao = AvaliacaoDataFactory.deletarAvaliacaoPorIdDaAvaliacao(avaliacaoCriada.getIdAvaliacao());
         var response = avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(avaliacao)
@@ -201,7 +178,7 @@ public class AvaliacaoTest extends BaseTest {
 //region DESATIVAR AVALIACAO
     @Test
     public void desativarAvaliacaoPeloIdDaAvaliacao() {
-        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(acompanhamentoCriado, estagiarioCriado);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(712, 904);
         AvaliacaoModel avaliacaoCriar = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
         AvaliacaoModel avaliacao = AvaliacaoDataFactory.deletarAvaliacaoPorIdDaAvaliacao(avaliacaoCriar.getIdAvaliacao());
         avaliacaoService.desativarAvaliacaoPeloIdDaAvaliacao(avaliacao)
