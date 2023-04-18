@@ -46,9 +46,6 @@ public class AcompanhamentoDataFactory {
         acompanhamento.setDataFim(dateFormat.format(faker.date().future(90, 30, TimeUnit.DAYS)));
         LocalTime horarioInicio = LocalTime.of(8, 0);
         LocalTime horarioFim = LocalTime.of(17, 0);
-//        LocalTime horaAleatoria = horarioInicio.plusMinutes(faker.random().nextInt(540));
-//        acompanhamento.setHorarioInicio(String.valueOf(horaAleatoria));
-//        acompanhamento.setHorarioFim(String.valueOf(horaAleatoria.plusMinutes(30)));
         acompanhamento.setHorarioInicio(String.valueOf(horarioInicio));
         acompanhamento.setHorarioFim(String.valueOf(horarioFim));
         acompanhamento.setDuracao(30);

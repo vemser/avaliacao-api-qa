@@ -20,12 +20,6 @@ import service.*;
 public class AvaliacaoTest extends BaseTest {
     AvaliacaoModel avaliacaoModel = new AvaliacaoModel();
     AvaliacaoService avaliacaoService = new AvaliacaoService();
-    EstagiarioModel estagiarioModel = new EstagiarioModel();
-    static ProgramaService programaService = new ProgramaService();
-    static TrilhaService trilhaService = new TrilhaService();
-    static AcompanhamentoService acompanhamentoService = new AcompanhamentoService();
-    static EstagiarioService estagiarioService = new EstagiarioService();
-
 
 //region CRIAR AVALIACAO
     @Test
@@ -147,7 +141,7 @@ public class AvaliacaoTest extends BaseTest {
     @DisplayName("Buscar todos os acompanhamentos")
     @Story("Buscar trilhas")
     @Description("Buscar todos os acompanhamentos")
-    public void testBuscarTodosAcompanhamentosSemPagina() {
+    public void testBuscarTodosAcompanhamentosSemPagina(){
         avaliacaoService.buscarAvaliacaoSemPaginaETamanho()
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
