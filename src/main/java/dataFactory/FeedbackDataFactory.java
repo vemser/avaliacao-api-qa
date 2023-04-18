@@ -38,7 +38,7 @@ public class FeedbackDataFactory {
 //region ATUALIZAR FEEDBACK
     public static FeedbackModel atualizarFeedback(Integer idAvaliacao){
         FeedbackModel feedback = new FeedbackModel();
-        feedback.setIdAvaliacao(idAvaliacao);
+        feedback.setIdAvaliacao(495);
         feedback.setNota(faker.number().numberBetween(40, 100));
         feedback.setDescricao("Descrição da " + faker.name().title());
         feedback.setTipoFeedback("POSITIVO");
@@ -52,7 +52,7 @@ public class FeedbackDataFactory {
         public static FeedbackModel atualizarFeedback(FeedbackModel feedback) {
             return atualizarFeedback(feedback.getIdFeedBack());
     }
-    public static FeedbackModel atualizarFeedbackComidErrado(Integer avaliar) {
+    public static FeedbackModel atualizarFeedbackComidErrado() {
             return atualizarFeedback(000000000000);
     }
 //endregion
