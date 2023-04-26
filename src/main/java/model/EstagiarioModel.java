@@ -45,6 +45,7 @@ public class EstagiarioModel {
     private Integer pontuacao;
     private Boolean ativo;
     private String programa;
+    private Integer idPrograma;
 
     public EstagiarioModel() {
     }
@@ -247,6 +248,14 @@ public class EstagiarioModel {
 
     public void setPrograma(String programa) {
         this.programa = programa;
+    }
+
+    public Integer getIdPrograma() {
+        return idPrograma;
+    }
+
+    public void setIdPrograma(Integer idPrograma) {
+        this.idPrograma = idPrograma;
     }
 
     @Override

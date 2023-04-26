@@ -33,11 +33,11 @@ public class TrilhaService {
 
     //endregion
 //region  BUSCAR TRILHAS POR ID
-    public Response buscarTrilhaPorIdTrilha(TrilhaModel trilha) {
+    public Response buscarTrilhaPorIdTrilha(Integer trilha) {
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idTrilha", trilha.getIdTrilha())
+                        .pathParam("idTrilha", trilha)
                         .when()
                         .get("/trilha/get-by-id/{idTrilha}");
         return response;
@@ -68,13 +68,13 @@ public class TrilhaService {
     }
 //endregion
 //region BUSCAR TODAS AS TRILHAS
-    public Response buscarTrilhaPage(TrilhaModel programa){
+    public Response buscarTrilhaPage(Integer programa){
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
-                .pathParam("idPrograma", programa.getIdPrograma())
+                .pathParam("idPrograma", programa)
                 .queryParam("pagina", 0)
-                .queryParam("tamanho", 20)
+                .queryParam("tamanho", 5)
             .when()
                 .get("/trilha/list-by-programa/{idPrograma}");
         return response;

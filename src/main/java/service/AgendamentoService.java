@@ -35,7 +35,7 @@ public class AgendamentoService {
                 .body(agendamentoAntigo)
                 .pathParam("idAgendamento", agendamentoNovo.getIdAgendamento())
             .when()
-                .post("/agendamento/update/{idAgendamento}");
+                .put("/agendamento/update/{idAgendamento}");
         return response;
     }
 //endregion

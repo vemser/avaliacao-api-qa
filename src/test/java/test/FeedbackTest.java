@@ -7,14 +7,16 @@ import io.qameta.allure.Story;
 import io.restassured.http.ContentType;
 import model.*;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-public class FeedbackTest extends BaseTest {
+import static org.hamcrest.Matchers.greaterThan;
 
+public class FeedbackTest extends BaseTest {
     FeedbackModel feedbackModel = new FeedbackModel();
     FeedbackService feedbackService = new FeedbackService();
 
@@ -24,7 +26,7 @@ public class FeedbackTest extends BaseTest {
     @Story("Criar feedback")
     @Description("Criar feedback com sucesso")
     public void criarFeedback() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(745);
         var response = feedbackService.cadastrarFeedback(feedbackModel)
             .then()
                 .statusCode(HttpStatus.SC_CREATED)
@@ -39,67 +41,75 @@ public class FeedbackTest extends BaseTest {
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
-//    @Test
-//    @DisplayName("Criar feedback invalido")
-//    @Story("Criar feedback")
-//    @Description("Criar feedback invalido")
-//    public void criarFeedbackInvalido() {
-//        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
-//        feedbackService.cadastrarFeedback(feedbackModel)
-//                .then()
-//                .statusCode(HttpStatus.SC_BAD_REQUEST);
-//    }
+    @Test
+    @DisplayName("Criar feedback com sucesso")
+    @Story("Criar feedback")
+    @Description("Criar feedback com sucesso")
+    public void testErroAoCriarFeedback() {
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(-456745);
+        var response = feedbackService.cadastrarFeedback(feedbackModel)
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getErrors().contains("idAvaliacao: must be greater than or equal to 1"));
+    }
+
 //endregion
 //region ATUALIZAR FEEDBACK
     @Test
     @DisplayName("Atualizar feedback com sucesso")
-    @Story("Criar feedback")
-    @Description("Atualizar feedback com sucesso")
-    public void atualizarFeedback() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
+    public void testAtualizarFeedback() {
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(745);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
         FeedbackModel atualizar = FeedbackDataFactory.atualizarFeedback(criarFeedback.getIdFeedBack());
         var response = feedbackService.atualizarFeedback(criarFeedback, atualizar)
-                .then()
-                .statusCode(HttpStatus.SC_OK);
-        feedbackService.desativarFeedbackPeloId(criarFeedback)
+            .then()
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .as(FeedbackModel.class);
+        Assertions.assertEquals(atualizar.getDescricao(), response.getDescricao());
+        feedbackService.deletarFeedbackPeloId(criarFeedback)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
-    @DisplayName("Atualizar feedback com Id errado")
-    @Story("Criar feedback")
-    @Description("Atualizar feedback com Id errado")
-    public void atualizarAvaliacaoComIdErrado() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
+    @DisplayName("Erro ao atualizar feedback, sem informações no Body")
+    public void testAtualizarFeedbackSemBody() {
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(745);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
-        FeedbackModel atualizar = FeedbackDataFactory.atualizarFeedbackComidErrado();
-        feedbackService.atualizarFeedback(criarFeedback, atualizar)
+        FeedbackModel atualizar = FeedbackDataFactory.atualizarFeedbackSemDescricao(criarFeedback.getIdFeedBack());
+        var response = feedbackService.atualizarFeedback(criarFeedback, atualizar)
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .extract();
-        FeedbackModel delete = FeedbackDataFactory.deletarFeedbackPorId(criarFeedback.getIdFeedBack());
-        feedbackService.desativarFeedbackPeloId(delete)
-                .then()
+                .contentType(ContentType.JSON)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getErrors().contains("tipoFeedback: must not be null"));
+        Assertions.assertTrue(response.getErrors().contains("status: must not be null"));
+        Assertions.assertTrue(response.getErrors().contains("nota: must not be null"));
+        feedbackService.deletarFeedbackPeloId(criarFeedback)
+            .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 //endregion
 //region BUSCAR FEEDBACK PELO ID
     @Test
     @DisplayName("Buscar feedback com sucesso")
-    @Story("Criar feedback")
-    @Description("Buscar feedback com sucesso")
     public void buscarFeedback() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(745);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
         FeedbackModel idFeedback = FeedbackDataFactory.buscarFeedback(criarFeedback.getIdFeedBack());
         var response = feedbackService.buscarFeedbackPeloId(idFeedback)
                 .then()
-                .statusCode(HttpStatus.SC_OK);
-        feedbackService.desativarFeedbackPeloId(idFeedback)
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .as(FeedbackModel.class);
+        assertThat(feedbackModel.getDescricao(), equalTo(response.getDescricao()));
+        assertThat(feedbackModel.getTipoFeedback(), equalTo(response.getTipoFeedback()));
+        feedbackService.deletarFeedbackPeloId(idFeedback)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-        response.log().all();
     }
     @Test
     @DisplayName("Criar feedback com id Invalido")
@@ -110,82 +120,99 @@ public class FeedbackTest extends BaseTest {
         FeedbackModel atualizar = FeedbackDataFactory.buscarFeedback(0000000000);
         var response = feedbackService.buscarFeedbackPeloId(atualizar)
                 .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getMessage().contains("getById.idFeedBack: must be greater than or equal to 1"));
     }
 //endregion
 //region BUSCAR FEEDBACK PELO ID DA AVALIACAO
     @Test
     @DisplayName("Buscar todos os feedbacks")
-    @Story("Buscar trilhas")
-    @Description("Buscar todos os feedbacks")
-    public void buscarAvaliacaoPeloIdDaAvaliacao() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
+    public void buscarFeedbackPeloIdDaAvaliacao() {
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(745);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
-        FeedbackModel gerarIdAvaliacao = FeedbackDataFactory.buscarFeedbackPorIdDeAvaliacao(criarFeedback.getIdAvaliacao());
         FeedbackModel idFeedback = FeedbackDataFactory.buscarFeedback(criarFeedback.getIdFeedBack());
-        feedbackService.buscarFeedbackPorPaginas(gerarIdAvaliacao);
-        feedbackService.desativarFeedbackPeloId(idFeedback)
+        feedbackService.buscarFeedbackPorPaginas(feedbackModel)
+            .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("elementos.size()", greaterThan(0));
+        feedbackService.deletarFeedbackPeloId(idFeedback)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
     }
     @Test
-    @DisplayName("Criar feedback com sucesso")
-    @Story("Criar feedback")
-    @Description("Criar feedback com sucesso")
+    @DisplayName("Erro ao buscar feedback")
     public void buscarFeedbackComIdDaAvaliacaoInvalida() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
+        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(745);
         feedbackService.cadastrarFeedback(feedbackModel);
-        FeedbackModel atualizar = FeedbackDataFactory.buscarFeedbackPorIdDeAvaliacao(0000000000);
-        feedbackService.buscarFeedbackPorPaginas(atualizar)
+        var response = feedbackService.buscarFeedbackPorPaginas(feedbackModel)
             .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getMessage().contains("listAllByAvaliacao.idAvaliacao: must be greater than or equal to 1"));
     }
 //endregion
 //region DELETAR FEEDBACK
-//    @Test
-//    public void deletarFeedback() {
-//        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
-//        FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
-//        FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackPorId(criarFeedback.getIdFeedBack());
-//        var response = feedbackService.deletarFeedbackPeloId(idFeedback)
-//                .then()
-//                .statusCode(HttpStatus.SC_NO_CONTENT);
-//        response.log().all();
-//    }
-//    @Test
-//    public void deletarFeedbackComIdErrado() {
-//        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
-//        FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackComIdErrado(000000000000000000000);
-//        var response = feedbackService.deletarFeedbackPeloId(idFeedback)
-//                .then()
-//                .statusCode(HttpStatus.SC_BAD_REQUEST);
-//    }
-//endregion
-//region DESATIVAR FEEDBACK
     @Test
-    @DisplayName("Desativar feedback com sucesso")
-    @Story("Criar feedback")
-    @Description("Desativar feedback com sucesso")
-    public void desativarFeedback() {
-        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(495);
+    public void deletarFeedback() {
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(745);
         FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
         FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackPorId(criarFeedback.getIdFeedBack());
-        var response = feedbackService.desativarFeedbackPeloId(idFeedback)
-                .then()
+       feedbackService.deletarFeedbackPeloId(idFeedback)
+            .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-        response.log().all();
+        var response = feedbackService.buscarFeedbackPeloId(idFeedback)
+                .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getMessage().contains("FeedBack não encontrado."));
     }
     @Test
-    @DisplayName("Desativar feedback com com id errado")
-    @Story("Criar feedback")
-    @Description("Desativar feedback com id errado")
-    public void desativarFeedbackComIdErrado() {
+    @DisplayName("Erro ao deletar o feedback por inserir o id errado")
+    public void deletarFeedbackComIdErrado() {
         feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
         FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackComIdErrado(000000000000000000000);
         var response = feedbackService.deletarFeedbackPeloId(idFeedback)
                 .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getMessage().contains("delete.idFeedBack: must be greater than or equal to 1"));
+    }
+//endregion
+//region DESATIVAR FEEDBACK
+    @Test
+    @DisplayName("Desativar feedback com sucesso")
+    public void desativarFeedback() {
+        feedbackModel = FeedbackDataFactory.gerarFeedbackValido(745);
+        FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
+        FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackPorId(criarFeedback.getIdFeedBack());
+        feedbackService.desativarFeedbackPeloId(idFeedback)
+                .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+        var response = feedbackService.buscarFeedbackPeloId(idFeedback)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .as(FeedbackModel.class);
+        assertThat(criarFeedback.getDescricao(), equalTo(response.getDescricao()));
+
+    }
+    @Test
+    @DisplayName("Erro ao desativar feedback com com id errado")
+    public void desativarFeedbackComIdErrado() {
+        feedbackModel = FeedbackDataFactory.gerarFeedbackSemId(495);
+        FeedbackModel idFeedback = FeedbackDataFactory.deletarFeedbackComIdErrado(000000000000000000000);
+        var response = feedbackService.desativarFeedbackPeloId(idFeedback)
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getMessage().contains("deactivate.idFeedBack: must be greater than or equal to 1"));
     }
 
 //endregion

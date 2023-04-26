@@ -33,19 +33,15 @@ public class AgendamentoDataFactory {
 //region ATUALIZAR AGENDAMENTO
     public static AgendamentoModel atualizarAgendamento(Integer idAgendamento) {
         AgendamentoModel agendamento = new AgendamentoModel();
-        agendamento.setidAvaliacao(495);
+        agendamento.setidAvaliacao(745);
         LocalTime horario = LocalTime.of(8, 0);
         LocalTime horaAleatoria = horario.plusMinutes(faker.random().nextInt(540));
         agendamento.setDataHorario(dateFormat.format(faker.date().future(10, 8, TimeUnit.DAYS)) + "T" + horaAleatoria);
         agendamento.setResponsavel(faker.name().nameWithMiddle());
         agendamento.setIdAgendamento(idAgendamento);
         agendamento.setAtivo("true");
+        agendamento.setIdAcompanhamento(724);
         return agendamento;
-    }
-    public static AcompanhamentoModel informarId(Integer agendamento) {
-        AcompanhamentoModel acompanhamentoModel = new AcompanhamentoModel();
-        acompanhamentoModel.setIdAcompanhamento(agendamento);
-        return acompanhamentoModel;
     }
 //endregion
 //region DELETAR AGENDAMENTO

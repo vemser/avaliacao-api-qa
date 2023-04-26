@@ -46,15 +46,18 @@ public class FeedbackDataFactory {
         feedback.setStatus("FINALIZADO");
         feedback.setLoginResponsavel("pietro.bordin");
         feedback.setAtivo(true);
-
         return feedback;
     }
         public static FeedbackModel atualizarFeedback(FeedbackModel feedback) {
             return atualizarFeedback(feedback.getIdFeedBack());
     }
-    public static FeedbackModel atualizarFeedbackComidErrado() {
-            return atualizarFeedback(000000000000);
+    public static FeedbackModel atualizarFeedbackSemDescricao(Integer idAvaliacao){
+        FeedbackModel feedback = new FeedbackModel();
+        feedback.setIdAvaliacao(495);
+        feedback.setAtivo(true);
+        return feedback;
     }
+
 //endregion
 //region BUSCAR FEEDBACK
     public static FeedbackModel buscarFeedback(Integer idFeedback) {
