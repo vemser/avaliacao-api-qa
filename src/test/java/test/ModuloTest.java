@@ -31,6 +31,10 @@ public class ModuloTest extends BaseTest {
                 .as(ModuloModel.class);
         assertThat(criarModulo.getNome(), equalTo(response.getNome()));
         assertThat(criarModulo.getDescricao(), equalTo(response.getDescricao()));
+        ModuloModel idModulo = ModuloDataFactory.buscarModuloComId(response.getIdModulo());
+        moduloService.deletarModuloPeloId(idModulo.getIdModulo())
+                .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
     @DisplayName("Erro ao criar modulo com id da trilha inexistente")
@@ -59,6 +63,9 @@ public class ModuloTest extends BaseTest {
                     .as(ModuloModel.class);
             assertThat(moduloAlterado.getNome(), equalTo(response.getNome()));
             assertThat(moduloAlterado.getDescricao(), equalTo(response.getDescricao()));
+            moduloService.deletarModuloPeloId(idModulo.getIdModulo())
+                .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
         }
     @Test
     @DisplayName("Criar modulo com sucesso")
@@ -143,7 +150,7 @@ public class ModuloTest extends BaseTest {
 //endregion
 //region DESATIVAR MODULO
     @Test
-    @DisplayName("Criar modulo com sucesso")
+    @DisplayName("Deletar modulo com sucesso")
     public void testDesativarModulo(){
         ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
@@ -156,7 +163,7 @@ public class ModuloTest extends BaseTest {
                 .body("ativo", equalTo(false));
     }
     @Test
-    @DisplayName("Criar modulo com sucesso")
+    @DisplayName("Erro ao desativar o modulo mais de uma vez")
     public void testDesativarModuloDuasVezes(){
         ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
@@ -169,7 +176,7 @@ public class ModuloTest extends BaseTest {
         Assertions.assertTrue(response.getMessage().contains("Módulo inexistente ou inativo."));
     }
     @Test
-    @DisplayName("Criar modulo com sucesso")
+    @DisplayName("Erro ao desativar o modulo com id negativo")
     public void testDesativarModuloComIdNegativo(){
         var response = moduloService.desativarModuloPeloId(-45652)
                 .then()
@@ -180,10 +187,9 @@ public class ModuloTest extends BaseTest {
     }
 
 //endregion
-
 //region DELETAR MODULO
     @Test
-    @DisplayName("Criar modulo com sucesso")
+    @DisplayName("Deletar modulo com sucesso")
     public void testDeletarModulo(){
         ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
@@ -198,7 +204,7 @@ public class ModuloTest extends BaseTest {
         Assertions.assertTrue(response.getMessage().contains("Módulo não encontrado."));
     }
     @Test
-    @DisplayName("Criar modulo com sucesso")
+    @DisplayName("Deletar modulo desativado com sucesso")
     public void testDeletarModuloDesativado(){
         ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
@@ -214,7 +220,7 @@ public class ModuloTest extends BaseTest {
         Assertions.assertTrue(response.getMessage().contains("Módulo não encontrado."));
     }
     @Test
-    @DisplayName("Criar modulo com sucesso")
+    @DisplayName("Erro ao deletar o modulo mais de uma vez")
     public void testDeletarModuloDuasVezes(){
         ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
@@ -227,7 +233,7 @@ public class ModuloTest extends BaseTest {
         Assertions.assertTrue(response.getMessage().contains("Módulo não encontrado."));
     }
     @Test
-    @DisplayName("Criar modulo com sucesso")
+    @DisplayName("Erro ao deletar o modulo com id negativo")
     public void testDeletarModuloComNumeroNegativo(){
         var response = moduloService.deletarModuloPeloId(-54562156)
                 .then()
@@ -237,5 +243,4 @@ public class ModuloTest extends BaseTest {
         Assertions.assertTrue(response.getMessage().contains("delete.idModulo: must be greater than or equal to 1"));
     }
 //endregion
-
 }
