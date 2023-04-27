@@ -1,6 +1,7 @@
 package dataFactory;
 
 import model.ModuloModel;
+import model.TrilhaModel;
 import net.datafaker.Faker;
 
 public class ModuloDataFactory {
@@ -16,13 +17,17 @@ public class ModuloDataFactory {
     public static ModuloModel gerarModuloModel(ModuloModel modulo) {
         return gerarModuloModel(modulo.getIdTrilha());
     }
-
     public static ModuloModel atualizarModulo(Integer idTrilha) {
         ModuloModel modulo = new ModuloModel();
         modulo.setNome(faker.name().firstName());
         modulo.setDescricao("Descrição do modulo" + modulo.getNome());
         modulo.setStatus("ABERTO");
         modulo.setIdTrilha(idTrilha);
+        return modulo;
+    }
+    public static ModuloModel buscarModuloComId(Integer idModulo){
+        ModuloModel modulo = new ModuloModel();
+        modulo.setIdModulo(idModulo);
         return modulo;
     }
 
