@@ -3,14 +3,16 @@ package dataFactory;
 import model.AcompanhamentoModel;
 import model.AgendamentoModel;
 import model.AvaliacaoModel;
+import net.datafaker.Faker;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 
-import static dataFactory.DataFactory.dateFormat;
-import static dataFactory.DataFactory.faker;
 
 public class AgendamentoDataFactory {
+    private static Faker faker = new Faker();
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //region CRIAR AGENDAMENTO
     public static AgendamentoModel gerarAgendamento(Integer idAvaliacao) {
         AcompanhamentoModel acompanhamentoModel = new AcompanhamentoModel();

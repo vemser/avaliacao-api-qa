@@ -18,7 +18,7 @@ public class ProgramaService {
     }
 
 //    endregion
-//    region BUSCAR PROGRAMA
+//    region LISTAR PROGRAMAS
 
     public Response buscarProgramas(Integer pagina, Integer tamanho){
         Response response =
@@ -28,6 +28,19 @@ public class ProgramaService {
                         .queryParam("tamanho", tamanho)
                         .when()
                         .get("/programa/list-all");
+        return response;
+    }
+//endregion
+//region LISTAR PROGRAMAS COM TRILHA
+
+    public Response buscarProgramasComTrilha(Integer pagina, Integer tamanho){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .queryParam("pagina", pagina)
+                        .queryParam("tamanho", tamanho)
+                        .when()
+                        .get("/programa/list-with-trilhas");
         return response;
     }
 //endregion
@@ -43,6 +56,16 @@ public class ProgramaService {
         return response;
     }
     //    endregion
+//region BUSCAR PROGRAMA ABERTO
+    public Response buscarProgramaAberto(){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+            .when()
+                    .get("/programa/get-open");
+        return response;
+    }
+//endregion
 //    region ATUALIZAR PROGRAMA
     public Response atualizarPrograma(ProgramaModel programaExistente, ProgramaModel programaNovo){
         Response response =
@@ -104,11 +127,11 @@ public class ProgramaService {
                         .delete("/programa/delete/{idPrograma}");
         return response;
     }
-    public Response deletarPrograma(ProgramaModel programa){
+    public Response deletarPrograma(Integer programa){
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idPrograma", programa.getIdPrograma())
+                        .pathParam("idPrograma", programa)
                 .when()
                         .delete("/programa/delete/{idPrograma}");
         return response;

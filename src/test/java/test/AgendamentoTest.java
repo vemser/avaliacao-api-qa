@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class AgendamentoTest extends BaseTest {
     AgendamentoModel agendamentoModel = new AgendamentoModel();
     AgendamentoService agendamentoService = new AgendamentoService();
@@ -46,6 +48,7 @@ public class AgendamentoTest extends BaseTest {
 //endregion
 //region ATUALIZAR AGENDAMENTO
     @Test
+    @DisplayName("Atualizar agendamento com sucesso")
     public void testAtualizarAgendamento() {
         agendamentoModel = AgendamentoDataFactory.gerarAgendamento(745);
         AgendamentoModel agendamentoCriado = agendamentoService.cadastraragendamento(agendamentoModel).then().extract().as(AgendamentoModel.class);
@@ -63,6 +66,7 @@ public class AgendamentoTest extends BaseTest {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
+    @DisplayName("Erro ao atualizar agendamento, avaliação inexistente")
     public void testErroAoAtualizarAgendamento() {
         agendamentoModel = AgendamentoDataFactory.gerarAgendamento(-452315745);
         AgendamentoModel agendamentoAlterado = AgendamentoDataFactory.atualizarAgendamento(-4562165);
@@ -78,6 +82,7 @@ public class AgendamentoTest extends BaseTest {
 //endregion
 //region BUSCAR AGENDAMENTO PELO ID DO AGENDAMENTO
     @Test
+    @DisplayName("Buscar o agendamento pelo id do agendamento")
     public void btestBuscarAgendamentoPeloIdDoAgendamento() {
         agendamentoModel = AgendamentoDataFactory.gerarAgendamento(745);
         AgendamentoModel extrairId = agendamentoService.cadastraragendamento(agendamentoModel).then().extract().as(AgendamentoModel.class);
@@ -94,6 +99,7 @@ public class AgendamentoTest extends BaseTest {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
+    @DisplayName("Erro ao buscar o agendamento, valor do id negativo")
     public void testErroAoBuscarAgendamento() {
         AgendamentoModel idAcompanhamento = AgendamentoDataFactory.deletarAgendamento(-12345);
         var response = agendamentoService.buscarAgendamentoPorIdDoAgendamento(idAcompanhamento)
@@ -104,12 +110,35 @@ public class AgendamentoTest extends BaseTest {
         Assertions.assertTrue(response.getMessage().contains("getById.idAgendamento: must be greater than or equal to 1"));
     }
 //endregion
+//region LISTAR HORARIOS DISPONIVEIS
+    @Test
+    @DisplayName("lista os horarios disponiveis para agendamento")
+    public void testListarHorariosDisponiveis(){
+        var response = agendamentoService.listarhorariosDispiniveis(710)
+            .then()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType(ContentType.JSON);
+        assertNotNull(response);
+    }
+    @Test
+    @DisplayName("Erro ao listar os horarios, id do acompanhamento invalido")
+    public void testErroAoListarHorariosDisponiveis(){
+        var response = agendamentoService.listarhorariosDispiniveis(-710)
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .contentType(ContentType.JSON)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getMessage().contains("listAllAvailableHorarios.idAcompanhamento: must be greater than or equal to 1"));
+    }
+
+//endregion
 //region BUSCAR AGENDAMENTO
     @Test
     @DisplayName("Buscar todos os acompanhamentos")
     public void testBuscarTodosAgendamentos() {
         agendamentoService.buscarAgendamentoPorPaginas(0, 5)
-                .then()
+            .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON)
                 .body("pagina", Matchers.is(0))
@@ -130,6 +159,7 @@ public class AgendamentoTest extends BaseTest {
 //endregion
 //region DELETAR AGENDAMENTO
     @Test
+    @DisplayName("Deletar agendamento com sucesso")
     public void testDeletarAgendamento() {
         agendamentoModel = AgendamentoDataFactory.gerarAgendamento(745);
         AgendamentoModel extrair = agendamentoService.cadastraragendamento(agendamentoModel).then().extract().as(AgendamentoModel.class);
@@ -144,8 +174,9 @@ public class AgendamentoTest extends BaseTest {
                 .as(JSONFailureResponse.class);
         Assertions.assertTrue(response.getMessage().contains("Agendamento não encontrado"));
     }
-        @Test
-        public void testDeletarAgendamentoSemId() {
+    @Test
+    @DisplayName("Erro ao deletar agendamento, id inexistente")
+    public void testDeletarAgendamentoSemId() {
             agendamentoModel = AgendamentoDataFactory.deletarAgendamentoComIdErrado(-555);
            var response =  agendamentoService.deletaragendamento(agendamentoModel)
                     .then()

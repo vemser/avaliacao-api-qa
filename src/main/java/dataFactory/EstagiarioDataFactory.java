@@ -1,8 +1,14 @@
 package dataFactory;
 
 import model.EstagiarioModel;
+import net.datafaker.Faker;
 
-public class EstagiarioDataFactory extends DataFactory {
+import java.text.SimpleDateFormat;
+
+
+public class EstagiarioDataFactory{
+    private static Faker faker = new Faker();
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public static EstagiarioModel gerarEstagiarioValido() {
         EstagiarioModel estagiario = new EstagiarioModel();
         estagiario.setIdTrilha(1150);

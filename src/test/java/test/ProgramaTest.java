@@ -19,12 +19,12 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProgramaTest extends BaseTest {
     ProgramaService programaService = new ProgramaService();
-//    region TESTES DE CRIAR PROGRAMA!
+
+//region CRIAR PROGRAMA
     @Test
     @DisplayName("Criar um programa com sucesso")
     public void testAdicionarPrograma(){
@@ -40,7 +40,7 @@ public class ProgramaTest extends BaseTest {
         assertThat(programaValido.getDataInicio(), equalTo(programaResponse.getDataInicio()));
         assertThat(programaValido.getDataFim(), equalTo(programaResponse.getDataFim()));
         assertThat(programaValido.getStatus(), equalTo(programaResponse.getStatus()));
-        programaService.deletarPrograma(programaResponse)
+        programaService.deletarPrograma(programaResponse.getIdPrograma())
                 .then()
                     .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -56,7 +56,40 @@ public class ProgramaTest extends BaseTest {
         assertTrue(jsonFailureResponse.getErrors().contains("nome: size must be between 10 and 2147483647"));
     }
 //endregion
-//    region TESTES DE BUSCAR PROGRAMA
+//    region ATUALIZAR PROGRAMA
+@Test
+@DisplayName("Editar programa com sucesso")
+public void testEditarPrograma(){
+    ProgramaModel criarPrograma = ProgramaDataFactory.gerarProgramaValido();
+    ProgramaModel programaCriado = programaService.criarPrograma(criarPrograma).then().extract().as(ProgramaModel.class);
+    ProgramaModel idPrograma = ProgramaDataFactory.programaComValorDeIdNegativo(programaCriado.getIdPrograma());
+    var response = programaService.atualizarPrograma(idPrograma, criarPrograma)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .as(ProgramaModel.class);
+    assertThat(criarPrograma.getNome(), equalTo(response.getNome()));
+    assertThat(criarPrograma.getDescricao(), equalTo(response.getDescricao()));
+    assertThat(programaCriado.getAtivo(), equalTo(response.getAtivo()));
+    programaService.deletarPrograma(programaCriado.getIdPrograma())
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT);
+}
+    @Test
+    @DisplayName("Falha ao editar programa com id vazio")
+    public void testEditarProgramaComIdNegativo(){
+        ProgramaModel corpo = ProgramaDataFactory.gerarProgramaValido();
+        ProgramaModel idVazio = ProgramaDataFactory.atualizarProgramaComValorDeIdVazio();
+        var response = programaService.atualizarPrograma(idVazio, corpo)
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .contentType(ContentType.JSON)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getMessage().contains("update.idPrograma: must be greater than or equal to 1"));
+    }
+//    endregion
+//region BUSCAR TODOS OS PROGRAMAS
 
     @Test
     @DisplayName("Buscar todos os programas com sucesso")
@@ -90,7 +123,7 @@ public class ProgramaTest extends BaseTest {
         Assertions.assertTrue(response.getMessage().contains("listAll.size: must be greater than or equal to 1"));
     }
 //endregion
-//    region TESTES DE BUSCAR PROGRAMA POR ID
+//region BUSCAR PROGRAMA POR ID
 
     @Test
     @DisplayName("Buscar programa por id com sucesso")
@@ -109,7 +142,7 @@ public class ProgramaTest extends BaseTest {
         assertThat(programaValido.getNome(), equalTo(programaResponse.getNome()));
         assertThat(programaValido.getDescricao(), equalTo(programaResponse.getDescricao()));
         assertThat(programaCriado.getIdPrograma(), equalTo(programaResponse.getIdPrograma()));
-        programaService.deletarPrograma(programaResponse)
+        programaService.deletarPrograma(programaResponse.getIdPrograma())
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -125,39 +158,41 @@ public class ProgramaTest extends BaseTest {
         Assertions.assertTrue(response.getMessage().contains("getById.idPrograma: must be greater than or equal to 1"));
     }
 //endregion
-//    region EDITAR PROGRAMA
+//region BUSCAR PROGRAMA ABERTO
     @Test
-    @DisplayName("Editar programa com sucesso")
-    public void testEditarPrograma(){
-        ProgramaModel criarPrograma = ProgramaDataFactory.gerarProgramaValido();
-        ProgramaModel programaCriado = programaService.criarPrograma(criarPrograma).then().extract().as(ProgramaModel.class);
-        ProgramaModel idPrograma = ProgramaDataFactory.programaComValorDeIdNegativo(programaCriado.getIdPrograma());
-        var response = programaService.atualizarPrograma(idPrograma, criarPrograma)
+    @DisplayName(("Lista o programa que está aberto"))
+    public void testBuscarProgramaAberto(){
+        ProgramaModel programa = programaService.buscarProgramaAberto()
             .then()
                 .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .as(ProgramaModel.class);
-        assertThat(criarPrograma.getNome(), equalTo(response.getNome()));
-        assertThat(criarPrograma.getDescricao(), equalTo(response.getDescricao()));
-        assertThat(programaCriado.getAtivo(), equalTo(response.getAtivo()));
-        programaService.deletarPrograma(programaCriado)
-                .then()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
+        assertNotNull(programa);
+    }
+//endregion
+//region BUSCAR PROGRAMAS COM TRILHA
+    @Test
+    @DisplayName("Buscar todos os programas que contenham trilhas")
+    public void testBuscarProgramasComTrilha(){
+        var response = programaService.buscarProgramasComTrilha(0,5)
+            .then()
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .body();
+        int tamanho = response.path("size()");
+        assertEquals(5, tamanho);
     }
     @Test
-    @DisplayName("Falha ao editar programa com id vazio")
-    public void testEditarProgramaComIdNegativo(){
-        ProgramaModel corpo = ProgramaDataFactory.gerarProgramaValido();
-        ProgramaModel idVazio = ProgramaDataFactory.atualizarProgramaComValorDeIdVazio();
-        var response = programaService.atualizarPrograma(idVazio, corpo)
-                .then()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST)
-                    .contentType(ContentType.JSON)
-                    .extract()
-                    .as(JSONFailureResponse.class);
-        Assertions.assertTrue(response.getMessage().contains("update.idPrograma: must be greater than or equal to 1"));
+    @DisplayName("Falha ao buscar programas com numero de pagina com valor negativo")
+    public void testBuscarProgramasComTrilhaNumeroPaginaVazio(){
+        var response = programaService.buscarProgramasComTrilha(-2, 5)
+            .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getMessage().contains("listWithTrilhas.page: must be greater than or equal to 0"));
     }
-//    endregion
+//endregion
 //    region DESATIVAR PROGRAMA
     @Test
     @DisplayName("Desativar programa com sucesso")
@@ -193,7 +228,7 @@ public class ProgramaTest extends BaseTest {
             .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .extract().as(ProgramaModel.class);
-        programaService.deletarPrograma(programaCriado)
+        programaService.deletarPrograma(programaCriado.getIdPrograma())
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
         var response = programaService.buscarPrograma(programaCriado)
@@ -208,7 +243,7 @@ public class ProgramaTest extends BaseTest {
     @DisplayName("Falha ao deletar programa com id inexistente negativo")
     public void testDeletarProgramaComIdInexistente(){
         ProgramaModel idNegativo = ProgramaDataFactory.programaComValorDeIdNegativo(-45621);
-        var response = programaService.deletarPrograma(idNegativo)
+        var response = programaService.deletarPrograma(idNegativo.getIdPrograma())
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .extract()

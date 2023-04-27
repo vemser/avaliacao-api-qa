@@ -1,11 +1,15 @@
 package dataFactory;
 
 import model.ProgramaModel;
+import net.datafaker.Faker;
 import service.ProgramaService;
 
+import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
-public class ProgramaDataFactory extends DataFactory {
+public class ProgramaDataFactory{
+    private static Faker faker = new Faker();
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static ProgramaService programaService = new ProgramaService();
 //region GERAR PROGRAMA
     public static ProgramaModel gerarProgramaValido() {

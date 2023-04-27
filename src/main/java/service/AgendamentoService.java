@@ -17,15 +17,6 @@ public class AgendamentoService {
             .post("/agendamento/create");
         return response;
     }
-    public Response deletaragendamento(AgendamentoModel idAgendamento){
-        Response response =
-            given()
-                .spec(SetupsRequestSpecification.requestSpecification())
-                .pathParam("idAgendamento", idAgendamento.getIdAgendamento())
-            .when()
-                .delete("/agendamento/delete/{idAgendamento}");
-        return response;
-    }
 //endregion
 //region ATUALIZAR AGENDAMENTO
     public Response atualizarAgendamento(AgendamentoModel agendamentoAntigo, AgendamentoModel agendamentoNovo) {
@@ -39,6 +30,7 @@ public class AgendamentoService {
         return response;
     }
 //endregion
+//region LISTAR AGENDAMENTOS
     public Response buscarAgendamentoPorPaginas(Integer pagina, Integer tamanho) {
         Response response =
             given()
@@ -49,8 +41,8 @@ public class AgendamentoService {
                 .get("/agendamento/list-all");
         return response;
     }
-
-
+//endregion
+//region BUSCAR AGENDAMENTO PELO ID
     public Response buscarAgendamentoPorIdDoAgendamento(AgendamentoModel idAgendamento){
         Response response =
             given()
@@ -69,4 +61,27 @@ public class AgendamentoService {
                         .get("/agendamento/list-all-available-horarios/{idAcompanhamento}");
         return response;
     }
+//endregion
+//region LISTAR HORARIOS DE AGENDAMENTO DISPONIVEL
+    public Response listarhorariosDispiniveis(Integer idAcompanhamento){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .pathParam("idAcompanhamento", idAcompanhamento)
+            .when()
+                .get("/agendamento/list-all-available-horarios/{idAcompanhamento}");
+        return response;
+    }
+//endregion
+//region DELETAR AGENDAMENTO
+    public Response deletaragendamento(AgendamentoModel idAgendamento){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idAgendamento", idAgendamento.getIdAgendamento())
+                        .when()
+                        .delete("/agendamento/delete/{idAgendamento}");
+        return response;
+    }
+//endregion
 }

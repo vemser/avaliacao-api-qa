@@ -4,6 +4,7 @@ import model.AcompanhamentoModel;
 import model.AvaliacaoModel;
 import model.ProgramaModel;
 import model.TrilhaModel;
+import net.datafaker.Faker;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -11,10 +12,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static dataFactory.DataFactory.dateFormat;
-import static dataFactory.DataFactory.faker;
+
 
 public class AcompanhamentoDataFactory {
+    private static Faker faker = new Faker();
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //    region  CRIAR ACOMPANHAMENTO
     public static AcompanhamentoModel gerarAcompanhamentoValido(Integer idPrograma) {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
@@ -36,9 +38,6 @@ public class AcompanhamentoDataFactory {
 
         return acompanhamento;
     }
-    public static AcompanhamentoModel gerarAcompanhamentoValido(ProgramaModel programa) {
-        return gerarAcompanhamentoValido(programa.getIdPrograma());
-    }
     public static AcompanhamentoModel gerarAcompanhamentoSemId(Integer idPrograma) {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
         acompanhamento.setTitulo("Trilha " + faker.name().firstName());
@@ -53,9 +52,6 @@ public class AcompanhamentoDataFactory {
         acompanhamento.setDescricao("Descrição da " + acompanhamento.getTitulo());
         acompanhamento.setStatus("ABERTO");
         return acompanhamento;
-    }
-    public static AcompanhamentoModel gerarAcompanhamentoSemId(ProgramaModel programa) {
-        return gerarAcompanhamentoSemId(programa.getIdPrograma());
     }
 //endregion
 //region ALTERAR ACOMPANHAMENTO

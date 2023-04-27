@@ -75,6 +75,36 @@ public class TrilhaTest extends BaseTest {
     }
 
     //    endregion
+//region CRIAR TRILHAS COM MODULO
+    @Test
+    @DisplayName("Criar uma trilha com modulo com sucesso")
+    public void testCadastrarTrilhaComModulo(){
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModulo(1346);
+        TrilhaModel response = trilhaService.adicionarTrilhaComModulo(trilhaModel)
+                .then()
+                .statusCode(HttpStatus.SC_CREATED)
+                .contentType(ContentType.JSON)
+                .extract()
+                .as(TrilhaModel.class);
+        assertThat(trilhaModel.getNome(), equalTo(response.getNome()));
+        assertThat(trilhaModel.getDescricao(), equalTo(response.getDescricao()));
+        assertThat(trilhaModel.getStatus(), equalTo(response.getStatus()));
+        assertThat(response.getIdTrilha(), equalTo(response.getIdTrilha()));
+        trilhaService.deletarTrilhaIdTrilha(response);
+    }
+    @Test
+    @DisplayName("Falha ao criar trilha com modulo Sem ID")
+    public void testCadastrarTrilhaComModuloSemId(){
+        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModuloSemInformarOId(1346);
+        var response = trilhaService.adicionarTrilhaComModulo(trilhaModel)
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .contentType(ContentType.JSON)
+                .extract()
+                .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getErrors().contains("idPrograma: must not be null"));
+    }
+    //endregion
 //    region ATUALIZAR TRILHAS
     @Test
     @DisplayName("Atualizar uma trilha com sucesso")
@@ -131,6 +161,26 @@ public class TrilhaTest extends BaseTest {
     }
 
     //endregion
+//region LISTAR TRILHAS MODELO
+    @Test
+    @DisplayName("Buscar todas trilhas")
+    public void testBuscarTodasTrilhas() {
+        trilhaService.buscarTrilhaModelo(0,5)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType(ContentType.JSON)
+                .body("pagina", Matchers.is(0))
+                .body("tamanho", Matchers.is(5))
+                .body("totalElementos", Matchers.greaterThanOrEqualTo(0));
+    }
+    @Test
+    @DisplayName("Falha uscar todas trilhas com letras")
+    public void testBuscarTodasTrilhasComLetras() {
+        trilhaService.buscarTrilhaModeloInvalido("error", "error")
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+//endregion
 //region BUSCAR TRILHAS POR ID DE PROGRAMA
     @Test
     @DisplayName("Listar todas trilhas vinculadas ao programa pelo id do programa")
@@ -226,59 +276,12 @@ public class TrilhaTest extends BaseTest {
     @DisplayName("Falha ao deletar trilha com id inexistente")
     public void testDeletarTrilhaPorIdTrilhaComIdInexistente(){
         TrilhaModel trilhaSemId = TrilhaDataFactory.deletarTrilhaComIdInexistente();
-        trilhaService.deletarTrilhaIdTrilha(trilhaSemId)
+        var response = trilhaService.deletarTrilhaIdTrilha(trilhaSemId)
             .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-//endregion
-//region CRIAR TRILHAS COM MODULO
-    @Test
-    @DisplayName("Criar uma trilha com modulo com sucesso")
-    public void testCadastrarTrilhaComModulo(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModulo(1346);
-        TrilhaModel response = trilhaService.adicionarTrilhaComModulo(trilhaModel)
-            .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .contentType(ContentType.JSON)
-                .extract()
-                .as(TrilhaModel.class);
-            assertThat(trilhaModel.getNome(), equalTo(response.getNome()));
-            assertThat(trilhaModel.getDescricao(), equalTo(response.getDescricao()));
-            assertThat(trilhaModel.getStatus(), equalTo(response.getStatus()));
-            assertThat(response.getIdTrilha(), equalTo(response.getIdTrilha()));
-            trilhaService.deletarTrilhaIdTrilha(response);
-    }
-    @Test
-    @DisplayName("Falha ao criar trilha com modulo Sem ID")
-    public void testCadastrarTrilhaComModuloSemId(){
-        trilhaModel = TrilhaDataFactory.gerarTrilhaValidaComModuloSemInformarOId(1346);
-        var response = trilhaService.adicionarTrilhaComModulo(trilhaModel)
-            .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .contentType(ContentType.JSON)
+                .statusCode(HttpStatus.SC_NOT_FOUND)
                 .extract()
                 .as(JSONFailureResponse.class);
-            Assertions.assertTrue(response.getErrors().contains("idPrograma: must not be null"));
+        Assertions.assertTrue(response.getMessage().contains("Trilha não encontrada."));
     }
 //endregion
-//region LISTAR TRILHAS MODELO
-    @Test
-    @DisplayName("Buscar todas trilhas")
-    public void testBuscarTodasTrilhas() {
-        trilhaService.buscarTrilhaModelo(0,5)
-            .then()
-                .statusCode(HttpStatus.SC_OK)
-                .contentType(ContentType.JSON)
-                .body("pagina", Matchers.is(0))
-                .body("tamanho", Matchers.is(5))
-                .body("totalElementos", Matchers.greaterThanOrEqualTo(0));
-    }
-    @Test
-    @DisplayName("Falha uscar todas trilhas com letras")
-    public void testBuscarTodasTrilhasComLetras() {
-        trilhaService.buscarTrilhaModeloInvalido("error", "error")
-            .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
-    }
-//endregion
-    }
+}

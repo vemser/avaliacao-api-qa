@@ -3,14 +3,16 @@ package dataFactory;
 import model.ModuloModel;
 import model.ProgramaModel;
 import model.TrilhaModel;
+import net.datafaker.Faker;
 import service.ProgramaService;
 import service.TrilhaService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrilhaDataFactory extends DataFactory{
-    private static TrilhaService trilhaService = new TrilhaService();
+
+public class TrilhaDataFactory {
+    private static Faker faker = new Faker();
 
 //region    CENÁRIOS DE CRIAÇÃO DE TRILHA
 
@@ -63,11 +65,6 @@ public class TrilhaDataFactory extends DataFactory{
     }
 //endregion
 //region    CENÁRIO DE BUSCA POR ID
-    public static TrilhaModel buscarTrilhaComIdInexistente(){
-        TrilhaModel trilha = new TrilhaModel();
-        trilha.setIdTrilha(12321564);
-        return trilha;
-    }
     public static TrilhaModel buscarTrilhaComId(Integer idTrilha){
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdTrilha(idTrilha);

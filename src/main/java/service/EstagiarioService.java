@@ -44,15 +44,6 @@ public Response buscarEstagiarioPorIdEstagiario(Integer idEstagiario){
             .get("/estagiario/get-by-id/{idEstagiario}");
     return response;
 }
-public Response buscarEstagiarioPorIdEstagiarioInvalido(String idEstagiario){
-    Response response =
-        given()
-            .spec(SetupsRequestSpecification.requestSpecification())
-            .pathParam("idEstagiario", idEstagiario)
-        .when()
-            .get("/estagiario/get-by-id/{idEstagiario}");
-    return response;
-}
 public Response buscarEstagiarioPorIdEstagiario(EstagiarioModel estagiario){
     return buscarEstagiarioPorIdEstagiario(estagiario.getIdEstagiario());
 }
@@ -67,55 +58,33 @@ public Response buscarEstagiariosPorPrograma(Integer idPrograma, Integer pagina,
             .get("/estagiario/list-by-programa/{idPrograma}");
     return response;
 }
-public Response buscarEstagiariosPorPrograma(ProgramaModel programa, Integer pagina, Integer tamanho){
-    return buscarEstagiariosPorPrograma(programa.getIdPrograma(), pagina, tamanho);
-}
-public Response buscarEstagiariosPorProgramaQueryInvalida(Integer idPrograma, String pagina, String tamanho){
-    Response response =
-            given()
-                    .spec(SetupsRequestSpecification.requestSpecification())
-                    .pathParam("idPrograma", idPrograma)
-                    .queryParam("pagina", pagina)
-                    .queryParam("tamanho", tamanho)
-                    .when()
-                    .get("/estagiario/list-by-programa/{idPrograma}");
-    return response;
-}
-public Response buscarEstagiariosPorProgramaQueryInvalida(ProgramaModel programa, String pagina, String tamanho){
-    return buscarEstagiariosPorProgramaQueryInvalida(programa.getIdPrograma(), pagina, tamanho);
-}
-public Response buscarPorListarTodosEstagiarios(Integer pagina, Integer tamanho){
-    Response response =
-        given()
-            .spec(SetupsRequestSpecification.requestSpecification())
-            .queryParam("pagina", pagina )
-            .queryParam("tamanho", tamanho)
-        .when()
-            .get("/estagiario/list-all");
-    return response;
-}
-public Response buscarPorListarTodosEstagiariosQueryInvalida(String pagina, String tamanho){
-    Response response =
-        given()
-            .spec(SetupsRequestSpecification.requestSpecification())
-            .queryParam("pagina", pagina )
-            .queryParam("tamanho", tamanho)
-        .when()
-            .get("/estagiario/list-all");
-    return response;
-}
-public Response buscarDadosDoDashboardPorIdPrograma(Integer idPrograma, Integer pagina, Integer tamanho){
-    Response response =
-        given()
-            .spec(SetupsRequestSpecification.requestSpecification())
-            .pathParam("idPrograma", idPrograma)
-            .queryParam("pagina", pagina)
-            .queryParam("tamanho", tamanho)
-        .when()
-            .get("/estagiario/get-dashboard-data/{idPrograma}");
-    return response;
-}
+
 // endregion
+//region LISTAR TODOS OS ESTAGIARIOS
+    public Response buscarPorListarTodosEstagiarios(Integer pagina, Integer tamanho){
+        Response response =
+            given()
+                .spec(SetupsRequestSpecification.requestSpecification())
+                .queryParam("pagina", pagina )
+                .queryParam("tamanho", tamanho)
+            .when()
+                .get("/estagiario/list-all");
+        return response;
+    }
+//endregion
+//region RECUPERA OS DADOS DO DASHBOARD
+    public Response recuperarDadosDoDashboard(Integer idPrograma, Integer pagina, Integer tamanho){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idPrograma", idPrograma)
+                        .queryParam("pagina", pagina)
+                        .queryParam("tamanho", tamanho)
+                        .when()
+                        .get("/estagiario/list-by-programa/{idPrograma}");
+        return response;
+    }
+//endregion
 // region DELETE Estagiario
 public Response deletarEstagiarioPorIdEstagiario(Integer idEstagiario){
     Response response =

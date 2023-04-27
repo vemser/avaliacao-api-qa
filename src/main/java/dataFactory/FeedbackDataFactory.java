@@ -2,9 +2,13 @@ package dataFactory;
 
 import model.AvaliacaoModel;
 import model.FeedbackModel;
-import static dataFactory.DataFactory.faker;
+import net.datafaker.Faker;
+
+import java.text.SimpleDateFormat;
 
 public class FeedbackDataFactory {
+    private static Faker faker = new Faker();
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //region GERAR FEEDBACK
     public static FeedbackModel gerarFeedbackValido(Integer idAvaliacao){
         FeedbackModel feedback = new FeedbackModel();
