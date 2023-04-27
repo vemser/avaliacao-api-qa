@@ -5,10 +5,14 @@ import model.ProgramaModel;
 import model.TrilhaModel;
 import model.AcompanhamentoModel;
 import model.EstagiarioModel;
+import net.datafaker.Faker;
 
-import static dataFactory.DataFactory.faker;
+import java.text.SimpleDateFormat;
+
 
 public class AvaliacaoDataFactory {
+    private static Faker faker = new Faker();
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //    region CRIAR AVALIACAO
     public static AvaliacaoModel gerarAvaliacaoValida(Integer idAcompanhamento, Integer idEstagiario) {
         AvaliacaoModel avaliaco = new AvaliacaoModel();

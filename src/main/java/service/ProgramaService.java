@@ -1,11 +1,9 @@
 package service;
 
-import dataFactory.ProgramaDataFactory;
 import io.restassured.response.Response;
 import model.ProgramaModel;
 import specs.SetupsRequestSpecification;
 import static io.restassured.RestAssured.given;
-
 public class ProgramaService {
 
 //    region CRIAR PROGRAMA
@@ -19,99 +17,35 @@ public class ProgramaService {
         return response;
     }
 
-    public Response criarProgramaValido(){
-        return criarPrograma(ProgramaDataFactory.gerarProgramaValido());
-    }
-
-    public Response criarProgramaSemNome(){
-        Response response =
-                given()
-                        .spec(SetupsRequestSpecification.requestSpecification())
-                        .body("""
-                               {
-                                "nome": "",
-                                "descricao": "Programa de formação profissional Vem Ser DBC 11º edição.",
-                                "dataInicio": "2023-10-23",
-                                "dataFim": "2023-12-23",
-                                "status": "ABERTO"
-                              }
-                            """)
-                .when()
-                        .post("/programa/create");
-        return response;
-    }
-//    public Response criarProgramaComDatasAbaixoDaAtual(){
-//        Response response =
-//                given()
-//                        .spec(SetupsRequestSpecification.requestSpecification())
-//                        .body(ProgramaDataFactory.gerarProgramaComDataAbaixoDaAtual())
-//                .when()
-//                        .post("/programa/create");
-//        return response;
-//    }
 //    endregion
-//    region BUSCAR PROGRAMA
+//    region LISTAR PROGRAMAS
 
-    public Response buscarProgramas(){
-        Response response =
-            given()
-                .spec(SetupsRequestSpecification.requestSpecification())
-                .queryParam("pagina", 0)
-                .queryParam("tamanho", 10)
-            .when()
-                .get("/programa/list-all");
-        return response;
-    }
-    public Response buscarProgramasNumeroPaginaVazio(){
-        Response response =
-            given()
-                .spec(SetupsRequestSpecification.requestSpecification())
-                .queryParam("pagina", "")
-                .queryParam("tamanho", 10)
-            .when()
-                .get("/programa/list-all");
-        return response;
-    }
-    public Response buscarProgramasTamanhoVazio(){
+    public Response buscarProgramas(Integer pagina, Integer tamanho){
         Response response =
                 given()
-                        .spec(SetupsRequestSpecification.requestSpecification())
-                        .queryParam("pagina", 0)
-                        .queryParam("tamanho", "")
+                .spec(SetupsRequestSpecification.requestSpecification())
+                        .queryParam("pagina", pagina)
+                        .queryParam("tamanho", tamanho)
                         .when()
                         .get("/programa/list-all");
         return response;
     }
+//endregion
+//region LISTAR PROGRAMAS COM TRILHA
 
+    public Response buscarProgramasComTrilha(Integer pagina, Integer tamanho){
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .queryParam("pagina", pagina)
+                        .queryParam("tamanho", tamanho)
+                        .when()
+                        .get("/programa/list-with-trilhas");
+        return response;
+    }
 //endregion
 //    region BUSCAR PROGRAMA PELO ID
-public Response buscarProgramaComLetrasNoId(){
-    Response response =
-            given()
-                    .spec(SetupsRequestSpecification.requestSpecification())
-                    .pathParam("idPrograma", "saxsaxaxasxsaa")
-            .when()
-                    .get("/programa/get-by-id/{idPrograma}");
-    return response;
-}
-    public Response buscarProgramaSemId(){
-        Response response =
-                given()
-                        .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idPrograma", "")
-                        .when()
-                        .get("/programa/get-by-id/{idPrograma}");
-        return response;
-    }
-    public Response buscarPrograma(){
-        Response response =
-                given()
-                        .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idPrograma", 12)
-                        .when()
-                        .get("/programa/get-by-id/{idPrograma}");
-        return response;
-    }
+
     public Response buscarPrograma(ProgramaModel programa){
         Response response =
                 given()
@@ -122,67 +56,23 @@ public Response buscarProgramaComLetrasNoId(){
         return response;
     }
     //    endregion
-//    region ATUALIZAR PROGRAMA
-    public Response atualizarPrograma(){
+//region BUSCAR PROGRAMA ABERTO
+    public Response buscarProgramaAberto(){
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
-                .body("""
-                        {
-                          "nome": "VemSer 11ed",
-                          "descricao": "Programa de formação profissional Vem Ser DBC 11º edição.",
-                          "dataInicio": "2024-02-23",
-                          "dataFim": "2024-06-23",
-                          "status": "ABERTO"
-                        }
-                        """)
-                .pathParam("idPrograma", 12)
             .when()
-                .put("/programa/update/{idPrograma}");
+                    .get("/programa/get-open");
         return response;
     }
+//endregion
+//    region ATUALIZAR PROGRAMA
     public Response atualizarPrograma(ProgramaModel programaExistente, ProgramaModel programaNovo){
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
                 .body(programaNovo)
                 .pathParam("idPrograma", programaExistente.getIdPrograma())
-            .when()
-                .put("/programa/update/{idPrograma}");
-        return response;
-    }
-    public Response atualizarProgramaComIdInexistente(){
-        Response response =
-            given()
-                .spec(SetupsRequestSpecification.requestSpecification())
-                .body("""
-                        {
-                          "nome": "VemSer 11ed",
-                          "descricao": "Programa de formação profissional Vem Ser DBC 11º edição.",
-                          "dataInicio": "2024-02-23",
-                          "dataFim": "2024-06-23",
-                          "status": "ABERTO"
-                        }
-                        """)
-                .pathParam("idPrograma", 123546879)
-            .when()
-                .put("/programa/update/{idPrograma}");
-        return response;
-    }
-    public Response atualizarProgramaComIdVazio(){
-        Response response =
-            given()
-                .spec(SetupsRequestSpecification.requestSpecification())
-                .body("""
-                        {
-                          "nome": "VemSer 11ed",
-                          "descricao": "Programa de formação profissional Vem Ser DBC 11º edição.",
-                          "dataInicio": "2024-02-23",
-                          "dataFim": "2024-06-23",
-                          "status": "ABERTO"
-                        }
-                        """)
-                .pathParam("idPrograma", "")
             .when()
                 .put("/programa/update/{idPrograma}");
         return response;
@@ -227,24 +117,7 @@ public Response buscarProgramaComLetrasNoId(){
     }
 //    endregion
 //    region DELETAR PROGRAMA
-public Response deletarProgramaComLetrasNoId(){
-    Response response =
-            given()
-                    .spec(SetupsRequestSpecification.requestSpecification())
-                    .pathParam("idPrograma", "ushuahus")
-            .when()
-                    .delete("/programa/dealete/{idPrograma}");
-    return response;
-}
-    public Response deletarProgramaComIdInexistente(){
-        Response response =
-                given()
-                        .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idPrograma", 2552500)
-                .when()
-                        .delete("/programa/delete/{idPrograma}");
-        return response;
-    }
+
     public Response deletarPrograma(){
         Response response =
                 given()
@@ -254,11 +127,11 @@ public Response deletarProgramaComLetrasNoId(){
                         .delete("/programa/delete/{idPrograma}");
         return response;
     }
-    public Response deletarPrograma(ProgramaModel programa){
+    public Response deletarPrograma(Integer programa){
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idPrograma", programa.getIdPrograma())
+                        .pathParam("idPrograma", programa)
                 .when()
                         .delete("/programa/delete/{idPrograma}");
         return response;

@@ -47,11 +47,11 @@ public class FeedbackService {
         Response response =
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
-                .pathParam("idPrograma", feedback.getIdPrograma())
+                .pathParam("idAvaliacao", feedback.getIdAvaliacao())
                 .queryParam("pagina",0)
                 .queryParam("tamanho",5)
             .when()
-                .get("/feedback/list-by-avaliacao/{idPrograma}");
+                .get("/feedback/list-by-avaliacao/{idAvaliacao}");
         return response;
     }
 //endregion

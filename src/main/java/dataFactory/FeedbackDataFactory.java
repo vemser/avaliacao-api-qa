@@ -2,9 +2,13 @@ package dataFactory;
 
 import model.AvaliacaoModel;
 import model.FeedbackModel;
-import static dataFactory.DataFactory.faker;
+import net.datafaker.Faker;
+
+import java.text.SimpleDateFormat;
 
 public class FeedbackDataFactory {
+    private static Faker faker = new Faker();
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //region GERAR FEEDBACK
     public static FeedbackModel gerarFeedbackValido(Integer idAvaliacao){
         FeedbackModel feedback = new FeedbackModel();
@@ -46,15 +50,18 @@ public class FeedbackDataFactory {
         feedback.setStatus("FINALIZADO");
         feedback.setLoginResponsavel("pietro.bordin");
         feedback.setAtivo(true);
-
         return feedback;
     }
         public static FeedbackModel atualizarFeedback(FeedbackModel feedback) {
             return atualizarFeedback(feedback.getIdFeedBack());
     }
-    public static FeedbackModel atualizarFeedbackComidErrado() {
-            return atualizarFeedback(000000000000);
+    public static FeedbackModel atualizarFeedbackSemDescricao(Integer idAvaliacao){
+        FeedbackModel feedback = new FeedbackModel();
+        feedback.setIdAvaliacao(495);
+        feedback.setAtivo(true);
+        return feedback;
     }
+
 //endregion
 //region BUSCAR FEEDBACK
     public static FeedbackModel buscarFeedback(Integer idFeedback) {

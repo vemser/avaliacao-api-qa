@@ -1,6 +1,9 @@
 package model;
 
+import java.util.List;
+
 public class AvaliacaoModel {
+    private List<FeedbackModel> feedbacks;
     private Integer idAvaliacao;
     private Integer idAcompanhamento;
     private Integer idEstagiario;
@@ -20,6 +23,14 @@ public class AvaliacaoModel {
     }
 
     public AvaliacaoModel() {
+    }
+
+    public List<FeedbackModel> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<FeedbackModel> feedbacks) {
+        this.feedbacks = feedbacks;
     }
 
     public Integer getIdAcompanhamento() {

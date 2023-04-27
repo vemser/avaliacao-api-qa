@@ -90,11 +90,11 @@ public class AcompanhamentoService {
     }
 //endregion
 //region BUSCAR ACOMPANHAMENTO PELO ID DO ACOMPANHAMENTO
-    public Response buscarAcompanhamentoPeloIdDoAcompanhamento(AcompanhamentoModel idAcompanhamento) {
+    public Response buscarAcompanhamentoPeloIdDoAcompanhamento(Integer idAcompanhamento) {
         Response response =
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idAcompanhamento", idAcompanhamento.getIdAcompanhamento())
+                        .pathParam("idAcompanhamento", idAcompanhamento)
                         .when()
                         .get("/acompanhamento/get-by-id/{idAcompanhamento}");
         return response;

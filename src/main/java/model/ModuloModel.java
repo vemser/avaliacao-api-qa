@@ -5,6 +5,8 @@ public class ModuloModel {
     private String descricao;
     private String status;
     private Integer idTrilha;
+    private Integer idModulo;
+    private String ativo;
 
     public Integer getIdTrilha() {
         return idTrilha;
@@ -12,6 +14,14 @@ public class ModuloModel {
 
     public void setIdTrilha(Integer idTrilha) {
         this.idTrilha = idTrilha;
+    }
+
+    public String getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(String ativo) {
+        this.ativo = ativo;
     }
 
     public String getNome() {
@@ -37,6 +47,9 @@ public class ModuloModel {
     public void setStatus(String status) {
         this.status = status;
     }
+    public void setIdModulo(Integer idModulo){this.idModulo = idModulo;}
+    public Integer getIdModulo(){return idModulo;}
+
 
     public ModuloModel(String nome, String descricao, String status) {
         this.nome = nome;
