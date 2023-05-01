@@ -19,7 +19,7 @@ public class TrilhaDataFactory {
     public static TrilhaModel gerarTrilhaValida(Integer idPrograma){
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdPrograma(1346);
-        trilha.setNome("Trilha " + faker.name().firstName());
+        trilha.setNome("Trilha " + faker.name().prefix());
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("FECHADO");
         trilha.setNome(faker.name().firstName());
