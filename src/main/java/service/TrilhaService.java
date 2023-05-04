@@ -30,6 +30,20 @@ public class TrilhaService {
                         .put("/trilha/update/{idTrilha}");
         return response;
     }
+    public Response atualizarTrilhaComLink(TrilhaModel trilhaAntiga) {
+        Response response =
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .body("""
+                                {
+                                  "link": "https://meet.google.com/abc-defg-hij"
+                                }
+                                """)
+                        .pathParam("idTrilha", trilhaAntiga.getIdTrilha())
+                        .when()
+                        .put("/trilha/update-link/{idTrilha}");
+        return response;
+    }
 
     //endregion
 //region  BUSCAR TRILHAS POR ID

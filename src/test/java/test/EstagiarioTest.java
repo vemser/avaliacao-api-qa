@@ -224,11 +224,12 @@ public class EstagiarioTest extends BaseTest {
         estagiarioService.deletarEstagiario(idEstagiario)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-        estagiarioService.buscarEstagiarioPorIdEstagiario(idEstagiario)
+        var response = estagiarioService.buscarEstagiarioPorIdEstagiario(idEstagiario)
             .then()
-                .statusCode(HttpStatus.SC_OK)
+                .statusCode(HttpStatus.SC_NOT_FOUND)
                 .extract()
                 .as(JSONFailureResponse.class);
+        Assertions.assertTrue(response.getMessage().contains("Estagiário não encontrado."));
     }
     @Test
     @DisplayName("Erro ao tentar deletar o estagiario duas vezes")

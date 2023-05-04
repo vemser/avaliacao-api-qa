@@ -13,6 +13,8 @@ import service.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AgendamentoTest extends BaseTest {
+    AvaliacaoModel avaliacaoModel = new AvaliacaoModel();
+    AvaliacaoService avaliacaoService = new AvaliacaoService();
     AgendamentoModel agendamentoModel = new AgendamentoModel();
     AgendamentoService agendamentoService = new AgendamentoService();
 
@@ -20,7 +22,9 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Criar agendamento com sucesso")
     public void testCriarAgendamento() {
-        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(742);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
+        AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
+        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao());
         var response = agendamentoService.cadastraragendamento(criarAgendamento)
             .then()
                 .statusCode(HttpStatus.SC_CREATED)
@@ -28,8 +32,7 @@ public class AgendamentoTest extends BaseTest {
                 .extract()
                 .as(AgendamentoModel.class);
         Assertions.assertEquals(criarAgendamento.getidAvaliacao(), response.getidAvaliacao());
-        AgendamentoModel agendamentoId = AgendamentoDataFactory.deletarAgendamento(response.getIdAgendamento());
-        agendamentoService.deletaragendamento(agendamentoId)
+        avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(deletarAvaliacao)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
@@ -50,8 +53,10 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Atualizar agendamento com sucesso")
     public void testAtualizarAgendamento() {
-        agendamentoModel = AgendamentoDataFactory.gerarAgendamento(745);
-        AgendamentoModel agendamentoCriado = agendamentoService.cadastraragendamento(agendamentoModel).then().extract().as(AgendamentoModel.class);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
+        AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
+        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao());
+        AgendamentoModel agendamentoCriado = agendamentoService.cadastraragendamento(criarAgendamento).then().extract().as(AgendamentoModel.class);
         AgendamentoModel agendamentoAlterado = AgendamentoDataFactory.atualizarAgendamento(agendamentoCriado.getIdAgendamento());
         var response = agendamentoService.atualizarAgendamento(agendamentoCriado, agendamentoAlterado)
             .then()
@@ -61,7 +66,7 @@ public class AgendamentoTest extends BaseTest {
                 .as(AgendamentoModel.class);
         Assertions.assertEquals(agendamentoCriado.getResponsavel(), response.getResponsavel());
         Assertions.assertEquals(agendamentoCriado.getidAvaliacao(), response.getidAvaliacao());
-        agendamentoService.deletaragendamento(agendamentoAlterado)
+        avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(deletarAvaliacao)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -84,8 +89,10 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Buscar o agendamento pelo id do agendamento")
     public void btestBuscarAgendamentoPeloIdDoAgendamento() {
-        agendamentoModel = AgendamentoDataFactory.gerarAgendamento(745);
-        AgendamentoModel extrairId = agendamentoService.cadastraragendamento(agendamentoModel).then().extract().as(AgendamentoModel.class);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
+        AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
+        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao());
+        AgendamentoModel extrairId = agendamentoService.cadastraragendamento(criarAgendamento).then().extract().as(AgendamentoModel.class);
         AgendamentoModel agendamentoId = AgendamentoDataFactory.deletarAgendamento(extrairId.getIdAgendamento());
         var response = agendamentoService.buscarAgendamentoPorIdDoAgendamento(agendamentoId)
             .then()
@@ -94,7 +101,7 @@ public class AgendamentoTest extends BaseTest {
                 .as(AgendamentoModel.class);
         Assertions.assertEquals(extrairId.getResponsavel(), response.getResponsavel());
         Assertions.assertEquals(extrairId.getidAvaliacao(), response.getidAvaliacao());
-        agendamentoService.deletaragendamento(agendamentoId)
+        avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(deletarAvaliacao)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -114,7 +121,7 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("lista os horarios disponiveis para agendamento")
     public void testListarHorariosDisponiveis(){
-        var response = agendamentoService.listarhorariosDispiniveis(710)
+        var response = agendamentoService.listarhorariosDispiniveis(865)
             .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON);
@@ -149,22 +156,24 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Buscar todos os acompanhamentos")
     public void testBuscaragendamentossemPagina() {
-        var response = agendamentoService.buscarAgendamentoPorPaginas(-456,-000000)
+        var response = agendamentoService.buscarAgendamentoPorPaginas(-456,5)
             .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .extract()
                 .as(JSONFailureResponse.class);
-        Assertions.assertTrue(response.getMessage().contains("listAll.size: must be greater than or equal to 1, listAll.page: must be greater than or equal to 0"));
+        Assertions.assertTrue(response.getMessage().contains("listAll.page: must be greater than or equal to 0"));
     }
 //endregion
 //region DELETAR AGENDAMENTO
     @Test
     @DisplayName("Deletar agendamento com sucesso")
     public void testDeletarAgendamento() {
-        agendamentoModel = AgendamentoDataFactory.gerarAgendamento(745);
-        AgendamentoModel extrair = agendamentoService.cadastraragendamento(agendamentoModel).then().extract().as(AgendamentoModel.class);
-        AgendamentoModel agendamentoId = AgendamentoDataFactory.deletarAgendamento(extrair.getIdAgendamento());
-        agendamentoService.deletaragendamento(agendamentoId)
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
+        AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
+        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao());
+        AgendamentoModel extrairId = agendamentoService.cadastraragendamento(criarAgendamento).then().extract().as(AgendamentoModel.class);
+        AgendamentoModel agendamentoId = AgendamentoDataFactory.deletarAgendamento(extrairId.getIdAgendamento());
+        avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(deletarAvaliacao)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
         var response = agendamentoService.buscarAgendamentoPorIdDoAgendamento(agendamentoId)

@@ -32,7 +32,7 @@ public class AvaliacaoTest extends BaseTest {
                 .contentType(ContentType.JSON)
                 .extract()
                 .as(AvaliacaoModel.class);
-        Assertions.assertEquals(avaliacaoModel.getLink(), response.getLink());
+        Assertions.assertEquals(avaliacaoModel.getIdAcompanhamento(), response.getIdAcompanhamento());
         AvaliacaoModel avaliacao = AvaliacaoDataFactory.buscarAvaliacaoPorIdDaAvaliacao(response.getIdAvaliacao());
         avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(avaliacao)
             .then()
@@ -64,7 +64,7 @@ public class AvaliacaoTest extends BaseTest {
                 .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .as(AvaliacaoModel.class);
-        Assertions.assertEquals(avaliacaoAlterada.getLink(), response.getLink());
+        Assertions.assertEquals(avaliacaoAlterada.getIdAcompanhamento(), response.getIdAcompanhamento());
         avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(avaliacao)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);

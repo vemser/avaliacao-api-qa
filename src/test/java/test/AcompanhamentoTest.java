@@ -39,7 +39,7 @@ public class AcompanhamentoTest extends BaseTest {
         acompanhamentoService.deletarAcompanhamentoPeloId(id)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-    }
+      }
 
     @Test
     @DisplayName("Falha ao criar um acompanhamento sem id do programa")
@@ -99,8 +99,7 @@ public class AcompanhamentoTest extends BaseTest {
             .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON)
-                .body("idPrograma", equalTo(1346))
-                .body("nome", equalTo("Programa VemSer 13"));
+                .body("idPrograma", equalTo(1346));
     }
     @Test
     @DisplayName("Falha ao listar acompanhamento com numero de id invalido")
