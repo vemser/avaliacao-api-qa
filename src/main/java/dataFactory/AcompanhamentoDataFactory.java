@@ -22,20 +22,16 @@ public class AcompanhamentoDataFactory {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
         acompanhamento.setIdPrograma(idPrograma);
         acompanhamento.setTitulo("Trilha " + faker.name().firstName());
-        acompanhamento.setDataInicio(dateFormat.format(faker.date().future(10, 5, TimeUnit.DAYS)));
-        acompanhamento.setDataFim(dateFormat.format(faker.date().future(20, 11, TimeUnit.DAYS)));
+        acompanhamento.setDataInicio(dateFormat.format(faker.date().future(10, 2, TimeUnit.DAYS)));
+        acompanhamento.setDataFim(dateFormat.format(faker.date().future(20, 19, TimeUnit.DAYS)));
         LocalTime horarioInicio = LocalTime.of(8, 0);
         LocalTime horarioFim = LocalTime.of(17, 0);
-//        LocalTime horaAleatoria = horarioInicio.plusMinutes(faker.random().nextInt(540));
-//        acompanhamento.setHorarioInicio(String.valueOf(horaAleatoria));
-//        acompanhamento.setHorarioFim(String.valueOf(horaAleatoria.plusMinutes(30)));
         acompanhamento.setHorarioInicio(String.valueOf(horarioInicio));
         acompanhamento.setHorarioFim(String.valueOf(horarioFim));
         acompanhamento.setDuracao(30);
         acompanhamento.setNumeroResponsaveis(2);
         acompanhamento.setDescricao("Descrição da " + acompanhamento.getTitulo());
         acompanhamento.setStatus("ABERTO");
-
         return acompanhamento;
     }
     public static AcompanhamentoModel gerarAcompanhamentoSemId(Integer idPrograma) {

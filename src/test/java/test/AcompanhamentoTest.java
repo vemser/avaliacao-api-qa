@@ -39,7 +39,7 @@ public class AcompanhamentoTest extends BaseTest {
         acompanhamentoService.deletarAcompanhamentoPeloId(id)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-    }
+      }
 
     @Test
     @DisplayName("Falha ao criar um acompanhamento sem id do programa")

@@ -19,7 +19,7 @@ public class TrilhaDataFactory {
     public static TrilhaModel gerarTrilhaValida(Integer idPrograma){
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdPrograma(1346);
-        trilha.setNome("Trilha " + faker.name().prefix());
+        trilha.setNome("FrontEnd");
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("FECHADO");
         trilha.setNome(faker.name().firstName());
@@ -29,7 +29,7 @@ public class TrilhaDataFactory {
 
     public static TrilhaModel gerarTrilhaSemId() {
         TrilhaModel trilha = new TrilhaModel();
-        trilha.setNome("Trilha " + faker.name().firstName());
+        trilha.setNome("BackEnd");
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("FECHADO");
         return trilha;
@@ -47,14 +47,14 @@ public class TrilhaDataFactory {
     public static TrilhaModel atualizarTrilhaValida(Integer idPrograma) {
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdPrograma(idPrograma);
-        trilha.setNome("Trilha " + faker.name().firstName());
+        trilha.setNome("QA");
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("ABERTO");
         return trilha;
     }
     public static TrilhaModel atualizarTrilhaSemId() {
         TrilhaModel trilha = new TrilhaModel();
-        trilha.setNome("Trilha " + faker.name().firstName());
+        trilha.setNome("Trilha");
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("ABERTO");
         return trilha;
@@ -101,7 +101,7 @@ public class TrilhaDataFactory {
     public static TrilhaModel gerarTrilhaValidaComModulo(Integer idPrograma) {
         TrilhaModel trilha = new TrilhaModel();
         trilha.setIdPrograma(idPrograma);
-        trilha.setNome("Trilha " + faker.name().firstName());
+        trilha.setNome("BackEnd");
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("FECHADO");
         trilha.setNome(faker.name().firstName());
@@ -119,7 +119,7 @@ public class TrilhaDataFactory {
     }
     public static TrilhaModel gerarTrilhaValidaComModuloSemInformarOId(Integer idPrograma) {
         TrilhaModel trilha = new TrilhaModel();
-        trilha.setNome("Trilha " + faker.name().firstName());
+        trilha.setNome("Trilha");
         trilha.setDescricao("Descrição da " + trilha.getNome());
         trilha.setStatus("FECHADO");
         trilha.setNome(faker.name().firstName());

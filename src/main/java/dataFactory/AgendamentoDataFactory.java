@@ -19,7 +19,7 @@ public class AgendamentoDataFactory {
         AgendamentoModel agendamento = new AgendamentoModel();
         agendamento.setidAvaliacao(idAvaliacao);
         LocalTime horario = LocalTime.of(8, 0);
-        String dia = "2023-05-01";
+        String dia = "2023-05-20";
         LocalTime horaAleatoria = horario.plusMinutes(faker.random().nextInt(540));
         agendamento.setDataHorario(dia + "T" + horaAleatoria);
         agendamento.setResponsavel(faker.name().nameWithMiddle());

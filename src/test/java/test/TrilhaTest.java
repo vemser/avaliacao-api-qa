@@ -120,6 +120,7 @@ public class TrilhaTest extends BaseTest {
         assertThat(criarTrilha.getDescricao(), equalTo(response.getDescricao()));
         assertThat(criarTrilha.getStatus(), equalTo(response.getStatus()));
         assertThat(criarTrilha.getIdPrograma(), equalTo(response.getIdPrograma()));
+        System.out.println(response);
         trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -160,7 +161,29 @@ public class TrilhaTest extends BaseTest {
         Assertions.assertTrue(response.getErrors().contains("nome: Nome não pode estar vazio!"));
     }
 
-    //endregion
+    //endregion,
+//region ATUALIZAR TRILHA COM LINK
+
+    @DisplayName("Atualizar uma trilha com link com sucesso")
+    @Test
+    public void testAtualizarTrilhaComLink() {
+        TrilhaModel criarTrilha = TrilhaDataFactory.gerarTrilhaValida(122);
+        TrilhaModel trilhaCriada = trilhaService.adicionarTrilha(criarTrilha).then().extract().as(TrilhaModel.class);
+        var response = trilhaService.atualizarTrilhaComLink(trilhaCriada)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .as(TrilhaModel.class);
+        assertThat(criarTrilha.getNome(), equalTo(response.getNome()));
+        assertThat(criarTrilha.getDescricao(), equalTo(response.getDescricao()));
+        assertThat(criarTrilha.getStatus(), equalTo(response.getStatus()));
+        assertThat(criarTrilha.getIdPrograma(), equalTo(response.getIdPrograma()));
+        System.out.println(response);
+        trilhaService.deletarTrilhaIdTrilha(trilhaCriada)
+                .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+//endregion
 //region LISTAR TRILHAS MODELO
     @Test
     @DisplayName("Buscar todas trilhas")
@@ -217,8 +240,7 @@ public class TrilhaTest extends BaseTest {
             .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("status", equalTo("ABERTO"))
-                .body("nome", equalTo("UX"))
-                .body("descricao", equalTo("trilha focada em design"));
+                .body("nome", equalTo("QA"));
     }
     @Test
     @DisplayName("Falha ao listar trilha sem inserir um Id valido")

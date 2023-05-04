@@ -22,7 +22,7 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Criar agendamento com sucesso")
     public void testCriarAgendamento() {
-        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(710, 904);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
         AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
         AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao());
         var response = agendamentoService.cadastraragendamento(criarAgendamento)
@@ -53,7 +53,7 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Atualizar agendamento com sucesso")
     public void testAtualizarAgendamento() {
-        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(710, 904);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
         AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
         AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao());
         AgendamentoModel agendamentoCriado = agendamentoService.cadastraragendamento(criarAgendamento).then().extract().as(AgendamentoModel.class);
@@ -89,7 +89,7 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Buscar o agendamento pelo id do agendamento")
     public void btestBuscarAgendamentoPeloIdDoAgendamento() {
-        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(710, 904);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
         AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
         AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao());
         AgendamentoModel extrairId = agendamentoService.cadastraragendamento(criarAgendamento).then().extract().as(AgendamentoModel.class);
@@ -121,7 +121,7 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("lista os horarios disponiveis para agendamento")
     public void testListarHorariosDisponiveis(){
-        var response = agendamentoService.listarhorariosDispiniveis(710)
+        var response = agendamentoService.listarhorariosDispiniveis(865)
             .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON);
@@ -168,7 +168,7 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Deletar agendamento com sucesso")
     public void testDeletarAgendamento() {
-        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(710, 904);
+        avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
         AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).then().extract().as(AvaliacaoModel.class);
         AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao());
         AgendamentoModel extrairId = agendamentoService.cadastraragendamento(criarAgendamento).then().extract().as(AgendamentoModel.class);
