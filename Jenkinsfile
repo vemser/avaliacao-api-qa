@@ -41,7 +41,7 @@ pipeline {
                 def buildNumber = env.BUILD_NUMBER
 
 
-                def printAllure = bat(script: "cd C:\Users\Bruno Artêmio\Desktop\DBC\PF-Avaliação\jenkins-config\APIConfig && node capture.js ${env.BUILD_NUMBER}", returnStdout: true).trim()
+                def printAllure = bat(script: "cd C:\\Users\\Bruno Artêmio\\Desktop\\DBC\\PF-Avaliação\\jenkins-config\\APIConfig && node capture.js ${env.BUILD_NUMBER}", returnStdout: true).trim()
                 def link = "abc"
                 try {
                     def matcher = (printAllure =~ /https?:\/\/[^\s]+/)
