@@ -12,7 +12,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    bat 'mvn -e clean test -DSkipTests=true'
+                    cmd_exec('mvn -e clean test -DSkipTests=true')
                 }
             }
         }
@@ -41,7 +41,7 @@ pipeline {
                 def buildNumber = env.BUILD_NUMBER
 
 
-                def printAllure = bat(script: "cd C:\\Users\\Bruno Artêmio\\Desktop\\DBC\\PF-Avaliação\\jenkins-config\\APIConfig && node capture.js ${env.BUILD_NUMBER}", returnStdout: true).trim()
+                def printAllure = cmd_exec((script: "cd C:\\Users\\Bruno Artêmio\\Desktop\\DBC\\PF-Avaliação\\jenkins-config\\APIConfig && node capture.js ${env.BUILD_NUMBER}", returnStdout: true).trim())
                 def link = "abc"
                 try {
                     def matcher = (printAllure =~ /https?:\/\/[^\s]+/)
