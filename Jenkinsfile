@@ -12,7 +12,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh 'mvn -e clean test -DSkipTests=true'
+                    sh 'mvn -e clean test -Dmaven.test.failure.ignore=true'
                 }
             }
         }
@@ -31,6 +31,7 @@ pipeline {
         always {
             allure(
                 includeProperties: false,
+                reportBuildPolicy: 'ALWAYS',
                 jdk: '',
                 results: [[path: 'allure-results']]
             )
