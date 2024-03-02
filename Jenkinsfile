@@ -42,7 +42,7 @@ pipeline {
                 def buildNumber = env.BUILD_NUMBER
 
 
-                def printAllure = sh(script: "cd 'C:\\Users\\Bruno Artêmio\\Desktop\\DBC\\PF-Avaliação\\jenkins-config\\APIConfig && node capture.js' ${env.BUILD_NUMBER}", returnStdout: true).trim()
+                def printAllure = sh(script: "cd 'C:\\jenkins-config\\APIConfig && node capture.js' ${env.BUILD_NUMBER}", returnStdout: true).trim()
                 def link = "abc"
                 try {
                     def matcher = (printAllure =~ /https?:\/\/[^\s]+/)
@@ -53,7 +53,7 @@ pipeline {
                 def ngrok = "https://rodent-dynamic-dane.ngrok-free.app/VemSerAPITestsPipeline/${env.BUILD_NUMBER}/allure/"
 
                 def message = "# Relatorio de Testes/API Validação\n"
-                message += "**Branch:** RELEASE\n"
+                message += "**Branch:** develop\n"
                 message += "**Build:** ${buildNumber}\n"
                 message += "**Status:** ${buildResult}\n"
 
