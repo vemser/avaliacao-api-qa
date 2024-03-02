@@ -12,7 +12,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    bat 'mvn -e clean test -DSkipTests=true'
+                    sh 'mvn -e clean test -DSkipTests=true'
                 }
             }
         }
@@ -41,7 +41,7 @@ pipeline {
                 def buildNumber = env.BUILD_NUMBER
 
 
-                def printAllure = bat(script: "cd C:\\Users\\Bruno Artêmio\\Desktop\\DBC\\PF-Avaliação\\jenkins-config\\APIConfig && node capture.js ${env.BUILD_NUMBER}", returnStdout: true).trim()
+                def printAllure = sh(script: "cd C:\\Users\\Bruno Artêmio\\Desktop\\DBC\\PF-Avaliação\\jenkins-config\\APIConfig && node capture.js ${env.BUILD_NUMBER}", returnStdout: true).trim()
                 def link = "abc"
                 try {
                     def matcher = (printAllure =~ /https?:\/\/[^\s]+/)
@@ -58,7 +58,7 @@ pipeline {
 
 
                 discordSend description: message,
-                       link: ngrok
+                       link: ngrok,
                        image: "${link}",
                        webhookURL: "https://discord.com/api/webhooks/1212783876636811285/C6C-5BDOyXJ5dO6-tQLL_q445JjP9nhuGevK7MJxt8cux2HDjt2prC-2X7McHQe9jQeG"
             }
