@@ -19,7 +19,7 @@ pipeline {
         stage('Publish Allure Report') {
             steps {
                 script {
-                    bat 'allure generate allure-results -o allure-report'
+                    sh 'allure generate allure-results -o allure-report'
 
                     archiveArtifacts 'allure-report/**'
                 }
