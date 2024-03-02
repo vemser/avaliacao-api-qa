@@ -49,7 +49,7 @@ pipeline {
                 } catch (Exception e) {
                      echo "Erro ao extrair o link da saída do comando: ${e.message}"
                 }
-
+                def ngrok = "https://rodent-dynamic-dane.ngrok-free.app/VemSerAPITestsPipeline/${env.BUILD_NUMBER}/allure/"
 
                 def message = "# Relatorio de Testes/API Validação\n"
                 message += "**Branch:** RELEASE\n"
@@ -58,6 +58,7 @@ pipeline {
 
 
                 discordSend description: message,
+                       link: ngrok
                        image: "${link}",
                        webhookURL: "https://discord.com/api/webhooks/1212783876636811285/C6C-5BDOyXJ5dO6-tQLL_q445JjP9nhuGevK7MJxt8cux2HDjt2prC-2X7McHQe9jQeG"
             }
