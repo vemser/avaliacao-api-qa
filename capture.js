@@ -3,14 +3,10 @@ const {ImgurClient} = require('imgur');
 const fs = require('fs');
 const buildNumber = process.argv[2];
 const client = new ImgurClient({ clientId: "91cb4ba1e87bbab" }); 
-console.log("epa")
 
 async function captureScreenshotAndUpload() {
-    console.log("epa1")
     const browser = await puppeteer.launch();
-    console.log("epa2")
     const page = await browser.newPage();
-    console.log("epa3")
 
     await page.setViewport({
         width: 1920, 
