@@ -23,7 +23,7 @@ public class ModuloTest extends BaseTest {
     @Test
     @DisplayName("Criar modulo com sucesso")
     public void testCriarModulo() {
-        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
+        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1);
         var response = moduloService.criarModulo(criarModulo)
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
@@ -55,7 +55,7 @@ public class ModuloTest extends BaseTest {
     @Test
     @DisplayName("Atualizar  modulo com sucesso")
     public void testAtualizarModulo() {
-        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
+        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(3);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
         ModuloModel moduloAlterado = ModuloDataFactory.atualizarModulo(criarModulo.getIdTrilha());
         var response = moduloService.atualizarModulo(moduloAlterado, idModulo.getIdModulo())
@@ -88,14 +88,22 @@ public class ModuloTest extends BaseTest {
     @Test
     @DisplayName("buscar modulo pelo id do modulo")
     public void testBuscarModulo() {
-        ModuloModel response = moduloService.buscarModuloPeloId(63)
+        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(3);
+        ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
+
+        ModuloModel response = moduloService.buscarModuloPeloId(idModulo.getIdModulo())
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON)
                 .extract()
                 .as(ModuloModel.class);
+
         assertNotNull(response);
-        Assertions.assertEquals(1173, response.getIdTrilha());
+        Assertions.assertEquals(3, response.getIdTrilha());
+
+        moduloService.deletarModuloPeloId(idModulo.getIdModulo())
+                .then()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
     @Test
@@ -106,7 +114,7 @@ public class ModuloTest extends BaseTest {
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .extract()
                 .as(JSONFailureResponse.class);
-        Assertions.assertTrue(response.getMessage().contains("Módulo não encontrado."));
+        Assertions.assertTrue(response.getMessage().contains("Módulo inexistente ou inativo."));
     }
 
     @Test
@@ -125,7 +133,7 @@ public class ModuloTest extends BaseTest {
     @Test
     @DisplayName("Buscar modulo pelo id da trilha")
     public void testBuscarModuloPelaTrilha() {
-        var response = moduloService.buscarModuloPelaTrilhaPage(1173)
+        var response = moduloService.buscarModuloPelaTrilhaPage(3)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON)
@@ -158,25 +166,33 @@ public class ModuloTest extends BaseTest {
     }
 
     //endregion
-//region DESATIVAR MODULO
+    //region DESATIVAR MODULO
     @Test
-    @DisplayName("Deletar modulo com sucesso")
+    @DisplayName("Delete lógico modulo com sucesso")
     public void testDesativarModulo() {
-        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
+        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(3);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
+
         moduloService.desativarModuloPeloId(idModulo.getIdModulo())
                 .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-        moduloService.buscarModuloPeloId(idModulo.getIdModulo())
+                .statusCode(HttpStatus.SC_NO_CONTENT)
+        ;
+
+        ModuloModel response = moduloService.buscarModuloPeloId(idModulo.getIdModulo())
                 .then()
-                .statusCode(HttpStatus.SC_OK)
-                .body("ativo", equalTo(false));
+                .log().body()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .extract().as(ModuloModel.class)
+        ;
+
+        Assertions.assertEquals("Módulo inexistente ou inativo.", response.getMessage());
+
     }
 
     @Test
     @DisplayName("Erro ao desativar o modulo mais de uma vez")
     public void testDesativarModuloDuasVezes() {
-        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
+        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(3);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
         moduloService.desativarModuloPeloId(idModulo.getIdModulo());
         var response = moduloService.desativarModuloPeloId(idModulo.getIdModulo())
@@ -203,7 +219,7 @@ public class ModuloTest extends BaseTest {
     @Test
     @DisplayName("Deletar modulo com sucesso")
     public void testDeletarModulo() {
-        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
+        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(3);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
         moduloService.deletarModuloPeloId(idModulo.getIdModulo())
                 .then()
@@ -213,13 +229,13 @@ public class ModuloTest extends BaseTest {
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .extract()
                 .as(JSONFailureResponse.class);
-        Assertions.assertTrue(response.getMessage().contains("Módulo não encontrado."));
+        Assertions.assertTrue(response.getMessage().contains("Módulo inexistente ou inativo."));
     }
 
     @Test
     @DisplayName("Deletar modulo desativado com sucesso")
     public void testDeletarModuloDesativado() {
-        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
+        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(3);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
         moduloService.desativarModuloPeloId(idModulo.getIdModulo());
         moduloService.deletarModuloPeloId(idModulo.getIdModulo())
@@ -230,20 +246,22 @@ public class ModuloTest extends BaseTest {
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .extract()
                 .as(JSONFailureResponse.class);
-        Assertions.assertTrue(response.getMessage().contains("Módulo não encontrado."));
+        Assertions.assertTrue(response.getMessage().contains("Módulo inexistente ou inativo."));
     }
 
     @Test
     @DisplayName("Erro ao deletar o modulo mais de uma vez")
     public void testDeletarModuloDuasVezes() {
-        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(1173);
+        ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(3);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
         moduloService.deletarModuloPeloId(idModulo.getIdModulo());
+
         var response = moduloService.deletarModuloPeloId(idModulo.getIdModulo())
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .extract()
                 .as(JSONFailureResponse.class);
+
         Assertions.assertTrue(response.getMessage().contains("Módulo não encontrado."));
     }
 

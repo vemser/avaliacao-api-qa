@@ -54,7 +54,7 @@ public class ProgramaTest extends BaseTest {
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
         response.assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
         JSONFailureResponse jsonFailureResponse = response.extract().as(JSONFailureResponse.class);
-        assertTrue(jsonFailureResponse.getErrors().contains("nome: size must be between 10 and 2147483647"));
+        assertTrue(jsonFailureResponse.getErrors().contains("nome: Nome não pode ser vazio ou nulo."));
     }
 
     //endregion
