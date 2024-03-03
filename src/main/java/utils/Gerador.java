@@ -1,5 +1,8 @@
 package utils;
 
+import service.AusenciaService;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -15,5 +18,10 @@ public class Gerador {
         data = Validator.validarSeDataCaiNoFimDeSemana(data);
 
         return data.toString();
+    }
+
+    public static String dataComHorario(Integer idAusencia) {
+        String dataComHorario = AusenciaService.buscarAusenciaPorId(idAusencia).extract().path("diaDeFalta");
+        return LocalDate.parse(dataComHorario).toString();
     }
 }
