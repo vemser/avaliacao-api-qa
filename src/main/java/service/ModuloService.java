@@ -12,11 +12,11 @@ public class ModuloService {
 //region CRIAR MODULO
     public Response criarModulo(ModuloModel corpo){
         return
-            given()
-                .spec(SetupsRequestSpecification.requestSpecification())
-                .body(corpo)
-            .when()
-                .post("/modulo/create");
+                given()
+                    .spec(SetupsRequestSpecification.requestSpecification())
+                    .body(corpo)
+                .when()
+                    .post("/modulo/create");
     }
 //endregion
 //region ATUALIZAR MODULO

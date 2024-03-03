@@ -8,11 +8,11 @@ import net.minidev.json.JSONObject;
 import static io.restassured.RestAssured.given;
 
 public class Autenticacao {
-    static String baseURL = "http://vemser-dbc.dbccompany.com.br:39000/vemser/usuario-back/usuario/login";
+    static String baseURL = "https://usuario-back.onrender.com/usuario/login";
 
     public static String token() {
-        String username = "gregori.nunes";
-        String password = "B3\"hZ%<4K-bYq'3";
+        String username = "admin.teste";
+        String password = "Jvs9^@B809lP";
 
         Response response =
                 given()

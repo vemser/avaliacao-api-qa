@@ -14,4 +14,5 @@ public class ModuloModel {
     public int idModulo;
     public boolean ativo;
     public InstrutorModel instrutorModel;
+    public String message;
 }
