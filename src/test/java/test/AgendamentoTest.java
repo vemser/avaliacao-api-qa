@@ -23,16 +23,22 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Criar agendamento com sucesso")
     public void testCriarAgendamento() {
-        AvaliacaoModel avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
-        AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).extract().as(AvaliacaoModel.class);
-        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao(), LocalDateTime.now());
+        AvaliacaoModel avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(20, 1);
+        AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).log().all().extract().as(AvaliacaoModel.class);
+
+        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao(), LocalDateTime.of(2024, 3, 6, 9, 0, 0));
+
+        System.out.println("teste " + criarAgendamento.idAgendamento);
+
         var response = agendamentoService.cadastraragendamento(criarAgendamento)
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .contentType(ContentType.JSON)
                 .extract()
                 .as(AgendamentoModel.class);
-        Assertions.assertEquals(criarAgendamento.getIdAgendamento(), response.getIdAgendamento());
+
+        Assertions.assertEquals(criarAgendamento.getIdAvaliacao(), response.getIdAvaliacao());
+
         avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(deletarAvaliacao)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -56,19 +62,23 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Atualizar agendamento com sucesso")
     public void testAtualizarAgendamento() {
-        AvaliacaoModel avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
+        AvaliacaoModel avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(23, 1);
         AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).extract().as(AvaliacaoModel.class);
-        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao(), LocalDateTime.now());
+
+        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao(), LocalDateTime.of(2024, 3, 13, 9, 0, 0));
         AgendamentoModel agendamentoCriado = agendamentoService.cadastraragendamento(criarAgendamento).then().extract().as(AgendamentoModel.class);
-        AgendamentoModel agendamentoAlterado = AgendamentoDataFactory.atualizarAgendamento(agendamentoCriado, agendamentoCriado.idAvaliacao, LocalDateTime.now());
+        AgendamentoModel agendamentoAlterado = AgendamentoDataFactory.atualizarAgendamento(agendamentoCriado, agendamentoCriado.idAvaliacao, LocalDateTime.of(2024, 3, 16, 9, 0, 0));
+
         var response = agendamentoService.atualizarAgendamento(agendamentoCriado, agendamentoAlterado)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON)
                 .extract()
                 .as(AgendamentoModel.class);
+
         Assertions.assertEquals(agendamentoCriado.getResponsavel(), response.getResponsavel());
         Assertions.assertEquals(agendamentoCriado.getIdAvaliacao(), response.getIdAvaliacao());
+
         avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(deletarAvaliacao)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -94,18 +104,22 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Buscar o agendamento pelo id do agendamento")
     public void btestBuscarAgendamentoPeloIdDoAgendamento() {
-        AvaliacaoModel avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
+        AvaliacaoModel avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(1, 1);
         AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).extract().as(AvaliacaoModel.class);
-        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao(), LocalDateTime.now());
+
+        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao(), LocalDateTime.of(2024, 4, 30, 0, 0, 0));
         AgendamentoModel extrairId = agendamentoService.cadastraragendamento(criarAgendamento).then().extract().as(AgendamentoModel.class);
         AgendamentoModel agendamentoId = AgendamentoDataFactory.deletarAgendamento(extrairId.getIdAgendamento());
+
         var response = agendamentoService.buscarAgendamentoPorIdDoAgendamento(agendamentoId)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .as(AgendamentoModel.class);
+
         Assertions.assertEquals(extrairId.getResponsavel(), response.getResponsavel());
         Assertions.assertEquals(extrairId.getIdAvaliacao(), response.getIdAvaliacao());
+
         avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(deletarAvaliacao)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -128,10 +142,11 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("lista os horarios disponiveis para agendamento")
     public void testListarHorariosDisponiveis() {
-        var response = agendamentoService.listarhorariosDispiniveis(865)
+        var response = agendamentoService.listarhorariosDispiniveis(1)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON);
+
         assertNotNull(response);
     }
 
@@ -178,19 +193,23 @@ public class AgendamentoTest extends BaseTest {
     @Test
     @DisplayName("Deletar agendamento com sucesso")
     public void testDeletarAgendamento() {
-        AvaliacaoModel avaliacaoModel = AvaliacaoDataFactory.gerarAvaliacaoValida(865, 1072);
-        AvaliacaoModel deletarAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoModel).extract().as(AvaliacaoModel.class);
-        AgendamentoModel criarAgendamento = AgendamentoDataFactory.gerarAgendamento(deletarAvaliacao.getIdAvaliacao(), LocalDateTime.now());
-        AgendamentoModel extrairId = agendamentoService.cadastraragendamento(criarAgendamento).then().extract().as(AgendamentoModel.class);
-        AgendamentoModel agendamentoId = AgendamentoDataFactory.deletarAgendamento(extrairId.getIdAgendamento());
-        avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(deletarAvaliacao)
+        AvaliacaoModel gerarAvaliacao = AvaliacaoDataFactory.gerarAvaliacaoValida(1, 1);
+        AvaliacaoModel avaliacaoCriada = avaliacaoService.criarAvaliacao(gerarAvaliacao).extract().as(AvaliacaoModel.class);
+
+        AgendamentoModel gerarAgendamento = AgendamentoDataFactory.gerarAgendamento(avaliacaoCriada.getIdAvaliacao(), LocalDateTime.of(2024, 4, 30, 0, 0, 0));
+        AgendamentoModel agendamentoCriado = agendamentoService.cadastraragendamento(gerarAgendamento).then().extract().as(AgendamentoModel.class);
+        AgendamentoModel gerarDeleteAgendamento = AgendamentoDataFactory.deletarAgendamento(agendamentoCriado.getIdAgendamento());
+
+        avaliacaoService.deletarAvaliacaoPeloIdDaAvaliacao(avaliacaoCriada)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-        var response = agendamentoService.buscarAgendamentoPorIdDoAgendamento(agendamentoId)
+
+        var response = agendamentoService.buscarAgendamentoPorIdDoAgendamento(gerarDeleteAgendamento)
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .extract()
                 .as(JSONFailureResponse.class);
+
         Assertions.assertTrue(response.getMessage().contains("Agendamento não encontrado"));
     }
 

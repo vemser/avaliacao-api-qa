@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.restassured.http.ContentType;
 import lombok.Data;
 
+import java.util.ArrayList;
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AcompanhamentoModel {
@@ -17,6 +19,8 @@ public class AcompanhamentoModel {
     public String descricao;
     public Integer numeroResponsaveis;
     public String status;
+    public String[] Emailresponsaveis;
+    public ArrayList<ResponsavelModel> responsaveis;
     public Integer idAcompanhamento;
     public boolean ativo;
 }

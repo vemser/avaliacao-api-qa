@@ -24,8 +24,8 @@ public class AcompanhamentoService {
         return
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .body(acompanhamentoAntigo)
-                        .pathParam("idAcompanhamento", acompanhamentoNovo.getIdAcompanhamento())
+                        .body(acompanhamentoNovo)
+                        .pathParam("idAcompanhamento", acompanhamentoAntigo.getIdAcompanhamento())
                         .when()
                         .put("/acompanhamento/update/{idAcompanhamento}");
     }
@@ -41,19 +41,6 @@ public class AcompanhamentoService {
                         .delete("/acompanhamento/deactivate/{idAcompanhamento}");
     }
 
-    //endregion
-//region DELETAR ACOMPANHAMENTO PELO ID DO ACOMPANHAMENTO
-    public Response deletarAcompanhamentoPeloId(AcompanhamentoModel idAcompanhamento) {
-        return
-                given()
-                        .spec(SetupsRequestSpecification.requestSpecification())
-                        .pathParam("idAcompanhamento", idAcompanhamento.getIdAcompanhamento())
-                        .when()
-                        .delete("/acompanhamento/delete/{idAcompanhamento}");
-    }
-
-    //endregion
-//region BUSCAR ACOMPANHAMENTO PELO ID DO PROGRAMA
     public Response buscarAcompanhamentoPeloId(AcompanhamentoModel idPrograma) {
         return
                 given()
