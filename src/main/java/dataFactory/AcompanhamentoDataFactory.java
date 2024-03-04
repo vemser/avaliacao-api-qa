@@ -4,7 +4,9 @@ import model.AcompanhamentoModel;
 import utils.FakerHolder;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class AcompanhamentoDataFactory {
@@ -15,9 +17,17 @@ public class AcompanhamentoDataFactory {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
 
         acompanhamento.setIdPrograma(idPrograma);
-        acompanhamento.setTitulo("Trilha " + FakerHolder.instance.name().firstName());
-        acompanhamento.setDataInicio(dateFormat.format(FakerHolder.instance.date().future(10, 2, TimeUnit.DAYS)));
-        acompanhamento.setDataFim(dateFormat.format(FakerHolder.instance.date().future(20, 19, TimeUnit.DAYS)));
+        acompanhamento.setTitulo("Acompanhamento " + FakerHolder.instance.name().firstName());
+        acompanhamento.setDataInicio(dateFormat.format(FakerHolder.instance.date().future(105, 95, TimeUnit.DAYS)));
+        acompanhamento.setDataFim(dateFormat.format(FakerHolder.instance.date().future(150, 106, TimeUnit.DAYS)));
+        acompanhamento.setHorarioInicio("09:00:00");
+        acompanhamento.setHorarioFim("13:00:00");
+        acompanhamento.setDuracao(30);
+        acompanhamento.setDescricao("Acompanhamento para " + acompanhamento.getTitulo());
+        acompanhamento.setNumeroResponsaveis(2);
+        acompanhamento.setStatus("FECHADO");
+        acompanhamento.setEmailresponsaveis(new String[]{"May.may"});
+
         return getAcompanhamentoModel(acompanhamento);
     }
 
@@ -36,9 +46,17 @@ public class AcompanhamentoDataFactory {
         AcompanhamentoModel acompanhamento = new AcompanhamentoModel();
 
         acompanhamento.setIdPrograma(idPrograma);
-        acompanhamento.setTitulo("Trilha " + FakerHolder.instance.name().firstName());
-        acompanhamento.setDataInicio(dateFormat.format(FakerHolder.instance.date().future(40, 39, TimeUnit.DAYS)));
-        acompanhamento.setDataFim(dateFormat.format(FakerHolder.instance.date().future(2, 1, TimeUnit.DAYS)));
+        acompanhamento.setTitulo("Acompanhamento " + FakerHolder.instance.name().firstName());
+        acompanhamento.setDataInicio(dateFormat.format(FakerHolder.instance.date().future(85, 75, TimeUnit.DAYS)));
+        acompanhamento.setDataFim(dateFormat.format(FakerHolder.instance.date().future(90, 86, TimeUnit.DAYS)));
+        acompanhamento.setHorarioInicio("09:00:00");
+        acompanhamento.setHorarioFim("13:00:00");
+        acompanhamento.setDuracao(30);
+        acompanhamento.setDescricao("Acompanhamento para " + acompanhamento.getTitulo());
+        acompanhamento.setNumeroResponsaveis(2);
+        acompanhamento.setStatus("FECHADO");
+        acompanhamento.setEmailresponsaveis(new String[]{"May.may"});
+
         return getAcompanhamentoModel(acompanhamento);
     }
 

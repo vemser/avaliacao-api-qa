@@ -21,7 +21,6 @@ public class AvaliacaoDataFactory {
         avaliaco.setObjetivoProfissional(FakerHolder.instance.name().nameWithMiddle());
         avaliaco.setRecomendacaoMelhorias(FakerHolder.instance.name().nameWithMiddle());
         avaliaco.setStatus("ABERTO");
-        avaliaco.setIdAvaliacao(FakerHolder.instance.random().nextInt(1000));
 
         return avaliaco;
     }

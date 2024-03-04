@@ -8,11 +8,11 @@ import static io.restassured.RestAssured.given;
 
 public class AgendamentoService {
     //region CADASTRAR AGENDAMENTO
-    public Response cadastraragendamento(AgendamentoModel corpo) {
+    public Response cadastraragendamento(AgendamentoModel body) {
         return
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .body(corpo)
+                        .body(body)
                         .when()
                         .post("/agendamento/create");
     }
@@ -23,8 +23,8 @@ public class AgendamentoService {
         return
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .body(agendamentoAntigo)
-                        .pathParam("idAgendamento", agendamentoNovo.getIdAgendamento())
+                        .body(agendamentoNovo)
+                        .pathParam("idAgendamento", agendamentoAntigo.getIdAgendamento())
                         .when()
                         .put("/agendamento/update/{idAgendamento}");
     }
