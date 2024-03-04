@@ -14,8 +14,9 @@ public class TrilhaService {
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
                         .body(trilha)
-                        .when()
-                        .post("/trilha/create");
+                .when()
+                        .post("/trilha/create")
+                ;
     }
 
     //endregion
@@ -40,7 +41,7 @@ public class TrilhaService {
                                 }
                                 """)
                         .pathParam("idTrilha", trilhaAntiga.getIdTrilha())
-                        .when()
+                .when()
                         .put("/trilha/update-link/{idTrilha}");
     }
 
@@ -62,7 +63,7 @@ public class TrilhaService {
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
                         .pathParam("idTrilha", trilha.getIdTrilha())
-                        .when()
+                .when()
                         .delete("/trilha/delete/{idTrilha}");
     }
 

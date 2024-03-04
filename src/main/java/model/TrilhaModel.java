@@ -17,5 +17,5 @@ public class TrilhaModel {
     public boolean ativo;
     public String link;
     public ArrayList<ModuloModel> modulos;
-    public ArrayList<InstrutorModel> instrutores;
+    public ArrayList<InstrutorModel> instrutorRequestDTOS;
 }

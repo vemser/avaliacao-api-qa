@@ -16,4 +16,5 @@ public class FeedbackModel {
     private String loginResponsavel;
     private Boolean ativo;
     private Integer idPrograma;
+    private Integer idEstagiario;
 }
