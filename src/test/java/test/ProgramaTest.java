@@ -3,8 +3,6 @@ package test;
 import base.BaseTest;
 
 import dataFactory.ProgramaDataFactory;
-import io.qameta.allure.Description;
-import io.qameta.allure.Story;
 import io.restassured.http.ContentType;
 import model.JSONFailureResponse;
 import model.ProgramaModel;
@@ -13,9 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.ProgramaService;
-
-import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

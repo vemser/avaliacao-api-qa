@@ -29,8 +29,10 @@ public class ModuloTest extends BaseTest {
                 .statusCode(HttpStatus.SC_CREATED)
                 .extract()
                 .as(ModuloModel.class);
+
         assertThat(criarModulo.getNome(), equalTo(response.getNome()));
         assertThat(criarModulo.getDescricao(), equalTo(response.getDescricao()));
+
         ModuloModel idModulo = ModuloDataFactory.buscarModuloComId(response.getIdModulo());
         moduloService.deletarModuloPeloId(idModulo.getIdModulo())
                 .then()
@@ -53,18 +55,22 @@ public class ModuloTest extends BaseTest {
     //endregion
 //region ATUALIZAR MODULO
     @Test
-    @DisplayName("Atualizar  modulo com sucesso")
+    @DisplayName("Atualizar nome do modulo com sucesso")
     public void testAtualizarModulo() {
         ModuloModel criarModulo = ModuloDataFactory.gerarModuloModel(3);
         ModuloModel idModulo = moduloService.criarModulo(criarModulo).then().extract().as(ModuloModel.class);
+
         ModuloModel moduloAlterado = ModuloDataFactory.atualizarModulo(criarModulo.getIdTrilha());
         var response = moduloService.atualizarModulo(moduloAlterado, idModulo.getIdModulo())
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .as(ModuloModel.class);
+
         assertThat(moduloAlterado.getNome(), equalTo(response.getNome()));
         assertThat(moduloAlterado.getDescricao(), equalTo(response.getDescricao()));
+
+
         moduloService.deletarModuloPeloId(idModulo.getIdModulo())
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);

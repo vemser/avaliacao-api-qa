@@ -6,6 +6,7 @@ import service.ProgramaService;
 import utils.FakerHolder;
 
 import java.text.SimpleDateFormat;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class ProgramaDataFactory{
@@ -59,9 +60,11 @@ public class ProgramaDataFactory{
     }
 
     private static ProgramaModel getProgramaModel() {
+        Random random = new Random();
+        int numeroAleatorio = random.nextInt(10000) + 1;
         ProgramaModel programa = new ProgramaModel();
 
-        programa.setNome("Programa VemSer 13");
+        programa.setNome("Programa VemSer " + numeroAleatorio);
         return getProgramaModel(programa);
     }
 }
