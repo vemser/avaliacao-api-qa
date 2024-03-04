@@ -16,13 +16,7 @@ public class AvaliacaoService {
         return
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
-                        .body(new JSONObject()
-                                .appendField("idAcompanhamento", body.getIdAcompanhamento())
-                                .appendField("idEstagiario", body.getIdEstagiario())
-                                .appendField("objetivoProfissional", body.getObjetivoProfissional())
-                                .appendField("recomendacaoMelhorias", body.getRecomendacaoMelhorias())
-                                .appendField("status", body.getStatus())
-                        )
+                        .body(body)
                         .when()
                         .post("/avaliacao/create")
                         .then();

@@ -19,24 +19,27 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class AcompanhamentoTest extends BaseTest {
     AcompanhamentoService acompanhamentoService = new AcompanhamentoService();
-    AcompanhamentoModel acompanhamentoModel = new AcompanhamentoModel();
 
     //region CRIAR ACOMPANHAMENTO
     @Test
     @DisplayName("Criar um acompanhamento com sucesso")
     public void testCadastrarAcompanhamento() {
-        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(861);
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(1);
+
         var response = acompanhamentoService.criarAcompanhamento(acompanhamentoModel)
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .contentType(ContentType.JSON)
                 .extract()
                 .as(AcompanhamentoModel.class);
+
         assertThat(acompanhamentoModel.getTitulo(), equalTo(response.getTitulo()));
         assertThat(acompanhamentoModel.getDataInicio(), equalTo(response.getDataInicio()));
         assertThat(acompanhamentoModel.getDescricao(), equalTo(response.getDescricao()));
+
         AcompanhamentoModel id = AcompanhamentoDataFactory.deletarAcompanhamentoPorId(response.getIdAcompanhamento());
-        acompanhamentoService.deletarAcompanhamentoPeloId(id)
+
+        acompanhamentoService.desativarAcompanhamentoPeloId(id)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -44,7 +47,7 @@ public class AcompanhamentoTest extends BaseTest {
     @Test
     @DisplayName("Falha ao criar um acompanhamento sem id do programa")
     public void testCadastrarAcompanhamentoSemId() {
-        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoSemId();
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoSemId();
         var response = acompanhamentoService.criarAcompanhamento(acompanhamentoModel)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
@@ -58,19 +61,26 @@ public class AcompanhamentoTest extends BaseTest {
     @Test
     @DisplayName("Atualizar acompanhamento com sucesso")
     public void testAtualizarAcompanhamento() {
-        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(861);
-        AcompanhamentoModel criarAcompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().extract().as(AcompanhamentoModel.class);
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(1);
+        AcompanhamentoModel criarAcompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().log().all().extract().as(AcompanhamentoModel.class);
         AcompanhamentoModel extrairId = AcompanhamentoDataFactory.deletarAcompanhamentoPorId(criarAcompanhamento.getIdAcompanhamento());
+
         AcompanhamentoModel acompanhamentoAlterado = AcompanhamentoDataFactory.alterarAcompanhamento(criarAcompanhamento.getIdAcompanhamento());
-        var response = acompanhamentoService.atualizarAcompanhamento(acompanhamentoAlterado, criarAcompanhamento)
+
+        System.out.println(criarAcompanhamento);
+
+        var response = acompanhamentoService.atualizarAcompanhamento(criarAcompanhamento, acompanhamentoAlterado)
                 .then()
+                .log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .as(AcompanhamentoModel.class);
-        assertThat(acompanhamentoModel.getTitulo(), equalTo(response.getTitulo()));
-        assertThat(acompanhamentoModel.getDataInicio(), equalTo(response.getDataInicio()));
-        assertThat(acompanhamentoModel.getDescricao(), equalTo(response.getDescricao()));
-        acompanhamentoService.deletarAcompanhamentoPeloId(extrairId)
+
+        assertThat(acompanhamentoAlterado.getTitulo(), equalTo(response.getTitulo()));
+        assertThat(acompanhamentoAlterado.getDataInicio(), equalTo(response.getDataInicio()));
+        assertThat(acompanhamentoAlterado.getDescricao(), equalTo(response.getDescricao()));
+
+        acompanhamentoService.desativarAcompanhamentoPeloId(extrairId)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -78,16 +88,20 @@ public class AcompanhamentoTest extends BaseTest {
     @Test
     @DisplayName("Erro ao atualizar o acompanhamento, pois nao foi inserido o id do programa")
     public void testAtualizarAcompanhamentoSemId() {
-        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(861);
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(1);
         AcompanhamentoModel criarAcompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().extract().as(AcompanhamentoModel.class);
         AcompanhamentoModel acompanhamentoAlterado = AcompanhamentoDataFactory.alterarAcompanhamentoSemId();
-        var response = acompanhamentoService.atualizarAcompanhamento(acompanhamentoAlterado, criarAcompanhamento)
+
+        var response = acompanhamentoService.atualizarAcompanhamento(criarAcompanhamento, acompanhamentoAlterado)
                 .then()
+                .log().all()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .extract()
                 .as(JSONFailureResponse.class);
+
         Assertions.assertTrue(response.getErrors().contains("idPrograma: must be greater than or equal to 1"));
-        acompanhamentoService.deletarAcompanhamentoPeloId(criarAcompanhamento)
+
+        acompanhamentoService.desativarAcompanhamentoPeloId(criarAcompanhamento)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -97,18 +111,18 @@ public class AcompanhamentoTest extends BaseTest {
     @Test
     @DisplayName("Listar acompanhamento pelo id do programa")
     public void testBuscarAcompanhamentoPorIdDePrograma() {
-        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(1346);
-        var response = acompanhamentoService.buscarAcompanhamentoPeloId(acompanhamentoModel)
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(1);
+        acompanhamentoService.buscarAcompanhamentoPeloId(acompanhamentoModel)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON)
-                .body("idPrograma", equalTo(1346));
+                .body("idPrograma", equalTo(1));
     }
 
     @Test
     @DisplayName("Falha ao listar acompanhamento com numero de id invalido")
     public void testBuscarProgramaPorIdDePrograma() {
-        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(0);
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(0);
         var response = acompanhamentoService.buscarAcompanhamentoPeloId(acompanhamentoModel)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
@@ -144,12 +158,16 @@ public class AcompanhamentoTest extends BaseTest {
     @Test
     @DisplayName("Buscar acompanhamento por id do programa")
     public void testBuscarAcompanhamentoPorIdDoPrograma() {
-        var response = acompanhamentoService.buscarAcompanhamentoPeloIdDoAcompanhamento(724)
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(1);
+        AcompanhamentoModel criarAcompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().log().all().extract().as(AcompanhamentoModel.class);
+
+        var response = acompanhamentoService.buscarAcompanhamentoPeloIdDoAcompanhamento(criarAcompanhamento.getIdAcompanhamento())
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.JSON)
                 .extract()
                 .as(AcompanhamentoModel.class);
+        
         assertThat(acompanhamentoModel.getTitulo(), equalTo(response.getTitulo()));
     }
 
@@ -169,13 +187,10 @@ public class AcompanhamentoTest extends BaseTest {
     @Test
     @DisplayName("Desativar um acompanhamento com sucesso")
     public void testDesativatAcompanhamento() {
-        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(861);
-        AcompanhamentoModel acompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().extract().as(AcompanhamentoModel.class);
-        AcompanhamentoModel idAcompanhamento = AcompanhamentoDataFactory.deletarAcompanhamentoPorId(acompanhamento.getIdAcompanhamento());
-        acompanhamentoService.desativarAcompanhamentoPeloId(idAcompanhamento)
-                .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-        acompanhamentoService.deletarAcompanhamentoPeloId(idAcompanhamento)
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(1);
+        AcompanhamentoModel criarAcompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().log().all().extract().as(AcompanhamentoModel.class);
+
+        acompanhamentoService.desativarAcompanhamentoPeloId(criarAcompanhamento)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -183,7 +198,7 @@ public class AcompanhamentoTest extends BaseTest {
     @Test
     @DisplayName("Falha em deletar um acompanhamento com id inexistente")
     public void testDesativarAcompanhamentoIdInvalido() {
-        acompanhamentoModel = AcompanhamentoDataFactory.deletarAcompanhamentocomIdErrado(0);
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.deletarAcompanhamentocomIdErrado(0);
         var response = acompanhamentoService.desativarAcompanhamentoPeloId(acompanhamentoModel)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
@@ -198,24 +213,29 @@ public class AcompanhamentoTest extends BaseTest {
     @Test
     @DisplayName("Deletar um acompanhamento com sucesso")
     public void testDeletarAcompanhamento() {
-        acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(861);
-        AcompanhamentoModel acompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().extract().as(AcompanhamentoModel.class);
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.gerarAcompanhamentoValido(1);
+
+        AcompanhamentoModel acompanhamento = acompanhamentoService.criarAcompanhamento(acompanhamentoModel).then().log().all().extract().as(AcompanhamentoModel.class);
         AcompanhamentoModel idAcompanhamento = AcompanhamentoDataFactory.deletarAcompanhamentoPorId(acompanhamento.getIdAcompanhamento());
-        acompanhamentoService.deletarAcompanhamentoPeloId(idAcompanhamento)
+
+        acompanhamentoService.desativarAcompanhamentoPeloId(idAcompanhamento)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+
         var response = acompanhamentoService.buscarAcompanhamentoPeloIdDoAcompanhamento(idAcompanhamento.getIdAcompanhamento())
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .extract()
                 .as(JSONFailureResponse.class);
+
         Assertions.assertTrue(response.getMessage().contains("Acompanhamento não encontrado"));
     }
 
     @Test
     @DisplayName("Falha em deletar um acompanhamento com id inexistente")
     public void testDeletarAcompanhamentoIdInvalido() {
-        acompanhamentoModel = AcompanhamentoDataFactory.desativarAcompanhamentocomIdErrado();
+        AcompanhamentoModel acompanhamentoModel = AcompanhamentoDataFactory.desativarAcompanhamentocomIdErrado();
+
         var response = acompanhamentoService.desativarAcompanhamentoPeloId(acompanhamentoModel)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)

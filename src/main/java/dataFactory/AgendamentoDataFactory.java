@@ -19,13 +19,9 @@ public class AgendamentoDataFactory {
     public static AgendamentoModel gerarAgendamento(Integer idAvaliacao, LocalDateTime dataHorario) {
         AgendamentoModel agendamento = new AgendamentoModel();
 
-        String dataAleatoria = Gerador.gerarDataAleatoriaDentroDePeriodoDeAcompanhamento(dataHorario);
-
         agendamento.setIdAvaliacao(idAvaliacao);
-        agendamento.setIdAgendamento(FakerHolder.instance.random().nextInt(1000));
-        agendamento.setDataHorario(dataAleatoria);
-        agendamento.setResponsavel(FakerHolder.instance.name().nameWithMiddle());
-        agendamento.setAtivo(true);
+        agendamento.setDataHorario(Validator.validarSeDataCaiNoFimDeSemana(dataHorario).toString());
+        agendamento.setResponsavel(FakerHolder.instance.name().fullName());
 
         return agendamento;
     }
@@ -43,12 +39,11 @@ public class AgendamentoDataFactory {
     public static AgendamentoModel atualizarAgendamento(AgendamentoModel agendamentoModel, Integer idAvaliacao, LocalDateTime dataHorario) {
         AgendamentoModel agendamento = new AgendamentoModel();
 
-        String dataAleatoria = Gerador.gerarDataAleatoriaDentroDePeriodoDeAcompanhamento(dataHorario);
-
         agendamento.setIdAvaliacao(idAvaliacao);
-        agendamento.setDataHorario(dataAleatoria);
+        agendamento.setDataHorario(Validator.validarSeDataCaiNoFimDeSemana(dataHorario).toString());
         agendamento.setIdAgendamento(agendamentoModel.getIdAgendamento());
         agendamento.setResponsavel(agendamentoModel.getResponsavel());
+
         return agendamento;
     }
 
