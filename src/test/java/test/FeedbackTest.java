@@ -25,33 +25,37 @@ public class FeedbackTest extends BaseTest {
     @Story("Criar feedback")
     @Description("Criar feedback com sucesso")
     public void criarFeedback() {
-        FeedbackModel feedbackModel = FeedbackDataFactory.gerarFeedbackValido(745);
+        FeedbackModel feedbackModel = FeedbackDataFactory.gerarFeedbackValido(611);
+
         var response = feedbackService.cadastrarFeedback(feedbackModel)
             .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .contentType(ContentType.JSON)
                 .extract()
                 .as(FeedbackModel.class);
+
         assertThat(feedbackModel.getDescricao(), equalTo(response.getDescricao()));
         assertThat(feedbackModel.getTipoFeedback(), equalTo(response.getTipoFeedback()));
+
         FeedbackModel extrair = feedbackService.buscarFeedbackPeloId(response).then().extract().as(FeedbackModel.class);
-        FeedbackModel delete = FeedbackDataFactory.deletarFeedbackPorId(extrair.getIdFeedBack());
-        feedbackService.desativarFeedbackPeloId(delete)
+
+        feedbackService.desativarFeedbackPeloId(extrair)
             .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
     @Test
-    @DisplayName("Criar feedback com sucesso")
-    @Story("Criar feedback")
-    @Description("Criar feedback com sucesso")
+    @DisplayName("ID invalido para criar feedback")
+    @Story("ID invalido para criar feedback")
+    @Description("ID invalido para criar feedback")
     public void testErroAoCriarFeedback() {
         FeedbackModel feedbackModel = FeedbackDataFactory.gerarFeedbackValido(-456745);
         var response = feedbackService.cadastrarFeedback(feedbackModel)
                 .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .statusCode(HttpStatus.SC_NOT_FOUND)
                 .extract()
                 .as(JSONFailureResponse.class);
-        Assertions.assertTrue(response.getErrors().contains("idAvaliacao: must be greater than or equal to 1"));
+
+        Assertions.assertEquals("Avaliação inexistente ou inativa", response.getMessage());
     }
 
 //endregion
@@ -59,18 +63,21 @@ public class FeedbackTest extends BaseTest {
     @Test
     @DisplayName("Atualizar feedback com sucesso")
     public void testAtualizarFeedback() {
-        FeedbackModel feedbackModel = FeedbackDataFactory.gerarFeedbackValido(745);
-        FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().extract().as(FeedbackModel.class);
-        FeedbackModel atualizar = FeedbackDataFactory.atualizarFeedback(criarFeedback.getIdFeedBack());
+        FeedbackModel feedbackModel = FeedbackDataFactory.gerarFeedbackValido(612);
+        FeedbackModel criarFeedback = feedbackService.cadastrarFeedback(feedbackModel).then().log().body().extract().as(FeedbackModel.class);
+        FeedbackModel atualizar = FeedbackDataFactory.atualizarFeedback(612);
+
         var response = feedbackService.atualizarFeedback(criarFeedback, atualizar)
             .then()
                 .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .as(FeedbackModel.class);
         Assertions.assertEquals(atualizar.getDescricao(), response.getDescricao());
-        feedbackService.deletarFeedbackPeloId(criarFeedback)
+
+        feedbackService.desativarFeedbackPeloId(response)
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+
     }
     @Test
     @DisplayName("Erro ao atualizar feedback, sem informações no Body")

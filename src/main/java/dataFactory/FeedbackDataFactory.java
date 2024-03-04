@@ -17,13 +17,14 @@ public class FeedbackDataFactory {
         feedback.setIdAvaliacao(idAvaliacao);
         feedback.setNota(faker.number().numberBetween(40, 100));
         feedback.setDescricao("Descrição da " + faker.name().title());
-        feedback.setTipoFeedback("POSITIVO");
+        feedback.setTipoFeedback("DESTAQUE");
         feedback.setIdFeedBack(0);
         feedback.setCargoResponsavel("INSTRUTOR");
-        feedback.setLoginResponsavel("gregori.nunes");
+        feedback.setLoginResponsavel("rafael.teste");
         feedback.setAtivo(true);
-        feedback.setIdPrograma(0);
+        feedback.setIdPrograma(1);
         feedback.setStatus("FINALIZADO");
+        feedback.setIdEstagiario(4);
 
         return feedback;
     }
@@ -54,7 +55,7 @@ public class FeedbackDataFactory {
     public static FeedbackModel atualizarFeedback(Integer idAvaliacao) {
         FeedbackModel feedback = new FeedbackModel();
 
-        feedback.setIdAvaliacao(495);
+        feedback.setIdAvaliacao(idAvaliacao);
         feedback.setNota(faker.number().numberBetween(40, 100));
         feedback.setDescricao("Descrição da " + faker.name().title());
         feedback.setTipoFeedback("POSITIVO");
@@ -62,6 +63,10 @@ public class FeedbackDataFactory {
         feedback.setStatus("FINALIZADO");
         feedback.setLoginResponsavel("pietro.bordin");
         feedback.setAtivo(true);
+        feedback.setIdPrograma(1);
+        feedback.setStatus("FINALIZADO");
+        feedback.setIdEstagiario(4);
+
         return feedback;
     }
 
