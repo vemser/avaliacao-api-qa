@@ -224,11 +224,11 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/yo
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/vemser/avaliacao-web-qa/graphs/contributors
+[contributors-url]: https://github.com/vemser/avaliacao-api-qa/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/vemser/avaliacao-web-qa/network/members
+[forks-url]: https://github.com/vemser/avaliacao-api-qa/network/members
 [issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/vemser/avaliacao-web-qa/issues
+[issues-url]: https://github.com/vemser/avaliacao-api-qa/issues
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/company/dbc-company/mycompany/
 
