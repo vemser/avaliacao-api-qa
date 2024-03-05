@@ -11,8 +11,9 @@ public class Autenticacao {
     static String baseURL = "https://usuario-back.onrender.com/usuario/login";
 
     public static String token() {
-        String username = "admin.teste";
-        String password = "Jvs9^@B809lP";
+        ConfigProperties.initializePropertyFile();
+        String username = ConfigProperties.properties.getProperty("admin_username");
+        String password = ConfigProperties.properties.getProperty("admin_password");
 
         Response response =
                 given()
