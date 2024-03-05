@@ -11,8 +11,9 @@ public class Autenticacao {
     static String baseURL = "http://vemser-dbc.dbccompany.com.br:39000/vemser/usuario-back/usuario/login";
 
     public static String token() {
-        String username = "admin.teste";
-        String password = "Jvs9^@B809lP";
+        ConfigProperties.initializePropertyFile();
+        String username = ConfigProperties.properties.getProperty("admin_username");
+        String password = ConfigProperties.properties.getProperty("admin_password");
 
         Response response =
                 given()

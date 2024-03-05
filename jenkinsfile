@@ -1,0 +1,67 @@
+//Este Jenkinsfile é um template para poder ser utilizado na continuação deste projeto com a utilização do Jenkins, Allure e Discord Notifier
+pipeline {
+    agent any
+
+    tools {
+        maven "MAVEN"
+        nodejs "NODE"
+        git "GIT"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    checkout([$class: 'GitSCM', branches: [[name: 'NOME DA SUA BRANCH']], userRemoteConfigs: [[url: 'https://github.com/vemser/avaliacao-api-qa.git']]])
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    sh 'mvn -e clean test -Dmaven.test.failure.ignore=true'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            allure(
+                includeProperties: false,
+                reportBuildPolicy: 'ALWAYS',
+                jdk: '',
+                results: [[path: 'allure-results']]
+            )
+            script {
+                def buildUrl = env.BUILD_URL
+                def buildResult = currentBuild.currentResult
+                def branchName = env.BRANCH_NAME
+                def buildNumber = env.BUILD_NUMBER
+
+
+                def printAllure = sh(script: "npm i && node capture.js ${env.BUILD_NUMBER}", returnStdout: true).trim()
+                def link = "abc"
+                try {
+                    def matcher = (printAllure =~ /https?:\/\/[^\s]+/)
+                    link = matcher.find() ? matcher.group() : "Link não encontrado"
+                } catch (Exception e) {
+                     echo "Erro ao extrair o link da saída do comando: ${e.message}"
+                }
+                def ngrok = "https://SEU LINK DO NGROK RODANDO O JENKINS/job/NOME DO JOB/${env.BUILD_NUMBER}/allure/"
+
+                def message = "**Branch:** develop\n"
+                 message += "**Build:** ${buildNumber}\n"
+                message += "**Status:** ${buildResult}\n"
+
+
+                discordSend description: message,
+                       link: ngrok,
+                       image: "${link}",
+                       title: "[LINK] Relatório de Teste/API Avaliação",
+                       webhookURL: "WEBHOOK DO DISCORD DO CHAT QUE DESEJA ENVIAR O RELATORIO"
+
+            }
+        }
+    }
+}
