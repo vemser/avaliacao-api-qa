@@ -40,13 +40,13 @@ public class FeedbackService {
     }
 //endregion
 //region BUSCAR FEEDBACK POR PAGINAS
-    public Response buscarFeedbackPorPaginas(FeedbackModel feedback) {
+    public Response buscarFeedbackPorPaginas(Integer id) {
         return
             given()
                 .spec(SetupsRequestSpecification.requestSpecification())
-                .pathParam("idAvaliacao", feedback.getIdAvaliacao())
+                .pathParam("idAvaliacao", id)
                 .queryParam("pagina",0)
-                .queryParam("tamanho",5)
+                .queryParam("tamanho",1)
             .when()
                 .get("/feedback/list-by-avaliacao/{idAvaliacao}");
     }
@@ -62,11 +62,29 @@ public class FeedbackService {
     }
     //    endregion
 //region DESATIVAR FEEDBACK
+    public Response deletarFeedbackPeloIdSemModel(Integer id) {
+        return
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idFeedBack", id)
+                        .when()
+                        .delete("/feedback/delete/{idFeedBack}");
+    }
+
     public Response desativarFeedbackPeloId(FeedbackModel feedback) {
         return
                 given()
                         .spec(SetupsRequestSpecification.requestSpecification())
                         .pathParam("idFeedBack", feedback.getIdFeedBack())
+                        .when()
+                        .delete("/feedback/deactivate/{idFeedBack}");
+    }
+
+    public Response desativarFeedbackSemModel(Integer id) {
+        return
+                given()
+                        .spec(SetupsRequestSpecification.requestSpecification())
+                        .pathParam("idFeedBack", id)
                         .when()
                         .delete("/feedback/deactivate/{idFeedBack}");
     }
