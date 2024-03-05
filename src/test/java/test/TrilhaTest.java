@@ -165,11 +165,13 @@ public class TrilhaTest extends BaseTest {
         TrilhaModel trilhaAlterada = TrilhaDataFactory.atualizarTrilhSemCorpo();
         var response = trilhaService.atualizarTrilha(trilhaCriada, trilhaAlterada)
                 .then()
+                .log().body()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType(ContentType.JSON)
                 .extract()
                 .as(JSONFailureResponse.class);
-        Assertions.assertTrue(response.getErrors().contains("[idPrograma: must be greater than or equal to 1]"));
+
+        Assertions.assertTrue(response.getErrors().contains("idPrograma: must be greater than or equal to 1"));
         Assertions.assertTrue(response.getErrors().contains("status: must not be null"));
         Assertions.assertTrue(response.getErrors().contains("nome: Nome não pode estar vazio!"));
     }

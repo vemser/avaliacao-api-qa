@@ -8,7 +8,7 @@ import net.minidev.json.JSONObject;
 import static io.restassured.RestAssured.given;
 
 public class Autenticacao {
-    static String baseURL = "https://usuario-back.onrender.com/usuario/login";
+    static String baseURL = "http://vemser-dbc.dbccompany.com.br:39000/vemser/usuario-back/usuario/login";
 
     public static String token() {
         ConfigProperties.initializePropertyFile();
