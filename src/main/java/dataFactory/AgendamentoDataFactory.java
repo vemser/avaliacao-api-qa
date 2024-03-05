@@ -4,58 +4,62 @@ import model.AcompanhamentoModel;
 import model.AgendamentoModel;
 import model.AvaliacaoModel;
 import net.datafaker.Faker;
+import utils.FakerHolder;
+import utils.Gerador;
+import utils.Validator;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 
 
 public class AgendamentoDataFactory {
-    private static Faker faker = new Faker();
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//region CRIAR AGENDAMENTO
-    public static AgendamentoModel gerarAgendamento(Integer idAvaliacao) {
-        AcompanhamentoModel acompanhamentoModel = new AcompanhamentoModel();
+    //region CRIAR AGENDAMENTO
+    public static AgendamentoModel gerarAgendamento(Integer idAvaliacao, LocalDateTime dataHorario) {
         AgendamentoModel agendamento = new AgendamentoModel();
-        agendamento.setidAvaliacao(idAvaliacao);
-        LocalTime horario = LocalTime.of(8, 0);
-        String dia = "2023-05-20";
-        LocalTime horaAleatoria = horario.plusMinutes(faker.random().nextInt(540));
-        agendamento.setDataHorario(dia + "T" + horaAleatoria);
-        agendamento.setResponsavel(faker.name().nameWithMiddle());
+
+        agendamento.setIdAvaliacao(idAvaliacao);
+        agendamento.setDataHorario(Validator.validarSeDataCaiNoFimDeSemana(dataHorario).toString());
+        agendamento.setResponsavel(FakerHolder.instance.name().fullName());
 
         return agendamento;
     }
-    public static AgendamentoModel gerarAgendamento(AvaliacaoModel avaliacao) {
-        return gerarAgendamento(avaliacao.getIdAvaliacao());
+
+    public static AgendamentoModel gerarAgendamento(AvaliacaoModel avaliacao, LocalDateTime dataHorario) {
+        return gerarAgendamento(avaliacao.getIdAvaliacao(), dataHorario);
     }
-    public static AgendamentoModel gerarAgendamentoComIdErrado(Integer agendar) {
-        return gerarAgendamento(00000000000000000);
+
+    public static AgendamentoModel gerarAgendamentoComIdErrado() {
+        return gerarAgendamento(0, LocalDateTime.now());
     }
-//endregion
+
+    //endregion
 //region ATUALIZAR AGENDAMENTO
-    public static AgendamentoModel atualizarAgendamento(Integer idAgendamento) {
+    public static AgendamentoModel atualizarAgendamento(AgendamentoModel agendamentoModel, Integer idAvaliacao, LocalDateTime dataHorario) {
         AgendamentoModel agendamento = new AgendamentoModel();
-        agendamento.setidAvaliacao(745);
-        LocalTime horario = LocalTime.of(8, 0);
-        LocalTime horaAleatoria = horario.plusMinutes(faker.random().nextInt(540));
-        agendamento.setDataHorario(dateFormat.format(faker.date().future(10, 8, TimeUnit.DAYS)) + "T" + horaAleatoria);
-        agendamento.setResponsavel(faker.name().nameWithMiddle());
-        agendamento.setIdAgendamento(idAgendamento);
-        agendamento.setAtivo("true");
-        agendamento.setIdAcompanhamento(724);
+
+        agendamento.setIdAvaliacao(idAvaliacao);
+        agendamento.setDataHorario(Validator.validarSeDataCaiNoFimDeSemana(dataHorario).toString());
+        agendamento.setIdAgendamento(agendamentoModel.getIdAgendamento());
+        agendamento.setResponsavel(agendamentoModel.getResponsavel());
+
         return agendamento;
     }
-//endregion
-//region DELETAR AGENDAMENTO
+
+    ////endregion
+////region DELETAR AGENDAMENTO
     public static AgendamentoModel deletarAgendamento(Integer agendamento) {
         AgendamentoModel agendamentoModel = new AgendamentoModel();
+
         agendamentoModel.setIdAgendamento(agendamento);
         return agendamentoModel;
     }
-    public static AgendamentoModel deletarAgendamentoComIdErrado(Integer agendamento) {
+
+    public static AgendamentoModel deletarAgendamentoComIdErrado() {
         AgendamentoModel agendamentoModel = new AgendamentoModel();
-        agendamentoModel.setIdAgendamento(000000000000000000000000);
+
+        agendamentoModel.setIdAgendamento(0);
         return agendamentoModel;
     }
 //endregion

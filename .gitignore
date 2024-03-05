@@ -4,7 +4,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-allure-results
 src/properties
 
 ### STS ###
@@ -35,3 +34,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+**/node_modules

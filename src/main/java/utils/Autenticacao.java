@@ -1,28 +1,31 @@
 package utils;
 
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Test;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
+import net.minidev.json.JSONObject;
 
 import static io.restassured.RestAssured.given;
 
 public class Autenticacao {
-static String baseURL = "http://vemser-dbc.dbccompany.com.br:39000/vemser/usuario-back/usuario/login";
-    @Test
+    static String baseURL = "http://vemser-dbc.dbccompany.com.br:39000/vemser/usuario-back/usuario/login";
+
     public static String token() {
-        String token =
-                    given()
+        ConfigProperties.initializePropertyFile();
+        String username = ConfigProperties.properties.getProperty("admin_username");
+        String password = ConfigProperties.properties.getProperty("admin_password");
+
+        Response response =
+                given()
                         .contentType(ContentType.JSON)
-                        .body("""
-                            {
-                             "username": "%s",
-                             "password": "%s" 
-                            }
-                            """.formatted(System.getenv("DBC_USER"), System.getenv("DBC_PASSWORD")))
-                    .when()
-                        .post(baseURL)
-                        .then()
-                        .extract().asString();
-//        System.out.println(token);
-        return token;
-}
+                        .accept(ContentType.JSON)
+                        .body(new JSONObject()
+                                .appendField("username", username)
+                                .appendField("password", password)
+                        )
+                        .when()
+                        .post(baseURL);
+
+        return response.getBody().asString();
+    }
 }
