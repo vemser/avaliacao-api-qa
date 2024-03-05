@@ -18,7 +18,6 @@ public class FeedbackDataFactory {
         feedback.setNota(faker.number().numberBetween(40, 100));
         feedback.setDescricao("Descrição da " + faker.name().title());
         feedback.setTipoFeedback("DESTAQUE");
-        feedback.setIdFeedBack(0);
         feedback.setCargoResponsavel("INSTRUTOR");
         feedback.setLoginResponsavel("rafael.teste");
         feedback.setAtivo(true);
@@ -58,10 +57,10 @@ public class FeedbackDataFactory {
         feedback.setIdAvaliacao(idAvaliacao);
         feedback.setNota(faker.number().numberBetween(40, 100));
         feedback.setDescricao("Descrição da " + faker.name().title());
-        feedback.setTipoFeedback("POSITIVO");
+        feedback.setTipoFeedback("DESTAQUE");
         feedback.setCargoResponsavel("INSTRUTOR");
         feedback.setStatus("FINALIZADO");
-        feedback.setLoginResponsavel("pietro.bordin");
+        feedback.setLoginResponsavel("admin.teste");
         feedback.setAtivo(true);
         feedback.setIdPrograma(1);
         feedback.setStatus("FINALIZADO");

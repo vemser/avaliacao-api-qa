@@ -54,7 +54,7 @@ public class AgendamentoTest extends BaseTest {
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .extract()
                 .as(JSONFailureResponse.class);
-        Assertions.assertTrue(response.getErrors().contains("idAvaliacao: must be greater than or equal to 1"));
+        Assertions.assertTrue(response.getErrors().contains("[idAvaliacao: must be greater than or equal to 1]"));
     }
 
     //endregion
